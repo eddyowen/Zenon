@@ -1,4 +1,4 @@
-# Zenon Engine [![License](https://img.shields.io/github/license/eddyowen/Zenon.svg)](https://github.com/eddyowen/Zenon/blob/master/LICENSE)
+# [![License](https://img.shields.io/github/license/eddyowen/Zenon.svg)](https://github.com/eddyowen/Zenon/blob/master/LICENSE)
 
 ![Zenon](docs/zenon_logo/zn_logo.png)
 
