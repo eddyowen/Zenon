@@ -16,12 +16,13 @@ namespace zn
 		void Run();
 		void OnKeyPressed(KeyPressedEvent& e);
 		void OnWindowClosed(WindowClosedEvent& e);
+		void OnWindowResized(WindowResizedEvent& e);
 		void OnWindowClosed_Const(WindowClosedEvent& e) const;
 		void OnEvent(Event& e);
 		void ProcessEvents();
 
 	private:
-		bool m_running = false;
-		Window m_window{};
+		bool m_IsRunning = false;
+		Window m_Window{};
 	};
 }

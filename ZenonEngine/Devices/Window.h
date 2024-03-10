@@ -24,25 +24,29 @@ namespace zn
 		void Close();
 
 		Delegate<void(zn::WindowClosedEvent&)> WindowClosedDelegate;
+		Delegate<void(zn::WindowResizedEvent&)> WindowResizedDelegate;
 		Delegate<void(zn::KeyPressedEvent&)> KeyPressedDelegate;
 
 	protected:
 		void CloseCallback();
+		void WindowResizedCallback(int width, int height);
 		void KeyPressedCallback(int key);
 
 	private:
 		bool ShouldClose() const;
 
-		void PollEvents();
-		void SwapBuffers();
+		void Clear() const;
+		void SwapBuffers() const;
+		void PollEvents() const;
 
 		static void GLFW_CloseCallback(GLFWwindow* wnd);
+		static void GLFW_FrameBufferResizeCallback(GLFWwindow* wnd, int width, int height);
 		static void GLFW_KeyCallback(GLFWwindow* wnd, int key, int scanCode, int action, int mods);
 
 	private:
-		int m_width = 0;
-		int m_height = 0;
-		const char* m_title = nullptr;
-		GLFWwindow* m_window = nullptr;
+		int m_Width = 0;
+		int m_Height = 0;
+		const char* m_Title = nullptr;
+		GLFWwindow* m_Window = nullptr;
 	};
 }

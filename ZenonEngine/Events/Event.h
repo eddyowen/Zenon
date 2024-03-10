@@ -11,7 +11,9 @@ namespace zn
 	{
 		None = 0,
 		WindowClosed,
-		KeyPressed, KeyReleased
+		WindowResized,
+		KeyPressed,
+		KeyReleased
 	};
 
 #define ZN_DEFINE_EVENT_TYPE(type) static EventType GetStaticType() { return EventType::type; }\

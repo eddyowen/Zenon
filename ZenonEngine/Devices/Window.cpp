@@ -27,15 +27,15 @@ namespace zn
 		glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
 		glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
-		m_window = glfwCreateWindow(width, height, title, nullptr, nullptr);
-		if (!m_window)
+		m_Window = glfwCreateWindow(width, height, title, nullptr, nullptr);
+		if (!m_Window)
 		{
 			std::cerr << "Failed to create GLFW window" << std::endl;
 			glfwTerminate();
 			return false;
 		}
 
-		glfwMakeContextCurrent(m_window);
+		glfwMakeContextCurrent(m_Window);
 
 		if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
 		{
@@ -46,14 +46,15 @@ namespace zn
 
 		// Setup user pointer as this is the only way 
 		// I have to access data within GLFW callbacks
-		m_width = width;
-		m_height = height;
-		m_title = title;
-		glfwSetWindowUserPointer(m_window, this);
+		m_Width = width;
+		m_Height = height;
+		m_Title = title;
+		glfwSetWindowUserPointer(m_Window, this);
 
 		// Setup Event Callbacks here
-		glfwSetWindowCloseCallback(m_window, &Window::GLFW_CloseCallback);
-		glfwSetKeyCallback(m_window, &Window::GLFW_KeyCallback);
+		glfwSetWindowCloseCallback(m_Window, &Window::GLFW_CloseCallback);
+		glfwSetFramebufferSizeCallback(m_Window, &Window::GLFW_FrameBufferResizeCallback);
+		glfwSetKeyCallback(m_Window, &Window::GLFW_KeyCallback);
 
 		return true;
 	}
@@ -62,7 +63,18 @@ namespace zn
 	{
 		WindowClosedEvent e;
 		WindowClosedDelegate(e);
-	}	
+	}
+
+	void Window::WindowResizedCallback(int width, int height)
+	{
+		m_Width = width;
+		m_Height = height;
+
+		glViewport(0, 0, m_Width, m_Height);
+
+		WindowResizedEvent e{m_Width, m_Height};
+		WindowResizedDelegate(e);
+	}
 	
 	void Window::KeyPressedCallback(int key)
 	{
@@ -73,7 +85,12 @@ namespace zn
 	void Window::GLFW_CloseCallback(GLFWwindow* wnd)
 	{ 
 		((Window*)glfwGetWindowUserPointer(wnd))->CloseCallback();
-	}	
+	}
+
+	void Window::GLFW_FrameBufferResizeCallback(GLFWwindow* wnd, int width, int height)
+	{
+		((Window*)glfwGetWindowUserPointer(wnd))->WindowResizedCallback(width, height);
+	}
 	
 	void Window::GLFW_KeyCallback(GLFWwindow* wnd, int key, int scanCode, int action, int mods)
 	{
@@ -103,28 +120,35 @@ namespace zn
 	{
 		if (!ShouldClose())
 		{
-			PollEvents();
+			Clear();
 			SwapBuffers();
+			PollEvents();
 		}
 	}
 
 	void Window::Close()
 	{
-		glfwSetWindowShouldClose(m_window, GL_TRUE);
+		glfwSetWindowShouldClose(m_Window, GL_TRUE);
 	}
 
 	bool Window::ShouldClose() const
 	{
-		return glfwWindowShouldClose(m_window);
+		return glfwWindowShouldClose(m_Window);
 	}
 
-	void Window::PollEvents()
+	void Window::Clear() const
+	{
+		glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
+		glClear(GL_COLOR_BUFFER_BIT);
+	}
+
+	void Window::SwapBuffers() const
+	{
+		glfwSwapBuffers(m_Window);
+	}
+
+	void Window::PollEvents() const
 	{
 		glfwPollEvents();
-	}
-
-	void Window::SwapBuffers()
-	{
-		glfwSwapBuffers(m_window);
 	}
 }
