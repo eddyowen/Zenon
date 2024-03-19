@@ -1,14 +1,12 @@
 #pragma once
 
-#include "Core/Base.h"
 #include "Core/Delegate.h"
 #include "Events/Event.h"
 #include "Events/ApplicationEvent.h"
 #include "Events/KeyEvent.h"
+#include "Graphics/Shader.h"
 
-#include <functional>
-
-class GLFWwindow;
+struct GLFWwindow;
 
 namespace zn
 {
@@ -44,9 +42,28 @@ namespace zn
 		static void GLFW_KeyCallback(GLFWwindow* wnd, int key, int scanCode, int action, int mods);
 
 	private:
+		GLFWwindow* m_Window = nullptr;
+		const char* m_Title = nullptr;
+
 		int m_Width = 0;
 		int m_Height = 0;
-		const char* m_Title = nullptr;
-		GLFWwindow* m_Window = nullptr;
+
+		// TEMPORAL ///////////////////////////////////////
+		UniquePtr<zn::Shader> m_BasicShader;
+		
+		unsigned int VBO, EBO, VAO;
+
+		float vertices[12] = {
+			 0.5f,  0.5f, 0.0f,  // top right
+			 0.5f, -0.5f, 0.0f,  // bottom right
+			-0.5f, -0.5f, 0.0f,  // bottom left
+			-0.5f,  0.5f, 0.0f   // top left 
+		};
+
+		unsigned int indices[6] = {  // note that we start from 0!
+			0, 1, 3,  // first Triangle
+			1, 2, 3   // second Triangle
+		};
+		//////////////////////////////////////////////////
 	};
 }
