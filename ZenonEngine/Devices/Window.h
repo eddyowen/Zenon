@@ -1,10 +1,14 @@
 #pragma once
 
+#include <glad/glad.h>
+#include <GLFW/glfw3.h>
+
 #include "Core/Delegate.h"
 #include "Events/Event.h"
 #include "Events/ApplicationEvent.h"
 #include "Events/KeyEvent.h"
 #include "Graphics/Shader.h"
+#include "Graphics/VertexArray.h"
 
 struct GLFWwindow;
 
@@ -50,6 +54,7 @@ namespace zn
 
 		// TEMPORAL ///////////////////////////////////////
 		UniquePtr<zn::Shader> m_BasicShader;
+		UniquePtr <zn::VertexArray> m_VertexArray;
 		
 		unsigned int VBO, EBO, VAO;
 
