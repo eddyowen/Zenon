@@ -19,7 +19,6 @@ namespace zn
 
 	void VertexBuffer::SetData(const void* data, unsigned int size)
 	{
-		glBindBuffer(GL_ARRAY_BUFFER, m_RendererID);
 		glBufferData(GL_ARRAY_BUFFER, size, data, GL_STATIC_DRAW);
 	}
 
@@ -45,7 +44,6 @@ namespace zn
 
 	void IndexBuffer::SetData(const unsigned int* indices, unsigned int count)
 	{
-		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_RendererID);
 		glBufferData(GL_ELEMENT_ARRAY_BUFFER, count * sizeof(unsigned int), indices, GL_STATIC_DRAW);
 	}
 
