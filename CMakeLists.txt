@@ -31,7 +31,8 @@ include(ZenonEngineInc)
 set(LIST SUBMODULES_LIST 
     glfw 
     glm
-    assimp)
+    assimp
+    spdlog)
 
 foreach(_submodule IN ${SUBMODULES_LIST})
     add_git_submodule(_submodule)

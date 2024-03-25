@@ -38,10 +38,16 @@ endif()
 #	set_target_properties(zlibstatic PROPERTIES FOLDER "External")
 #endif()
 
+if(NOT TARGET spdlog)
+	add_subdirectory(../external/spdlog spdlog)
+	set_target_properties(spdlog PROPERTIES FOLDER "External")
+endif()
+
 set ( LINK_LIBS
     glfw ${GLFW_LIBRARIES}
 	glad
 	opengl32.lib
+	spdlog
 )
 
 ### Setup visual studio source groups / filters ###

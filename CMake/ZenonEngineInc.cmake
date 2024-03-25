@@ -13,6 +13,7 @@ MACRO( ZENON_ENGINE_INC EngineDir )
         ../external/glad/include
         ../external/glm
         ../external/assimp
+        ../external/spdlog/include
 	)
 
 ENDMACRO(ZENON_ENGINE_INC)
