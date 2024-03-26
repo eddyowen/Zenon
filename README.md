@@ -7,7 +7,7 @@
 ## Getting Started
 Visual Studio 2019 or 2022 are the recommended versions to work with this engine. As mentioned before, the development will be focused on Windows for now.  
 
-<ins>**1. Downloading the repository:**</ins>
+<ins>**1. Downloading the repository**</ins>
 
 Clone the repository with `git clone https://github.com/eddyowen/Zenon`. As explained in the next step, there's no need to clone recursively.
 
