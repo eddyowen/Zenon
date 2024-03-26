@@ -3,3 +3,23 @@
 ![Zenon](docs/zenon_logo/zn_logo.png)
 
 **Zenon Engine** is an open-source C++/OpenGL toy engine for Windows that I'll be building as I learn more about game engine development and reinforce my graphics programming knowledge. This framework should not be used for any production application as the code may potentially contain bugs <br/>
+
+## Getting Started
+Visual Studio 2019 or 2022 are the recommended versions to work with this engine. As mentioned before, the development will be focused on Windows for now.  
+
+<ins>**1. Downloading the repository:**</ins>
+
+Clone the repository with `git clone https://github.com/eddyowen/Zenon`. As explained in the next step, there's no need to clone recursively.
+
+<ins>**2. Configuring the project using the `zen` tool**</ins>
+
+Open a terminal where the repository is located and access the `Scripts` directory. Once in that location, you can execute the `zen` tool the following way:
+
+#### Format
+    zen <arg>
+#### Arguments
+    
+    gensln  - initializes all the submodules, configures the dependencies and generates the project files.
+    opensln - launches Visual Studio and opens the solution.
+    clean   - clears project files and deletes build outputs.
+
