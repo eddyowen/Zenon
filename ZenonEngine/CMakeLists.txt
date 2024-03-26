@@ -8,22 +8,22 @@ endif()
 set ( ZENON_ENGINE_SOURCE_PATH "${CMAKE_CURRENT_SOURCE_DIR}" )
 
 # Include the Zenon Engine source files that we may need
-ZENON_ENGINE_INC("")
+ZENON_ENGINE_INC( "" )
 
 # GLFW
-if(NOT TARGET glfw)
-	foreach(_glfw3_option "GLFW_BUILD_TESTS" "GLFW_BUILD_EXAMPLES" "GLFW_BUILD_DOCS" "GLFW_INSTALL")
-		set(${_glfw3_option} OFF CACHE INTERNAL "")
+if( NOT TARGET glfw )
+	foreach( _glfw3_option "GLFW_BUILD_TESTS" "GLFW_BUILD_EXAMPLES" "GLFW_BUILD_DOCS" "GLFW_INSTALL" )
+		set( ${_glfw3_option} OFF CACHE INTERNAL "" )
 	endforeach()
-	set(GLFW_INCLUDE_NONE OFF CACHE INTERNAL "")
-	add_subdirectory(../external/glfw glfw)
-	set_target_properties(glfw PROPERTIES FOLDER "External")
+	set( GLFW_INCLUDE_NONE OFF CACHE INTERNAL "" )
+	add_subdirectory( ../external/glfw glfw )
+	set_target_properties( glfw PROPERTIES FOLDER "External" )
 endif()
 
 # GLAD
-if(NOT TARGET glad)
-	add_subdirectory(../external/glad glad)
-	set_target_properties(glad PROPERTIES FOLDER "External")
+if( NOT TARGET glad )
+	add_subdirectory( ../external/glad glad )
+	set_target_properties( glad PROPERTIES FOLDER "External" )
 endif()
 
 # ASSIMP
@@ -38,9 +38,9 @@ endif()
 #	set_target_properties(zlibstatic PROPERTIES FOLDER "External")
 #endif()
 
-if(NOT TARGET spdlog)
-	add_subdirectory(../external/spdlog spdlog)
-	set_target_properties(spdlog PROPERTIES FOLDER "External")
+if( NOT TARGET spdlog )
+	add_subdirectory( ../external/spdlog spdlog )
+	set_target_properties( spdlog PROPERTIES FOLDER "External" )
 endif()
 
 set ( LINK_LIBS
@@ -68,4 +68,4 @@ target_include_directories ( ${PROJECT_NAME} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR} 
 target_link_libraries( ${PROJECT_NAME} LINK_PUBLIC ${LINK_LIBS} )
 
 # Prettify folders in solution
-assign_source_group(${_source_list})
+assign_source_group( ${_source_list} )

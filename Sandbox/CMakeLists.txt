@@ -1,4 +1,4 @@
-project( Sanbox VERSION 1.0 )
+project( Sandbox VERSION 1.0 )
 
 #======== Engine Setup =========#
 
@@ -6,7 +6,7 @@ project( Sanbox VERSION 1.0 )
 ##	Gameplay/inc
 ##)
 
-ZENON_ENGINE_INC("../ZenonEngine/")
+ZENON_ENGINE_INC( "../ZenonEngine/" )
 
 set ( LINK_LIBS
 	"ZenonEngine"
@@ -29,4 +29,4 @@ target_include_directories( ${PROJECT_NAME} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR} $
 target_link_libraries( ${PROJECT_NAME} LINK_PUBLIC ${LINK_LIBS} )
 
 # Prettify folders in solution
-assign_source_group(${_source_list})
+assign_source_group( ${_source_list} )
