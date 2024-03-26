@@ -1,10 +1,13 @@
 #include "Shader.h"
 
+#include "Core/Log.h"
+
 namespace zn
 {
 	Shader::Shader(const std::string& name, const char* vertexPath, const char* fragmentPath)
 	{
 		m_Name = name;
+
 		Load(vertexPath, fragmentPath);
 	}
 
@@ -36,7 +39,7 @@ namespace zn
 		}
 		catch (std::ifstream::failure& e)
 		{
-			std::cerr << "ERROR::SHADER::FILE_NOT_SUCCESSFULLY_READ - Shader Namme: " + m_Name << std::endl;
+			ZN_CORE_ERROR("ERROR::SHADER::FILE_NOT_SUCCESSFULLY_READ - Shader Namme: " + m_Name);
 		}
 
 		const char* vShaderCode = vertexCode.c_str();
@@ -75,7 +78,7 @@ namespace zn
 			if (!success)
 			{
 				glGetShaderInfoLog(shader, 1024, nullptr, infoLog);
-				std::cerr << "ERROR::SHADER_COMPILATION_ERROR of type: " << type << "\n" << infoLog << std::endl;
+				ZN_CORE_ERROR("ERROR::SHADER_COMPILATION_ERROR of type: " + type + "\n" + infoLog);
 			}
 		}
 		else
@@ -84,7 +87,7 @@ namespace zn
 			if (!success)
 			{
 				glGetProgramInfoLog(shader, 1024, nullptr, infoLog);
-				std::cerr << "ERROR::PROGRAM_LINKING_ERROR of type: " << type << "\n" << infoLog << std::endl;
+				ZN_CORE_ERROR("ERROR::SHADER_LINKING_ERROR of type: " + type + "\n" + infoLog);
 			}
 		}
 	}

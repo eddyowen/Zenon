@@ -1,6 +1,6 @@
 #include "Application.h"
 
-#include <iostream>
+#include "Core/Log.h"
 
 namespace zn
 {
@@ -8,7 +8,7 @@ namespace zn
 	{
 		if (!m_Window.Init(1920, 1080, "Zenon Engine"))
 		{
-			std::cout << "Failed to initialize Window. Closing Application\n";
+			ZN_CORE_ERROR("Failed to initialize Window. Closing Application");
 			return false;
 		}
 
@@ -38,7 +38,7 @@ namespace zn
 		//	std::optional<Event> event = eventBuffer.Pop();
 		//	if (event->GetEventType() == EventType::WindowClose)
 		//	{
-		//		std::cout << "Close\n";
+		//		ZN_CORE_ERROR("Close\n";
 		//		m_Window.Close();
 		//		m_running = false;
 		//	}
@@ -47,24 +47,24 @@ namespace zn
 
 	void Application::OnKeyPressed(KeyPressedEvent& e)
 	{
-		std::cout << e.ToString() << std::endl;
+		ZN_CORE_TRACE(e.ToString());
 	}
 
 	void Application::OnWindowClosed(WindowClosedEvent& e)
 	{
-		std::cout << e.ToString() << std::endl;
+		ZN_CORE_TRACE(e.ToString());
 		m_Window.Close();
 		m_IsRunning = false;
 	}
 
 	void Application::OnWindowResized(WindowResizedEvent& e)
 	{
-		std::cout << e.ToString() << std::endl;
+		ZN_CORE_TRACE(e.ToString());
 	}
 
 	void Application::OnWindowClosed_Const(WindowClosedEvent& e) const
 	{
-		std::cout << "Close\n";
+		ZN_CORE_TRACE("Close");
 	}
 
 	void Application::OnEvent(Event& e)

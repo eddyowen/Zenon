@@ -20,7 +20,6 @@ namespace zn
 
 	private:
 		GLuint m_RendererID;
-		unsigned int m_Size;
 	};
 
 	class IndexBuffer
