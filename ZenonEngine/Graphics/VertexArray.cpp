@@ -2,11 +2,6 @@
 
 namespace zn
 {
-	// Explicit template instantiation
-	template void VertexBufferLayout::Push<float>(unsigned int count);
-	template void VertexBufferLayout::Push<unsigned int>(unsigned int count);
-	template void VertexBufferLayout::Push<unsigned char>(unsigned int count);
-
 	VertexBuffer::VertexBuffer()
 	{
 		glGenBuffers(1, &m_RendererID);

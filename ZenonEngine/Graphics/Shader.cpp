@@ -61,7 +61,7 @@ namespace zn
 		glAttachShader(m_Id, vertex);
 		glAttachShader(m_Id, fragment);
 		glLinkProgram(m_Id);
-		CheckCompileErrors(m_Id, m_Name);
+		CheckCompileErrors(m_Id, "PROGRAM");
 
 		glDeleteShader(vertex);
 		glDeleteShader(fragment);

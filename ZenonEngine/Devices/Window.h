@@ -45,6 +45,11 @@ namespace zn
 		static void GLFW_FrameBufferResizeCallback(GLFWwindow* wnd, int width, int height);
 		static void GLFW_KeyCallback(GLFWwindow* wnd, int key, int scanCode, int action, int mods);
 
+#ifdef ZN_DEBUG
+		static void APIENTRY OpenGLDebugOutput(GLenum source, GLenum type, unsigned int id,
+			GLenum severity, GLsizei length, const char* message, const void* userParam);
+#endif
+
 	private:
 		GLFWwindow* m_Window = nullptr;
 		const char* m_Title = nullptr;
