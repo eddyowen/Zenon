@@ -20,8 +20,16 @@ namespace zn
 	};
 }
 
-#define ZN_CORE_TRACE(...)    ::zn::Log::GetCoreLogger()->trace(__VA_ARGS__)
-#define ZN_CORE_INFO(...)     ::zn::Log::GetCoreLogger()->info(__VA_ARGS__)
-#define ZN_CORE_WARN(...)     ::zn::Log::GetCoreLogger()->warn(__VA_ARGS__)
-#define ZN_CORE_ERROR(...)    ::zn::Log::GetCoreLogger()->error(__VA_ARGS__)
-#define ZN_CORE_CRITICAL(...) ::zn::Log::GetCoreLogger()->critical(__VA_ARGS__)
+#ifdef ZN_DEBUG
+	#define ZN_CORE_TRACE(...)    ::zn::Log::GetCoreLogger()->trace(__VA_ARGS__)
+	#define ZN_CORE_INFO(...)     ::zn::Log::GetCoreLogger()->info(__VA_ARGS__)
+	#define ZN_CORE_WARN(...)     ::zn::Log::GetCoreLogger()->warn(__VA_ARGS__)
+	#define ZN_CORE_ERROR(...)    ::zn::Log::GetCoreLogger()->error(__VA_ARGS__)
+	#define ZN_CORE_CRITICAL(...) ::zn::Log::GetCoreLogger()->critical(__VA_ARGS__)
+#else
+	#define ZN_CORE_INFO(...)    
+	#define ZN_CORE_TRACE(...)   
+	#define ZN_CORE_WARN(...)    
+	#define ZN_CORE_ERROR(...)   
+	#define ZN_CORE_CRITICAL(...)
+#endif

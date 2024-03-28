@@ -6,6 +6,8 @@ namespace zn
 {
 	bool Application::Init()
 	{
+		Log::Init();
+		
 		if (!m_Window.Init(1920, 1080, "Zenon Engine"))
 		{
 			ZN_CORE_ERROR("Failed to initialize Window. Closing Application");
