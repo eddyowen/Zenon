@@ -230,7 +230,6 @@ namespace zn
 			case GL_DEBUG_TYPE_OTHER:               messageType = "Type: Other"; break;
 		}
 
-		std::string messageSeverity;
 		switch (severity)
 		{
 			case GL_DEBUG_SEVERITY_HIGH:
