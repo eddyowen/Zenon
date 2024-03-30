@@ -2,7 +2,7 @@
 
 ![Zenon](docs/zenon_logo/zn_logo.png)
 
-**Zenon Engine** is an open-source C++/OpenGL toy engine for Windows that I'll build as I learn more about game engine development, modern C++, and my graphics programming knowledge. This framework should not be used for any production application as the code may potentially contain bugs <br/>
+**Zenon Engine** is an open-source C++/OpenGL toy engine for Windows that I'll build to reinforce my knowledge about game engine development, modern C++, and graphics programming. This framework should not be used for any production application as the code may potentially contain bugs <br/>
 
 ## Getting Started
 A compiler with support for C++ 20 is required, so Visual Studio 2019 or 2022 are the recommended versions to work with this engine. As mentioned before, the development will be focused on Windows for now.  
