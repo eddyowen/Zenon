@@ -1,89 +1,83 @@
 #pragma once
 
+#include "Core/Assert.h"
+
+#include <type_traits>
+
 namespace zn
 {
-	template<typename Signature>
-	class Delegate;
+    template <typename Signature>
+    class Delegate;
 
-	template<typename R, typename...Args>
-	class Delegate<R(Args...)>
-	{
-	public:
-		// Creates an unbound delegate
-		Delegate() = default;
+    template <typename R, typename...Args>
+    class Delegate<R(Args...)>
+    {
+    public:
+        // Creates an unbound delegate
+        Delegate() = default;
 
-		// We want the Delegate to be copyable, since its lightweight
-		Delegate(const Delegate& other) = default;
+        // We want the Delegate to be copyable, since its lightweight
+        Delegate(const Delegate& other) = default;
+        auto operator=(const Delegate& other)->Delegate & = default;
 
-		Delegate& operator=(const Delegate& other) = default;
+        // Call the underlying bound function
+        template <typename... UArgs,
+            typename = std::enable_if_t<std::is_invocable_v<R(Args...), UArgs...>>>
+        auto operator()(UArgs&&...args) -> R
+        {
+            return std::invoke(m_Stub, m_Instance, args...);
+        }
 
-		// Call the underlying bound function
-		R operator()(Args...args) const
-		{
-			if (m_stub == nullptr)
-			{
-				return;
-				//std::cout << "ERROR m_STUB = NULLPTR";
-			}
+        template <auto MemberFunction,
+            typename = std::enable_if_t<std::is_invocable_r_v<R, decltype(Function), Args...>>>
+        auto Bind() -> void
+        {
+            m_Instance = nullptr;
 
-			return (*m_stub)(m_instance, args...);
-		}
+            m_Stub = static_cast<StubFunction>([](const void* p, Args...args) -> R
+            {
+                return std::invoke(MemberFunction, std::forward<Args>(args)...);
+            });
+        }
 
-		// Bind to a free function
-		template<R(*Function)(Args...)>
-		void Bind()
-		{
-			// We don't use this for non-member functions, so just set it to nullptr
-			m_instance = nullptr;
+        template <auto MemberFunction, typename Class,
+            typename = std::enable_if_t<std::is_invocable_r_v<R, decltype(MemberFunction), const Class*, Args...>>>
+        auto Bind(const Class* c) -> void
+        {
+            m_Instance = c;
 
-			// Bind the function pointer
-			m_stub = static_cast<StubFunction>([](const void*, Args...args) -> R
-			{
-				return (*Function)(args...);
-			});
-		}
+            m_Stub = static_cast<StubFunction>([](const void* p, Args... args) -> R
+            {
+                const auto* cls = static_cast<const Class*>(p);
 
-		// Bind to a class const member function
-		template<auto MemberFunction, typename Class>
-		void Bind(const Class* c)
-		{
-			// Assign the pointer to the instance that holds the member function
-			m_instance = c;
+                return std::invoke(MemberFunction, cls, std::forward<Args>(args)...);
+            });
+        }
 
-			// Bind the function pointer. Fun fact, non-capturing lambdas can be convertible to a function pointer with the same signature
-			m_stub = static_cast<StubFunction>([](const void* p, Args...args) -> R
-			{
-				// Cast back to the specific class to access the member function
-				const auto* cls = static_cast<const Class*>(p);
+        template <auto MemberFunction, typename Class,
+            typename = std::enable_if_t<std::is_invocable_r_v<R, decltype(MemberFunction), Class*, Args...>>>
+        auto Bind(Class* c) -> void
+        {
+            m_Instance = c;
 
-				// Safe, because we know the pointer was bound to a const instance
-				return (cls->*MemberFunction)(args...);
-			});
-		}
+            m_Stub = static_cast<StubFunction>([](const void* p, Args...args) -> R
+            {
+                auto* cls = const_cast<Class*>(static_cast<const Class*>(p));
+            
+                return std::invoke(MemberFunction, cls, std::forward<Args>(args)...);
+            });
+        }
 
+        [[noreturn]]
+        static auto StubNull(const void* p, Args...) -> R
+        {
+            throw std::exception{};
+        }
 
-		// Bind to a class non-const member function
-		template<auto MemberFunction, typename Class>
-		void Bind(Class* c)
-		{
-			// Assign the pointer to the instance that holds the member function
-			m_instance = c;
+    private:
+        using StubFunction = R(*)(const void*, Args...);
 
-			// Bind the function pointer. Fun fact, non-capturing lambdas can be convertible to a function pointer with the same signature
-			m_stub = static_cast<StubFunction>([](const void* p, Args...args) -> R
-			{
-				// Cast back to the specific class to access the member function
-				auto* cls = const_cast<Class*>(static_cast<const Class*>(p));
-
-				// Safe, because we know the pointer was bound to a non-const instance
-				return (cls->*MemberFunction)(args...);
-			});
-		}
-
-	private:
-		using StubFunction = R(*)(const void*, Args...);
-
-		const void* m_instance = nullptr; ///< A pointer to the instance (if it exists)
-		StubFunction m_stub = nullptr;   ///< A pointer to the function to invoke
-	};
+        const void* m_Instance = nullptr;
+        StubFunction m_Stub = &StubNull;
+    };
 }

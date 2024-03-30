@@ -70,6 +70,7 @@ target_link_libraries( ${PROJECT_NAME} LINK_PUBLIC ${LINK_LIBS} )
 target_compile_definitions(${PROJECT_NAME} PRIVATE
   $<$<CONFIG:Debug>:ZN_DEBUG>
   $<$<CONFIG:Release>:ZN_RELEASE>
+  $<$<BOOL:${WIN32}>:ZN_WINDOWS_PLATFORM>
 )
 
 # Prettify folders in solution

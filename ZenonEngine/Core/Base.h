@@ -6,6 +6,17 @@
 #include <sstream>
 #include <fstream>
 
+#ifdef ZN_DEBUG
+	#if defined(ZN_WINDOWS_PLATFORM)
+		#define ZN_DEBUGBREAK() __debugbreak()
+	#endif
+	#define ZN_ENABLE_ASSERTS
+#else
+	#define ZN_DEBUGBREAK()
+#endif
+
+#define ZN_STRINGIFY_MACRO(x) #x
+
 namespace zn
 {
 	template<typename T>
