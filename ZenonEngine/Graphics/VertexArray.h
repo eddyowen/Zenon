@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Core/Base.h"
+#include "Core/Assert.h"
 
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
@@ -44,9 +45,9 @@ namespace zn
 	public:
 		struct VertexBufferElement
 		{
+			unsigned char normalized;
 			unsigned int type;
 			unsigned int count;
-			unsigned char normalized;
 
 			static unsigned int GetSizeOfType(unsigned int type)
 			{
@@ -63,34 +64,40 @@ namespace zn
 
 		VertexBufferLayout() : m_Stride(0) {}
 
-		template<typename T>
-		void Push(unsigned int count) 
-		{
-			if constexpr (std::is_same_v<T, float>) 
-			{
-				m_Elements.push_back({ GL_FLOAT, count, GL_FALSE });
-				m_Stride += count * sizeof(GLfloat);
-			}
-			else if constexpr (std::is_same_v<T, unsigned int>) 
-			{
-				m_Elements.push_back({ GL_UNSIGNED_INT, count, GL_FALSE });
-				m_Stride += count * sizeof(GLuint);
-			}
-			else if constexpr (std::is_same_v<T, unsigned char>) 
-			{
-				m_Elements.push_back({ GL_UNSIGNED_BYTE, count, GL_TRUE });
-				m_Stride += count * sizeof(GLubyte);
-			}
-			else 
-			{
-				static_assert(std::is_same_v<T, void>, "No specialization provided for this type.");
-			}
-		}
-
 		inline const std::vector<VertexBufferElement>& GetElements() const { return m_Elements; }
 		inline unsigned int GetStride() const { return m_Stride; }
 
+		template<typename T>
+		void PushElement(unsigned int count)
+		{
+			ZN_CORE_ASSERT(false);
+		}
+
+		template<>
+		void PushElement<float>(unsigned int count)
+		{
+			m_Elements.push_back({ GL_FALSE, GL_FLOAT, count });
+			m_Stride += count * sizeof(GLfloat);
+		}
+
+		template<>
+		void PushElement<unsigned int>(unsigned int count)
+		{
+			m_Elements.push_back({ GL_FALSE, GL_FLOAT, count});
+			m_Stride += count * sizeof(GLuint);
+		}
+
+		template<>
+		void PushElement<unsigned char>(unsigned int count)
+		{
+			m_Elements.push_back({ GL_FALSE, GL_FLOAT, count });
+			m_Stride += count * sizeof(GLubyte);
+		}
+
 	private:
+		template<typename T>
+		struct InvalidPushType : std::false_type {};
+
 		std::vector<VertexBufferElement> m_Elements;
 		unsigned int m_Stride;
 	};

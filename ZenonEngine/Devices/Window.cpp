@@ -77,10 +77,11 @@ namespace zn
 		vertexBuffer.Bind();
 		vertexBuffer.SetData(vertices, sizeof(vertices));
 		
-		VertexBufferLayout vertexBufferlayout;
-		vertexBufferlayout.Push<float>(3);
+		VertexBufferLayout vertexBufferLayout;
+		vertexBufferLayout.PushElement<float>(3);
+		vertexBufferLayout.PushElement<float>(3);
 
-		m_VertexArray->AddVertexBuffer(vertexBuffer, vertexBufferlayout);
+		m_VertexArray->AddVertexBuffer(vertexBuffer, vertexBufferLayout);
 
 		IndexBuffer indexBuffer{};
 		indexBuffer.Bind();
@@ -248,6 +249,8 @@ namespace zn
 				ZN_CORE_TRACE(std::format("Debug message ({}): {}\n{}\n{}\n{}\n", id, message, messageSource, messageType, "Severity: notification"));
 				break;
 		}
+
+		ZN_CORE_ASSERT(false);
 	}
 #endif
 }

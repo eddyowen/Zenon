@@ -63,11 +63,11 @@ namespace zn
 		
 		unsigned int VBO, EBO, VAO;
 
-		float vertices[12] = {
-			 0.5f,  0.5f, 0.0f,  // top right
-			 0.5f, -0.5f, 0.0f,  // bottom right
-			-0.5f, -0.5f, 0.0f,  // bottom left
-			-0.5f,  0.5f, 0.0f   // top left 
+		float vertices[24] = {
+			 0.5f,  0.5f, 0.0f, 1.0f, 0.0f, 0.0f, // top right
+			 0.5f, -0.5f, 0.0f, 0.0f, 1.0f, 0.0f, // bottom right
+			-0.5f, -0.5f, 0.0f, 1.0f, 0.0f, 0.0f, // bottom left
+			-0.5f,  0.5f, 0.0f, 0.0f, 0.0f, 1.0f // top left 
 		};
 
 		unsigned int indices[6] = {  // note that we start from 0!

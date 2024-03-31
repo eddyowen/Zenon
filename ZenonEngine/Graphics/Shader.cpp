@@ -67,7 +67,7 @@ namespace zn
 		glDeleteShader(fragment);
 	}
 
-	void Shader::CheckCompileErrors(GLuint shader, const std::string& type)
+	void Shader::CheckCompileErrors(GLuint shader, const std::string& type) const
 	{
 		GLint success;
 		GLchar infoLog[1024];
@@ -118,6 +118,12 @@ namespace zn
 	{
 		GLint location = glGetUniformLocation(m_Id, name.c_str());
 		glUniform3fv(location, 1, glm::value_ptr(value));
+	}
+
+	void Shader::SetVec4(const std::string& name, const glm::vec4& value)
+	{
+		GLint location = glGetUniformLocation(m_Id, name.c_str());
+		glUniform4fv(location, 1, glm::value_ptr(value));
 	}
 
 	void Shader::SetMat4(const std::string& name, const glm::mat4& value)

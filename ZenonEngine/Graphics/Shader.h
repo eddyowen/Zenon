@@ -24,10 +24,11 @@ namespace zn
 		void SetInt(const std::string& name, int value);
 		void SetFloat(const std::string& name, float value);
 		void SetVec3(const std::string& name, const glm::vec3& value);
+		void SetVec4(const std::string& name, const glm::vec4& value);
 		void SetMat4(const std::string& name, const glm::mat4& value);
-		
+
 	private:
-		void CheckCompileErrors(GLuint shader, const std::string& type);
+		void CheckCompileErrors(GLuint shader, const std::string& type) const;
 
 		std::string m_Name;
 		GLuint m_Id;

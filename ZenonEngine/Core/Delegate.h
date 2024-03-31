@@ -29,7 +29,7 @@ namespace zn
         }
 
         template <auto MemberFunction,
-            typename = std::enable_if_t<std::is_invocable_r_v<R, decltype(Function), Args...>>>
+            typename = std::enable_if_t<std::is_invocable_r_v<R, decltype(MemberFunction), Args...>>>
         auto Bind() -> void
         {
             m_Instance = nullptr;
