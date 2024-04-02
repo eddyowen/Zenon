@@ -16,4 +16,4 @@ file( GLOB_RECURSE _source_list
 # will depend on the value of the property BUILD_SHARED_LIBS
 add_library ( ${PROJECT_NAME} ${_source_list} )
 
-target_include_directories( ${PROJECT_NAME} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}include )
+target_include_directories( ${PROJECT_NAME} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include )

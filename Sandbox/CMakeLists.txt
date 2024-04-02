@@ -2,11 +2,9 @@ project( Sandbox VERSION 1.0 )
 
 #======== Engine Setup =========#
 
-##include_directories(
-##	Gameplay/inc
-##)
-
-ZENON_ENGINE_INC( "../ZenonEngine/" )
+set ( INCLUDE_DIRS
+	"../ZenonEngine"
+)
 
 set ( LINK_LIBS
 	"ZenonEngine"

@@ -25,7 +25,6 @@ list( APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/CMake" )
 
 include( CommonInc )
 include( GitSubmodules )
-include( ZenonEngineInc )
 
 # List of submodules (specify the relative path from the project root)
 set(SUBMODULES_LIST
@@ -33,6 +32,9 @@ set(SUBMODULES_LIST
     "external/glm"
     "external/spdlog"
 )
+
+configure_file(Config/RootDirectory.h.in Config/RootDirectory.h)
+include_directories(${CMAKE_BINARY_DIR}/Config)
 
 # Iterate over the submodule list and initialize each
 foreach(submodule_path IN LISTS SUBMODULES_LIST)

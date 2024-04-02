@@ -7,8 +7,20 @@ endif()
 
 set ( ZENON_ENGINE_SOURCE_PATH "${CMAKE_CURRENT_SOURCE_DIR}" )
 
-# Include the Zenon Engine source files that we may need
-ZENON_ENGINE_INC( "" )
+if( MSVC )
+	add_definitions( -D_CRT_SECURE_NO_WARNINGS )
+endif()
+
+include_directories(${CMAKE_CURRENT_SOURCE_DIR})
+
+set (INCLUDE_DIRS
+	../external/glad/include
+	../external/glfw/include
+	../external/glm
+	../external/assimp
+	../external/spdlog/include
+	../external/stb_image
+)
 
 # GLFW
 if( NOT TARGET glfw )
@@ -62,7 +74,7 @@ file( GLOB_RECURSE _source_list
 add_library ( ${PROJECT_NAME} ${_source_list} )
 
 # Make sure the compiler can find include files for our Engine library
-target_include_directories ( ${PROJECT_NAME} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR} )
+target_include_directories ( ${PROJECT_NAME} PUBLIC ${INCLUDE_DIRS} )
 
 # Link libs
 target_link_libraries( ${PROJECT_NAME} LINK_PUBLIC ${LINK_LIBS} )

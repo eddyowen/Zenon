@@ -1,8 +1,7 @@
 #include "Window.h"
 
 #include "Core/Log.h"
-
-#include "stb_image.h"
+#include "Core/FileSystem.h"
 
 namespace zn
 {
@@ -70,7 +69,8 @@ namespace zn
 		}
 #endif
 		// TEMPORAL ///////////////////////////////////////
-		m_BasicShader = CreateUnique<zn::Shader>("Basic Shader", "../../Content/Shaders/vertex.glsl", "../../Content/Shaders/fragment.glsl");
+		m_BasicShader = CreateUnique<zn::Shader>("Basic Shader", 
+			FileSystem::GetPath("Content/Shaders/vertex.glsl").c_str(), FileSystem::GetPath("Content/Shaders/fragment.glsl").c_str());
 
 		m_VertexArray = CreateUnique<zn::VertexArray>();
 		m_VertexArray->Bind();

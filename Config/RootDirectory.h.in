@@ -1,0 +1,3 @@
+#pragma once
+
+const char * zenon_root = "${CMAKE_SOURCE_DIR}";
