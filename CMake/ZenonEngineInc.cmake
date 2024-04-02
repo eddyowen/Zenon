@@ -14,6 +14,7 @@ MACRO( ZENON_ENGINE_INC EngineDir )
         ../external/glm
         ../external/assimp
         ../external/spdlog/include
+        ../external/stb_image
 	)
 
 ENDMACRO(ZENON_ENGINE_INC)
