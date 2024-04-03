@@ -9,6 +9,7 @@
 #include "Events/KeyEvent.h"
 #include "Graphics/Shader.h"
 #include "Graphics/VertexArray.h"
+#include "Graphics/Texture.h"
 
 struct GLFWwindow;
 
@@ -37,6 +38,7 @@ namespace zn
 	private:
 		bool ShouldClose() const;
 
+		void Draw() const;
 		void Clear() const;
 		void SwapBuffers() const;
 		void PollEvents() const;
@@ -59,15 +61,17 @@ namespace zn
 
 		// TEMPORAL ///////////////////////////////////////
 		UniquePtr<zn::Shader> m_BasicShader;
-		UniquePtr <zn::VertexArray> m_VertexArray;
+		UniquePtr<zn::VertexArray> m_VertexArray;
+		UniquePtr<zn::Texture> m_Texture;
 		
 		unsigned int VBO, EBO, VAO;
 
-		float vertices[24] = {
-			 0.5f,  0.5f, 0.0f, 1.0f, 0.0f, 0.0f, // top right
-			 0.5f, -0.5f, 0.0f, 0.0f, 1.0f, 0.0f, // bottom right
-			-0.5f, -0.5f, 0.0f, 1.0f, 0.0f, 0.0f, // bottom left
-			-0.5f,  0.5f, 0.0f, 0.0f, 0.0f, 1.0f // top left 
+		float vertices[32] = {
+			// positions          // colors           // texture coords
+			 0.5f,  0.5f, 0.0f,   1.0f, 0.0f, 0.0f,   1.0f, 1.0f, // top right
+			 0.5f, -0.5f, 0.0f,   0.0f, 1.0f, 0.0f,   1.0f, 0.0f, // bottom right
+			-0.5f, -0.5f, 0.0f,   0.0f, 0.0f, 1.0f,   0.0f, 0.0f, // bottom left
+			-0.5f,  0.5f, 0.0f,   1.0f, 1.0f, 0.0f,   0.0f, 1.0f  // top left 
 		};
 
 		unsigned int indices[6] = {  // note that we start from 0!

@@ -64,7 +64,7 @@ set ( LINK_LIBS
 
 ### Setup visual studio source groups / filters ###
 file( GLOB_RECURSE _source_list
-    *.cpp* src/*.h* src/*.hpp* *.h* ${GENERATED_INC_FOLDER}/*.h ${GENERATED_INC_FOLDER}/*.cpp *.inl
+    *.cpp* src/*.h* src/*.hpp* *.h* ../external/stb_image/stb_image.h ../external/stb_image/stb_image.cpp ${GENERATED_INC_FOLDER}/*.h ${GENERATED_INC_FOLDER}/*.cpp *.inl
 )
 
 ################# Add library and link ######################

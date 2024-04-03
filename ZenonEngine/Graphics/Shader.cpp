@@ -57,36 +57,36 @@ namespace zn
 		glCompileShader(fragment);
 		CheckCompileErrors(fragment, "FRAGMENT");
 
-		m_Id = glCreateProgram();
-		glAttachShader(m_Id, vertex);
-		glAttachShader(m_Id, fragment);
-		glLinkProgram(m_Id);
-		CheckCompileErrors(m_Id, "PROGRAM");
+		m_RendererID = glCreateProgram();
+		glAttachShader(m_RendererID, vertex);
+		glAttachShader(m_RendererID, fragment);
+		glLinkProgram(m_RendererID);
+		CheckCompileErrors(m_RendererID, "PROGRAM");
 
 		glDeleteShader(vertex);
 		glDeleteShader(fragment);
 	}
 
-	void Shader::CheckCompileErrors(GLuint shader, const std::string& type) const
+	void Shader::CheckCompileErrors(unsigned int rendererId, const std::string& type) const
 	{
 		GLint success;
 		GLchar infoLog[1024];
 
 		if (type != "PROGRAM")
 		{
-			glGetShaderiv(shader, GL_COMPILE_STATUS, &success);
+			glGetShaderiv(rendererId, GL_COMPILE_STATUS, &success);
 			if (!success)
 			{
-				glGetShaderInfoLog(shader, 1024, nullptr, infoLog);
+				glGetShaderInfoLog(rendererId, 1024, nullptr, infoLog);
 				ZN_CORE_ERROR("ERROR::SHADER_COMPILATION_ERROR of type: " + type + "\n" + infoLog);
 			}
 		}
 		else
 		{
-			glGetProgramiv(shader, GL_LINK_STATUS, &success);
+			glGetProgramiv(rendererId, GL_LINK_STATUS, &success);
 			if (!success)
 			{
-				glGetProgramInfoLog(shader, 1024, nullptr, infoLog);
+				glGetProgramInfoLog(rendererId, 1024, nullptr, infoLog);
 				ZN_CORE_ERROR("ERROR::SHADER_LINKING_ERROR of type: " + type + "\n" + infoLog);
 			}
 		}
@@ -94,7 +94,7 @@ namespace zn
 
 	void Shader::Bind() const
 	{
-		glUseProgram(m_Id);
+		glUseProgram(m_RendererID);
 	}
 
 	void Shader::Unbind() const
@@ -104,31 +104,31 @@ namespace zn
 
 	void Shader::SetInt(const std::string& name, int value)
 	{
-		GLint location = glGetUniformLocation(m_Id, name.c_str());
+		GLint location = glGetUniformLocation(m_RendererID, name.c_str());
 		glUniform1i(location, value);
 	}
 
 	void Shader::SetFloat(const std::string& name, float value)
 	{
-		GLint location = glGetUniformLocation(m_Id, name.c_str());
+		GLint location = glGetUniformLocation(m_RendererID, name.c_str());
 		glUniform1f(location, value);
 	}
 
 	void Shader::SetVec3(const std::string& name, const glm::vec3& value)
 	{
-		GLint location = glGetUniformLocation(m_Id, name.c_str());
+		GLint location = glGetUniformLocation(m_RendererID, name.c_str());
 		glUniform3fv(location, 1, glm::value_ptr(value));
 	}
 
 	void Shader::SetVec4(const std::string& name, const glm::vec4& value)
 	{
-		GLint location = glGetUniformLocation(m_Id, name.c_str());
+		GLint location = glGetUniformLocation(m_RendererID, name.c_str());
 		glUniform4fv(location, 1, glm::value_ptr(value));
 	}
 
 	void Shader::SetMat4(const std::string& name, const glm::mat4& value)
 	{
-		GLint location = glGetUniformLocation(m_Id, name.c_str());
+		GLint location = glGetUniformLocation(m_RendererID, name.c_str());
 		glUniformMatrix4fv(location, 1, GL_FALSE, glm::value_ptr(value));
 	}
 }

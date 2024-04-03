@@ -28,9 +28,9 @@ namespace zn
 		void SetMat4(const std::string& name, const glm::mat4& value);
 
 	private:
-		void CheckCompileErrors(GLuint shader, const std::string& type) const;
+		void CheckCompileErrors(unsigned int rendererId, const std::string& type) const;
 
 		std::string m_Name;
-		GLuint m_Id;
+		unsigned int m_RendererID;
 	};
 }

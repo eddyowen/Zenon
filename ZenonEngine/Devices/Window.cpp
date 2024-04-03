@@ -72,6 +72,8 @@ namespace zn
 		m_BasicShader = CreateUnique<zn::Shader>("Basic Shader", 
 			FileSystem::GetPath("Content/Shaders/vertex.glsl").c_str(), FileSystem::GetPath("Content/Shaders/fragment.glsl").c_str());
 
+		m_Texture = CreateUnique<zn::Texture>(FileSystem::GetPath("Content/Textures/wall.jpg"));
+
 		m_VertexArray = CreateUnique<zn::VertexArray>();
 		m_VertexArray->Bind();
 
@@ -82,6 +84,7 @@ namespace zn
 		VertexBufferLayout vertexBufferLayout;
 		vertexBufferLayout.PushElement<float>(3);
 		vertexBufferLayout.PushElement<float>(3);
+		vertexBufferLayout.PushElement<float>(2); //texture coords
 
 		m_VertexArray->AddVertexBuffer(vertexBuffer, vertexBufferLayout);
 
@@ -162,13 +165,7 @@ namespace zn
 		if (!ShouldClose())
 		{
 			Clear();
-
-			m_BasicShader->Bind();
-
-			m_VertexArray->Bind();
-
-			glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
-
+			Draw();
 			SwapBuffers();
 			PollEvents();
 		}
@@ -182,6 +179,15 @@ namespace zn
 	bool Window::ShouldClose() const
 	{
 		return glfwWindowShouldClose(m_Window);
+	}
+
+	void Window::Draw() const
+	{
+		m_Texture->Bind();
+		m_BasicShader->Bind();
+		m_VertexArray->Bind();
+
+		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 	}
 
 	void Window::Clear() const
