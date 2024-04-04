@@ -1,9 +1,20 @@
 #include "Application.h"
 
 #include "Core/Log.h"
+#include "Utils/MemoryViewer.h"
+
+#include <array>
+#include <vector>
 
 namespace zn
 {
+	struct Component
+	{
+		const char start[16]  = "#COMP-START####";
+		std::array<int, 7>  a{ 1, 2, 4, 8, 16, 32, 64 };
+		const char end[16] = "#COMP-END######";
+	};
+
 	bool Application::Init()
 	{
 		Log::Init();
@@ -13,6 +24,18 @@ namespace zn
 			ZN_CORE_ERROR("Failed to initialize Window. Closing Application");
 			return false;
 		}
+
+		Component a{};
+
+		MemoryViewer aViewer{ &a };
+
+		aViewer.Print();
+
+		//MemoryViewer<std::vector<int>::iterator> beingViewer{ &(*a.a.begin()) };
+		//MemoryViewer<std::vector<int>::iterator> endViewer{ &a.a.end() };
+		//
+		//beingViewer.Print();
+		//endViewer.Print();
 
 		m_Window.KeyPressedDelegate.Bind<&Application::OnKeyPressed>(this);
 		m_Window.WindowResizedDelegate.Bind<&Application::OnWindowResized>(this);

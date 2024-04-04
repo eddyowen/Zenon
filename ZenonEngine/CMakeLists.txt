@@ -83,6 +83,7 @@ target_compile_definitions(${PROJECT_NAME} PRIVATE
   $<$<CONFIG:Debug>:ZN_DEBUG>
   $<$<CONFIG:Release>:ZN_RELEASE>
   $<$<BOOL:${WIN32}>:ZN_WINDOWS_PLATFORM>
+  _SILENCE_STDEXT_ARR_ITERS_DEPRECATION_WARNING
 )
 
 # Prettify folders in solution
