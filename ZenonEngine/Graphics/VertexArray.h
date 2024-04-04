@@ -20,7 +20,7 @@ namespace zn
 		void Unbind() const;
 
 	private:
-		GLuint m_RendererID;
+		uint32_t m_RendererID;
 	};
 
 	class IndexBuffer
@@ -36,8 +36,8 @@ namespace zn
 		unsigned int GetCount() const;
 
 	private:
-		GLuint m_RendererID;
-		unsigned int m_Count;
+		uint32_t m_RendererID;
+		uint32_t m_Count;
 	};
 
 	class VertexBufferLayout
@@ -98,8 +98,8 @@ namespace zn
 		template<typename T>
 		struct InvalidPushType : std::false_type {};
 
-		std::vector<VertexBufferElement> m_Elements;
 		unsigned int m_Stride;
+		std::vector<VertexBufferElement> m_Elements;
 	};
 
 	class VertexArray
@@ -114,6 +114,6 @@ namespace zn
 		void AddVertexBuffer(const VertexBuffer& vertexBuffer, const VertexBufferLayout& layout);
 
 	private:
-		GLuint m_RendererID;
+		uint32_t m_RendererID;
 	};
 }

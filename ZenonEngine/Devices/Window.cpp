@@ -19,7 +19,7 @@ namespace zn
 		}
 
 		glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
-		glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 4);
+		glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 5);
 		glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 #ifdef ZN_DEBUG
 		glfwWindowHint(GLFW_OPENGL_DEBUG_CONTEXT, true);
@@ -73,6 +73,7 @@ namespace zn
 			FileSystem::GetPath("Content/Shaders/vertex.glsl").c_str(), FileSystem::GetPath("Content/Shaders/fragment.glsl").c_str());
 
 		m_Texture = CreateUnique<zn::Texture>(FileSystem::GetPath("Content/Textures/wall.jpg"));
+		m_Texture2 = CreateUnique<zn::Texture>(FileSystem::GetPath("Content/Textures/awesomeface.png"));
 
 		m_VertexArray = CreateUnique<zn::VertexArray>();
 		m_VertexArray->Bind();
@@ -183,8 +184,12 @@ namespace zn
 
 	void Window::Draw() const
 	{
-		m_Texture->Bind();
 		m_BasicShader->Bind();
+		m_BasicShader->SetInt("texture1", 0);
+		m_BasicShader->SetInt("texture2", 1);
+
+		m_Texture->Bind();
+		m_Texture2->Bind(1);
 		m_VertexArray->Bind();
 
 		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);

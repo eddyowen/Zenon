@@ -63,6 +63,7 @@ namespace zn
 		UniquePtr<zn::Shader> m_BasicShader;
 		UniquePtr<zn::VertexArray> m_VertexArray;
 		UniquePtr<zn::Texture> m_Texture;
+		UniquePtr<zn::Texture> m_Texture2;
 		
 		unsigned int VBO, EBO, VAO;
 
