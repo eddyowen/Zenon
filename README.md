@@ -1,6 +1,6 @@
 # [![License](https://img.shields.io/github/license/eddyowen/zenon)](https://github.com/eddyowen/Zenon/blob/master/LICENSE)
 
-![Zenon](Content/Branding/zenon_logo/zn_logo.png)
+![Zenon](Content/Branding/zn_logo.png)
 
 **Zenon Engine** is an open-source C++/OpenGL toy engine for Windows that I'll build to reinforce my knowledge about game engine development, modern C++, and graphics programming. This framework should not be used for any production application as the code may potentially contain bugs <br/>
 
