@@ -13,5 +13,5 @@
 			ZN_DEBUGBREAK();\
 		}}
 #else
-	#define ZN_CORE_ASSERT(check, msg, ...)
+	#define ZN_CORE_ASSERT(check)
 #endif
