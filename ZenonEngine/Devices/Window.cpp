@@ -3,6 +3,10 @@
 #include "Core/Log.h"
 #include "Core/FileSystem.h"
 
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
+
 namespace zn
 {
 	Window::~Window()
@@ -73,7 +77,7 @@ namespace zn
 			FileSystem::GetPath("Content/Shaders/vertex.glsl").c_str(), FileSystem::GetPath("Content/Shaders/fragment.glsl").c_str());
 
 		m_Texture = CreateUnique<zn::Texture>(FileSystem::GetPath("Content/Textures/wall.jpg"));
-		m_Texture2 = CreateUnique<zn::Texture>(FileSystem::GetPath("Content/Textures/awesomeface.png"));
+		m_Texture2 = CreateUnique<zn::Texture>(FileSystem::GetPath("Content/Textures/george.jpg"));
 
 		m_VertexArray = CreateUnique<zn::VertexArray>();
 		m_VertexArray->Bind();
@@ -100,7 +104,7 @@ namespace zn
 		
 		m_VertexArray->Unbind();
 		// TEMPORAL ///////////////////////////////////////
-
+		m_Transform = glm::mat4(1.0f);
 		return true;
 	}
 
@@ -184,6 +188,11 @@ namespace zn
 
 	void Window::Draw() const
 	{
+		glm::mat4 transform = glm::mat4(1.0f);
+		transform = glm::rotate(transform, glm::radians(float(glfwGetTime() * 120.0f)), glm::vec3(0.0f, 1.0f, 0.0f));
+		transform = glm::scale(transform, glm::vec3(0.5f, 0.5f, 0.5f));
+
+		m_Texture->Bind();
 		m_BasicShader->Bind();
 		m_BasicShader->SetInt("texture1", 0);
 		m_BasicShader->SetInt("texture2", 1);
@@ -191,6 +200,8 @@ namespace zn
 		m_Texture->Bind();
 		m_Texture2->Bind(1);
 		m_VertexArray->Bind();
+
+		m_BasicShader->SetMat4("transform", transform);
 
 		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 	}

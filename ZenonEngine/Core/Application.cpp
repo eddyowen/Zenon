@@ -8,34 +8,15 @@
 
 namespace zn
 {
-	struct Component
-	{
-		const char start[16]  = "#COMP-START####";
-		std::array<int, 7>  a{ 1, 2, 4, 8, 16, 32, 64 };
-		const char end[16] = "#COMP-END######";
-	};
-
 	bool Application::Init()
 	{
 		Log::Init();
 		
-		if (!m_Window.Init(1920, 1080, "Zenon Engine"))
+		if (!m_Window.Init(1200, 1200, "Zenon Engine"))
 		{
 			ZN_CORE_ERROR("Failed to initialize Window. Closing Application");
 			return false;
 		}
-
-		Component a{};
-
-		MemoryViewer aViewer{ &a };
-
-		aViewer.Print();
-
-		//MemoryViewer<std::vector<int>::iterator> beingViewer{ &(*a.a.begin()) };
-		//MemoryViewer<std::vector<int>::iterator> endViewer{ &a.a.end() };
-		//
-		//beingViewer.Print();
-		//endViewer.Print();
 
 		m_Window.KeyPressedDelegate.Bind<&Application::OnKeyPressed>(this);
 		m_Window.WindowResizedDelegate.Bind<&Application::OnWindowResized>(this);

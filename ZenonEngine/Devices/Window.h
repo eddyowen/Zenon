@@ -62,8 +62,11 @@ namespace zn
 		// TEMPORAL ///////////////////////////////////////
 		UniquePtr<zn::Shader> m_BasicShader;
 		UniquePtr<zn::VertexArray> m_VertexArray;
+
 		UniquePtr<zn::Texture> m_Texture;
 		UniquePtr<zn::Texture> m_Texture2;
+		
+		glm::mat4 m_Transform;
 		
 		unsigned int VBO, EBO, VAO;
 

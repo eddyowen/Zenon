@@ -8,7 +8,7 @@
 class FileSystem 
 {
 private:
-    using Builder = std::string(*)(const std::string& path); // Modern type alias
+    using Builder = std::string(*)(const std::string& path);
 
 public:
     static std::string GetPath(const std::string& path) 
