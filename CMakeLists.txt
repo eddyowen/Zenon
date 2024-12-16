@@ -1,4 +1,4 @@
-cmake_minimum_required( VERSION 3.5 )
+cmake_minimum_required( VERSION 3.28 )
 
 project ( "ZenonEngine" VERSION 1.0 )
 
@@ -46,7 +46,7 @@ endforeach()
 #endforeach()
 
 # Generated folder used for Cmake generated files
-set( GENERATED_INC_FOLDER ${CMAKE_BINARY_DIR}/Generated )
+set( GENERATED_INC_FOLDER ${CMAKE_BINARY_DIR} )
 
 zn_log( "CMake mod path:  ${CMAKE_MODULE_PATH}" )
 zn_log( "Generated dir: ${GENERATED_INC_FOLDER}" )
