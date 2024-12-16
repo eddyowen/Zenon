@@ -28,3 +28,5 @@ target_link_libraries( ${PROJECT_NAME} LINK_PUBLIC ${LINK_LIBS} )
 
 # Prettify folders in solution
 assign_source_group( ${_source_list} )
+
+set_property(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} PROPERTY VS_STARTUP_PROJECT Sandbox)
