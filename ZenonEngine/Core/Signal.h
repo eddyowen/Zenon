@@ -85,10 +85,13 @@ namespace zn
     };
 }
 
-namespace std {
+namespace std
+{
     template <>
-    struct hash<zn::EventHandler> {
-        std::size_t operator()(const zn::EventHandler& handler) const noexcept {
+    struct hash<zn::EventHandler>
+    {
+        std::size_t operator()(const zn::EventHandler& handler) const noexcept
+        {
             return std::hash<std::size_t>()(handler.Id);
         }
     };
