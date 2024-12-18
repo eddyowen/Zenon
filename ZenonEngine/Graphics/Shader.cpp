@@ -6,7 +6,7 @@ namespace zn
 {
 	Shader::Shader(const std::string& name, const char* vertexPath, const char* fragmentPath)
 	{
-		m_Name = name;
+		m_name = name;
 
 		Load(vertexPath, fragmentPath);
 	}
@@ -39,7 +39,7 @@ namespace zn
 		}
 		catch (std::ifstream::failure& e)
 		{
-			ZN_CORE_ERROR("ERROR::SHADER::FILE_NOT_SUCCESSFULLY_READ - Shader Namme: " + m_Name);
+			ZN_CORE_ERROR("ERROR::SHADER::FILE_NOT_SUCCESSFULLY_READ - Shader Namme: " + m_name);
 		}
 
 		const char* vShaderCode = vertexCode.c_str();
@@ -57,11 +57,11 @@ namespace zn
 		glCompileShader(fragment);
 		CheckCompileErrors(fragment, "FRAGMENT");
 
-		m_RendererID = glCreateProgram();
-		glAttachShader(m_RendererID, vertex);
-		glAttachShader(m_RendererID, fragment);
-		glLinkProgram(m_RendererID);
-		CheckCompileErrors(m_RendererID, "PROGRAM");
+		m_rendererID = glCreateProgram();
+		glAttachShader(m_rendererID, vertex);
+		glAttachShader(m_rendererID, fragment);
+		glLinkProgram(m_rendererID);
+		CheckCompileErrors(m_rendererID, "PROGRAM");
 
 		glDeleteShader(vertex);
 		glDeleteShader(fragment);
@@ -94,7 +94,7 @@ namespace zn
 
 	void Shader::Bind() const
 	{
-		glUseProgram(m_RendererID);
+		glUseProgram(m_rendererID);
 	}
 
 	void Shader::Unbind() const
@@ -104,31 +104,31 @@ namespace zn
 
 	void Shader::SetInt(const std::string& name, int value)
 	{
-		GLint location = glGetUniformLocation(m_RendererID, name.c_str());
+		GLint location = glGetUniformLocation(m_rendererID, name.c_str());
 		glUniform1i(location, value);
 	}
 
 	void Shader::SetFloat(const std::string& name, float value)
 	{
-		GLint location = glGetUniformLocation(m_RendererID, name.c_str());
+		GLint location = glGetUniformLocation(m_rendererID, name.c_str());
 		glUniform1f(location, value);
 	}
 
 	void Shader::SetVec3(const std::string& name, const glm::vec3& value)
 	{
-		GLint location = glGetUniformLocation(m_RendererID, name.c_str());
+		GLint location = glGetUniformLocation(m_rendererID, name.c_str());
 		glUniform3fv(location, 1, glm::value_ptr(value));
 	}
 
 	void Shader::SetVec4(const std::string& name, const glm::vec4& value)
 	{
-		GLint location = glGetUniformLocation(m_RendererID, name.c_str());
+		GLint location = glGetUniformLocation(m_rendererID, name.c_str());
 		glUniform4fv(location, 1, glm::value_ptr(value));
 	}
 
 	void Shader::SetMat4(const std::string& name, const glm::mat4& value)
 	{
-		GLint location = glGetUniformLocation(m_RendererID, name.c_str());
+		GLint location = glGetUniformLocation(m_rendererID, name.c_str());
 		glUniformMatrix4fv(location, 1, GL_FALSE, glm::value_ptr(value));
 	}
 }

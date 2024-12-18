@@ -30,7 +30,7 @@ namespace zn
 	private:
 		void CheckCompileErrors(unsigned int rendererId, const std::string& type) const;
 		
-		uint32_t m_RendererID;
-		std::string m_Name;
+		uint32_t m_rendererID;
+		std::string m_name;
 	};
 }

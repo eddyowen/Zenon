@@ -53,20 +53,20 @@ namespace zn
 #endif
 
 	private:
-		GLFWwindow* m_Window = nullptr;
-		const char* m_Title = nullptr;
+		GLFWwindow* m_window = nullptr;
+		const char* m_title = nullptr;
 
-		int m_Width = 0;
-		int m_Height = 0;
+		int m_width = 0;
+		int m_height = 0;
 
 		// TEMPORAL ///////////////////////////////////////
-		UniquePtr<zn::Shader> m_BasicShader;
-		UniquePtr<zn::VertexArray> m_VertexArray;
+		UniquePtr<zn::Shader> m_basicShader;
+		UniquePtr<zn::VertexArray> m_vertexArray;
 
-		UniquePtr<zn::Texture> m_Texture;
-		UniquePtr<zn::Texture> m_Texture2;
+		UniquePtr<zn::Texture> m_texture;
+		UniquePtr<zn::Texture> m_texture2;
 		
-		glm::mat4 m_Transform;
+		glm::mat4 m_transform;
 		
 		unsigned int VBO, EBO, VAO;
 

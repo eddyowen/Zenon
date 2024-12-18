@@ -4,12 +4,12 @@ namespace zn
 {
 	VertexBuffer::VertexBuffer()
 	{
-		glGenBuffers(1, &m_RendererID);
+		glGenBuffers(1, &m_rendererID);
 	}
 
 	VertexBuffer::~VertexBuffer()
 	{
-		glDeleteBuffers(1, &m_RendererID);
+		glDeleteBuffers(1, &m_rendererID);
 	}
 
 	void VertexBuffer::SetData(const void* data, unsigned int size)
@@ -19,7 +19,7 @@ namespace zn
 
 	void VertexBuffer::Bind() const
 	{
-		glBindBuffer(GL_ARRAY_BUFFER, m_RendererID);
+		glBindBuffer(GL_ARRAY_BUFFER, m_rendererID);
 	}
 
 	void VertexBuffer::Unbind() const
@@ -29,12 +29,12 @@ namespace zn
 
 	IndexBuffer::IndexBuffer()
 	{
-		glGenBuffers(1, &m_RendererID);
+		glGenBuffers(1, &m_rendererID);
 	}
 
 	IndexBuffer::~IndexBuffer()
 	{
-		glDeleteBuffers(1, &m_RendererID);
+		glDeleteBuffers(1, &m_rendererID);
 	}
 
 	void IndexBuffer::SetData(const unsigned int* indices, unsigned int count)
@@ -44,7 +44,7 @@ namespace zn
 
 	void IndexBuffer::Bind() const
 	{
-		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_RendererID);
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_rendererID);
 	}
 
 	void IndexBuffer::Unbind() const
@@ -54,17 +54,17 @@ namespace zn
 
 	unsigned int IndexBuffer::GetCount() const
 	{
-		return m_Count;
+		return m_count;
 	}
 
 	VertexArray::VertexArray()
 	{
-		glGenVertexArrays(1, &m_RendererID);
+		glGenVertexArrays(1, &m_rendererID);
 	}
 
 	VertexArray::~VertexArray()
 	{
-		glDeleteVertexArrays(1, &m_RendererID);
+		glDeleteVertexArrays(1, &m_rendererID);
 	}
 
 	void VertexArray::AddVertexBuffer(const VertexBuffer& vertexBuffer, const VertexBufferLayout& layout)
@@ -88,7 +88,7 @@ namespace zn
 
 	void VertexArray::Bind() const
 	{
-		glBindVertexArray(m_RendererID);
+		glBindVertexArray(m_rendererID);
 	}
 
 	void VertexArray::Unbind() const

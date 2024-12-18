@@ -9,19 +9,19 @@ namespace zn
 	public:
 		WindowClosedEvent() = default;
 
-		ZN_DEFINE_EVENT_TYPE(WindowClosed);
+		ZN_DEFINE_EVENT_TYPE(WindowClosed)
 	};
 
 	class WindowResizedEvent : public Event
 	{
 	public:
 		WindowResizedEvent(int width, int height)
-			: m_Width(width), m_Height(height) {}
+			: m_width(width), m_height(height) {}
 
-		ZN_DEFINE_EVENT_TYPE(WindowResized);
+		ZN_DEFINE_EVENT_TYPE(WindowResized)
 	
 	private:
-		int m_Width;
-		int m_Height;
+		int m_width;
+		int m_height;
 	};
 }

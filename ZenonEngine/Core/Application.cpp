@@ -8,44 +8,49 @@
 
 namespace zn
 {
+	bool function(int a, int b)
+	{
+		return a == b;
+	}
+	
 	bool Application::Init()
 	{
 		Log::Init();
 		
-		if (!m_Window.Init(1200, 1200, "Zenon Engine"))
+		if (!m_window.Init(1200, 1200, "Zenon Engine"))
 		{
 			ZN_CORE_ERROR("Failed to initialize Window. Closing Application");
 			return false;
 		}
 
-		m_Window.KeyPressedDelegate.Bind<&Application::OnKeyPressed>(this);
-		m_Window.WindowResizedDelegate.Bind<&Application::OnWindowResized>(this);
-		m_Window.WindowClosedDelegate.Bind<&Application::OnWindowClosed>(this);
+		m_window.KeyPressedDelegate.Bind<&Application::OnKeyPressed>(this);
+		m_window.WindowResizedDelegate.Bind<&Application::OnWindowResized>(this);
+		m_window.WindowClosedDelegate.Bind<&Application::OnWindowClosed>(this);
 
 		return true;
 	}
 
 	void Application::Run()
 	{
-		m_IsRunning = true;
+		m_isRunning = true;
 
-		while (m_IsRunning)
+		while (m_isRunning)
 		{
 			ProcessEvents();
-			m_Window.Update();
+			m_window.Update();
 		}
 	}
 
 	void Application::ProcessEvents()
 	{
-		//EventBuffer& eventBuffer = m_Window.GetEventBuffer();
+		//EventBuffer& eventBuffer = m_window.GetEventBuffer();
 		//while (!eventBuffer.IsEmpty())
 		//{
 		//	std::optional<Event> event = eventBuffer.Pop();
 		//	if (event->GetEventType() == EventType::WindowClose)
 		//	{
 		//		ZN_CORE_ERROR("Close\n";
-		//		m_Window.Close();
+		//		m_window.Close();
 		//		m_running = false;
 		//	}
 		//}
@@ -59,8 +64,8 @@ namespace zn
 	void Application::OnWindowClosed(WindowClosedEvent& e)
 	{
 		ZN_CORE_TRACE(e.ToString());
-		m_Window.Close();
-		m_IsRunning = false;
+		m_window.Close();
+		m_isRunning = false;
 	}
 
 	void Application::OnWindowResized(WindowResizedEvent& e)

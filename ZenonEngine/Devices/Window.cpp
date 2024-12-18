@@ -29,15 +29,15 @@ namespace zn
 		glfwWindowHint(GLFW_OPENGL_DEBUG_CONTEXT, true);
 #endif
 
-		m_Window = glfwCreateWindow(width, height, title, nullptr, nullptr);
-		if (!m_Window)
+		m_window = glfwCreateWindow(width, height, title, nullptr, nullptr);
+		if (!m_window)
 		{
 			ZN_CORE_CRITICAL("Failed to create GLFW window");
 			glfwTerminate();
 			return false;
 		}
 
-		glfwMakeContextCurrent(m_Window);
+		glfwMakeContextCurrent(m_window);
 
 		if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
 		{
@@ -48,15 +48,15 @@ namespace zn
 
 		// Setup user pointer as this is the only way 
 		// I have to access data within GLFW callbacks
-		m_Width = width;
-		m_Height = height;
-		m_Title = title;
-		glfwSetWindowUserPointer(m_Window, this);
+		m_width = width;
+		m_height = height;
+		m_title = title;
+		glfwSetWindowUserPointer(m_window, this);
 
 		// Setup Event Callbacks here
-		glfwSetWindowCloseCallback(m_Window, &Window::GLFW_CloseCallback);
-		glfwSetFramebufferSizeCallback(m_Window, &Window::GLFW_FrameBufferResizeCallback);
-		glfwSetKeyCallback(m_Window, &Window::GLFW_KeyCallback);
+		glfwSetWindowCloseCallback(m_window, &Window::GLFW_CloseCallback);
+		glfwSetFramebufferSizeCallback(m_window, &Window::GLFW_FrameBufferResizeCallback);
+		glfwSetKeyCallback(m_window, &Window::GLFW_KeyCallback);
 
 #ifdef ZN_DEBUG
 		int flags;
@@ -73,14 +73,14 @@ namespace zn
 		}
 #endif
 		// TEMPORAL ///////////////////////////////////////
-		m_BasicShader = CreateUnique<zn::Shader>("Basic Shader", 
+		m_basicShader = CreateUnique<zn::Shader>("Basic Shader", 
 			FileSystem::GetPath("Content/Shaders/vertex.glsl").c_str(), FileSystem::GetPath("Content/Shaders/fragment.glsl").c_str());
 
-		m_Texture = CreateUnique<zn::Texture>(FileSystem::GetPath("Content/Textures/wall.jpg"));
-		m_Texture2 = CreateUnique<zn::Texture>(FileSystem::GetPath("Content/Textures/george.jpg"));
+		m_texture = CreateUnique<zn::Texture>(FileSystem::GetPath("Content/Textures/wall.jpg"));
+		m_texture2 = CreateUnique<zn::Texture>(FileSystem::GetPath("Content/Textures/george.jpg"));
 
-		m_VertexArray = CreateUnique<zn::VertexArray>();
-		m_VertexArray->Bind();
+		m_vertexArray = CreateUnique<zn::VertexArray>();
+		m_vertexArray->Bind();
 
 		VertexBuffer vertexBuffer{};
 		vertexBuffer.Bind();
@@ -91,7 +91,7 @@ namespace zn
 		vertexBufferLayout.PushElement<float>(3);
 		vertexBufferLayout.PushElement<float>(2); //texture coords
 
-		m_VertexArray->AddVertexBuffer(vertexBuffer, vertexBufferLayout);
+		m_vertexArray->AddVertexBuffer(vertexBuffer, vertexBufferLayout);
 
 		IndexBuffer indexBuffer{};
 		indexBuffer.Bind();
@@ -102,9 +102,9 @@ namespace zn
 		//// remember: do NOT unbind the EBO while a VAO is active as the bound element buffer object IS stored in the VAO; keep the EBO bound.
 		//indexBuffer.Unbind();
 		
-		m_VertexArray->Unbind();
+		m_vertexArray->Unbind();
 		// TEMPORAL ///////////////////////////////////////
-		m_Transform = glm::mat4(1.0f);
+		m_transform = glm::mat4(1.0f);
 		return true;
 	}
 
@@ -116,12 +116,12 @@ namespace zn
 
 	void Window::WindowResizedCallback(int width, int height)
 	{
-		m_Width = width;
-		m_Height = height;
+		m_width = width;
+		m_height = height;
 
-		glViewport(0, 0, m_Width, m_Height);
+		glViewport(0, 0, m_width, m_height);
 
-		WindowResizedEvent e{m_Width, m_Height};
+		WindowResizedEvent e{m_width, m_height};
 		WindowResizedDelegate(e);
 	}
 	
@@ -178,12 +178,12 @@ namespace zn
 
 	void Window::Close()
 	{
-		glfwSetWindowShouldClose(m_Window, GL_TRUE);
+		glfwSetWindowShouldClose(m_window, GL_TRUE);
 	}
 
 	bool Window::ShouldClose() const
 	{
-		return glfwWindowShouldClose(m_Window);
+		return glfwWindowShouldClose(m_window);
 	}
 
 	void Window::Draw() const
@@ -192,16 +192,16 @@ namespace zn
 		transform = glm::rotate(transform, glm::radians(float(glfwGetTime() * 120.0f)), glm::vec3(0.0f, 1.0f, 0.0f));
 		transform = glm::scale(transform, glm::vec3(0.5f, 0.5f, 0.5f));
 
-		m_Texture->Bind();
-		m_BasicShader->Bind();
-		m_BasicShader->SetInt("texture1", 0);
-		m_BasicShader->SetInt("texture2", 1);
+		m_texture->Bind();
+		m_basicShader->Bind();
+		m_basicShader->SetInt("texture1", 0);
+		m_basicShader->SetInt("texture2", 1);
 
-		m_Texture->Bind();
-		m_Texture2->Bind(1);
-		m_VertexArray->Bind();
+		m_texture->Bind();
+		m_texture2->Bind(1);
+		m_vertexArray->Bind();
 
-		m_BasicShader->SetMat4("transform", transform);
+		m_basicShader->SetMat4("transform", transform);
 
 		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 	}
@@ -214,7 +214,7 @@ namespace zn
 
 	void Window::SwapBuffers() const
 	{
-		glfwSwapBuffers(m_Window);
+		glfwSwapBuffers(m_window);
 	}
 
 	void Window::PollEvents() const

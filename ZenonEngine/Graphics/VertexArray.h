@@ -20,7 +20,7 @@ namespace zn
 		void Unbind() const;
 
 	private:
-		uint32_t m_RendererID;
+		uint32_t m_rendererID;
 	};
 
 	class IndexBuffer
@@ -36,8 +36,8 @@ namespace zn
 		unsigned int GetCount() const;
 
 	private:
-		uint32_t m_RendererID;
-		uint32_t m_Count;
+		uint32_t m_rendererID;
+		uint32_t m_count;
 	};
 
 	class VertexBufferLayout
@@ -114,6 +114,6 @@ namespace zn
 		void AddVertexBuffer(const VertexBuffer& vertexBuffer, const VertexBufferLayout& layout);
 
 	private:
-		uint32_t m_RendererID;
+		uint32_t m_rendererID;
 	};
 }

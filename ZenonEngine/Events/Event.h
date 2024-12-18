@@ -23,7 +23,7 @@ namespace zn
 	class Event
 	{
 	public:
-		~Event() = default;
+		virtual ~Event() = default;
 
 		virtual EventType GetEventType() const = 0;
 		virtual const char* GetName() const = 0;
@@ -31,7 +31,7 @@ namespace zn
 		virtual std::string ToString() const { return GetName(); };
 
 	protected:
-		EventType m_Type = EventType::None;
+		EventType m_type = EventType::None;
 	};
 
 	//class EventBuffer

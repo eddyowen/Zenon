@@ -22,7 +22,7 @@ namespace zn
 		void ProcessEvents();
 
 	private:
-		bool m_IsRunning = false;
-		Window m_Window{};
+		bool m_isRunning = false;
+		Window m_window{};
 	};
 }

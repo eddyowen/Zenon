@@ -13,10 +13,10 @@ namespace zn
 	public:
 		static void Init();
 
-		static SharedPtr<spdlog::logger>& GetCoreLogger() { return s_CoreLogger; }
+		static SharedPtr<spdlog::logger>& GetCoreLogger() { return s_coreLogger; }
 
 	private:
-		static SharedPtr<spdlog::logger> s_CoreLogger;
+		static SharedPtr<spdlog::logger> s_coreLogger;
 	};
 }
 

@@ -13,15 +13,15 @@ namespace zn
 		void Bind(uint32_t textureUnit = 0) const;
 		void Unbind() const;
 
-		bool IsLoaded() const { return m_IsLoaded;  }
+		bool IsLoaded() const { return m_isLoaded;  }
 
 	private:
-		bool m_IsLoaded = false;
+		bool m_isLoaded = false;
 
-		uint32_t m_RendererID;
+		uint32_t m_rendererID;
 		
-		int m_Width;
-		int m_Height;
-		int m_Channels;
+		int m_width;
+		int m_height;
+		int m_channels;
 	};
 }
