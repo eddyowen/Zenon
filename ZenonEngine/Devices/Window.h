@@ -1,15 +1,16 @@
 #pragma once
 
-#include <glad/glad.h>
-#include <GLFW/glfw3.h>
-
 #include "Core/Delegate.h"
+#include "Core/Signal.h"
 #include "Events/Event.h"
 #include "Events/ApplicationEvent.h"
 #include "Events/KeyEvent.h"
 #include "Graphics/Shader.h"
 #include "Graphics/VertexArray.h"
 #include "Graphics/Texture.h"
+
+#include <glad/glad.h>
+#include <GLFW/glfw3.h>
 
 struct GLFWwindow;
 
@@ -26,9 +27,9 @@ namespace zn
 		void Update();
 		void Close();
 
-		Delegate<void(zn::WindowClosedEvent&)> WindowClosedDelegate;
-		Delegate<void(zn::WindowResizedEvent&)> WindowResizedDelegate;
-		Delegate<void(zn::KeyPressedEvent&)> KeyPressedDelegate;
+		Signal<zn::WindowClosedEvent&> OnWindowsClosed;
+		Signal<zn::WindowResizedEvent&> OnWindowResized;
+		Signal<zn::KeyPressedEvent&> OnKeyPressed;
 
 	protected:
 		void CloseCallback();

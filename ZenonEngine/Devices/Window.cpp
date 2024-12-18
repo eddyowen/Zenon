@@ -111,7 +111,7 @@ namespace zn
 	void Window::CloseCallback()
 	{
 		WindowClosedEvent e;
-		WindowClosedDelegate(e);
+		OnWindowsClosed.Emit(e);
 	}
 
 	void Window::WindowResizedCallback(int width, int height)
@@ -122,13 +122,13 @@ namespace zn
 		glViewport(0, 0, m_width, m_height);
 
 		WindowResizedEvent e{m_width, m_height};
-		WindowResizedDelegate(e);
+		OnWindowResized.Emit(e);
 	}
 	
 	void Window::KeyPressedCallback(int key)
 	{
 		KeyPressedEvent e(key, 0);
-		KeyPressedDelegate(e);
+		OnKeyPressed.Emit(e);
 	}
 
 	void Window::GLFW_CloseCallback(GLFWwindow* wnd)

@@ -1,6 +1,7 @@
 #include "Application.h"
 
 #include "Core/Log.h"
+#include "Core/Signal.h"
 #include "Utils/MemoryViewer.h"
 
 #include <array>
@@ -23,9 +24,11 @@ namespace zn
 			return false;
 		}
 
-		m_window.KeyPressedDelegate.Bind<&Application::OnKeyPressed>(this);
-		m_window.WindowResizedDelegate.Bind<&Application::OnWindowResized>(this);
-		m_window.WindowClosedDelegate.Bind<&Application::OnWindowClosed>(this);
+		Application* a = new Application();
+
+		m_window.OnWindowsClosed.Connect(*this, &Application::OnWindowClosed);
+		m_window.OnWindowResized.Connect(*this, &Application::OnWindowResized);
+		m_window.OnKeyPressed.Connect(*this, &Application::OnKeyPressed);
 
 		return true;
 	}
@@ -71,15 +74,5 @@ namespace zn
 	void Application::OnWindowResized(WindowResizedEvent& e)
 	{
 		ZN_CORE_TRACE(e.ToString());
-	}
-
-	void Application::OnWindowClosed_Const(WindowClosedEvent& e) const
-	{
-		ZN_CORE_TRACE("Close");
-	}
-
-	void Application::OnEvent(Event& e)
-	{
-		
 	}
 }

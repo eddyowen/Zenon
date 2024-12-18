@@ -17,8 +17,6 @@ namespace zn
 		void OnKeyPressed(KeyPressedEvent& e);
 		void OnWindowClosed(WindowClosedEvent& e);
 		void OnWindowResized(WindowResizedEvent& e);
-		void OnWindowClosed_Const(WindowClosedEvent& e) const;
-		void OnEvent(Event& e);
 		void ProcessEvents();
 
 	private:
