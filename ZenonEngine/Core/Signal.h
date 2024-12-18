@@ -23,7 +23,6 @@ namespace zn
     class Signal {
     public:
         using slot_type = std::function<void(Args...)>;
-        using connection_id_type = std::size_t;
 
         Signal() : m_currentId(EventHandler::InvalidId) {}
         ~Signal() { m_slots.clear(); m_currentId = EventHandler::InvalidId; }
@@ -69,7 +68,7 @@ namespace zn
         }
         
         // Disconnect a slot using its connection ID
-        void Disconnect(connection_id_type id)
+        void Disconnect(std::size_t id)
         {
             ZN_CORE_ASSERT(id != EventHandler::InvalidId)
             m_slots.erase(id);
