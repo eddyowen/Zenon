@@ -1,6 +1,6 @@
 #include "Core/Application.h"
 
-int main()
+int main(int argc, char *argv[])
 {
 	zn::Application app{};
 	if (app.Init())

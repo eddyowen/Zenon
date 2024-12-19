@@ -70,7 +70,7 @@ namespace zn
 		template<typename T>
 		void PushElement(unsigned int count)
 		{
-			ZN_CORE_ASSERT(false);
+			ZN_CORE_ASSERT(false)
 		}
 
 		template<>

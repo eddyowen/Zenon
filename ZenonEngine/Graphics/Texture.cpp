@@ -51,7 +51,7 @@ namespace zn
 		}
 		else
 		{
-			ZN_CORE_ERROR("Failed to load texture: {0}", path);
+			ZN_CORE_ERROR("Failed to load texture: {0}", path)
 		}
 
 		stbi_image_free(data);

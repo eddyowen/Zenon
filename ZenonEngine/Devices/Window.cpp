@@ -11,7 +11,7 @@ namespace zn
 {
 	Window::~Window()
 	{
-		glfwTerminate();
+		m_window = nullptr;
 	}
 
 	bool Window::Init(int width, int height, const char* title)
@@ -32,7 +32,7 @@ namespace zn
 		m_window = glfwCreateWindow(width, height, title, nullptr, nullptr);
 		if (!m_window)
 		{
-			ZN_CORE_CRITICAL("Failed to create GLFW window");
+			ZN_CORE_CRITICAL("Failed to create GLFW window")
 			glfwTerminate();
 			return false;
 		}
@@ -41,10 +41,13 @@ namespace zn
 
 		if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
 		{
-			ZN_CORE_CRITICAL("Failed to initialize GLAD");
+			ZN_CORE_CRITICAL("Failed to initialize GLAD")
 			glfwTerminate();
 			return false;
 		}
+
+		// Force VSYNC
+		glfwSwapInterval(1);
 
 		// Setup user pointer as this is the only way 
 		// I have to access data within GLFW callbacks
@@ -69,9 +72,10 @@ namespace zn
 			glDebugMessageCallback(OpenGLDebugOutput, nullptr);
 			glDebugMessageControl(GL_DONT_CARE, GL_DONT_CARE, GL_DONT_CARE, 0, nullptr, GL_TRUE);
 			
-			ZN_CORE_INFO("OpenGL Debug Context succesfully initialized");
+			ZN_CORE_INFO("OpenGL Debug Context succesfully initialized")
 		}
 #endif
+		
 		// TEMPORAL ///////////////////////////////////////
 		m_basicShader = CreateUnique<zn::Shader>("Basic Shader", 
 			FileSystem::GetPath("Content/Shaders/vertex.glsl").c_str(), FileSystem::GetPath("Content/Shaders/fragment.glsl").c_str());
@@ -110,6 +114,8 @@ namespace zn
 
 	void Window::CloseCallback()
 	{
+		glfwSetWindowShouldClose(m_window, GL_TRUE);
+		
 		WindowClosedEvent e;
 		OnWindowsClosed.Emit(e);
 	}
@@ -176,9 +182,10 @@ namespace zn
 		}
 	}
 
-	void Window::Close()
+	void Window::Cleanup()
 	{
-		glfwSetWindowShouldClose(m_window, GL_TRUE);
+		glfwDestroyWindow(m_window);
+		glfwTerminate();
 	}
 
 	bool Window::ShouldClose() const
@@ -258,23 +265,23 @@ namespace zn
 		switch (severity)
 		{
 			case GL_DEBUG_SEVERITY_HIGH:
-				ZN_CORE_ERROR(std::format("Debug message ({}): {}\n{}\n{}\n{}\n", id, message, messageSource, messageType, "Severity: high"));
+				ZN_CORE_ERROR(std::format("Debug message ({}): {}\n{}\n{}\n{}\n", id, message, messageSource, messageType, "Severity: high"))
 				break;
 
 			case GL_DEBUG_SEVERITY_MEDIUM:  
-				ZN_CORE_WARN(std::format("Debug message ({}): {}\n{}\n{}\n{}\n", id, message, messageSource, messageType, "Severity: medium"));
+				ZN_CORE_WARN(std::format("Debug message ({}): {}\n{}\n{}\n{}\n", id, message, messageSource, messageType, "Severity: medium"))
 				break;
 
 			case GL_DEBUG_SEVERITY_LOW:          
-				ZN_CORE_TRACE(std::format("Debug message ({}): {}\n{}\n{}\n{}\n", id, message, messageSource, messageType, "Severity: low"));
+				ZN_CORE_TRACE(std::format("Debug message ({}): {}\n{}\n{}\n{}\n", id, message, messageSource, messageType, "Severity: low"))
 				break;
 
 			case GL_DEBUG_SEVERITY_NOTIFICATION:
-				ZN_CORE_TRACE(std::format("Debug message ({}): {}\n{}\n{}\n{}\n", id, message, messageSource, messageType, "Severity: notification"));
+				ZN_CORE_TRACE(std::format("Debug message ({}): {}\n{}\n{}\n{}\n", id, message, messageSource, messageType, "Severity: notification"))
 				break;
 		}
 
-		ZN_CORE_ASSERT(false);
+		ZN_CORE_ASSERT(false)
 	}
 #endif
 }

@@ -39,7 +39,7 @@ namespace zn
 		}
 		catch (std::ifstream::failure& e)
 		{
-			ZN_CORE_ERROR("ERROR::SHADER::FILE_NOT_SUCCESSFULLY_READ - Shader Namme: " + m_name);
+			ZN_CORE_ERROR("ERROR::SHADER::FILE_NOT_SUCCESSFULLY_READ - Shader Namme: " + m_name)
 		}
 
 		const char* vShaderCode = vertexCode.c_str();
@@ -78,7 +78,7 @@ namespace zn
 			if (!success)
 			{
 				glGetShaderInfoLog(rendererId, 1024, nullptr, infoLog);
-				ZN_CORE_ERROR("ERROR::SHADER_COMPILATION_ERROR of type: " + type + "\n" + infoLog);
+				ZN_CORE_ERROR("ERROR::SHADER_COMPILATION_ERROR of type: " + type + "\n" + infoLog)
 			}
 		}
 		else
@@ -87,7 +87,7 @@ namespace zn
 			if (!success)
 			{
 				glGetProgramInfoLog(rendererId, 1024, nullptr, infoLog);
-				ZN_CORE_ERROR("ERROR::SHADER_LINKING_ERROR of type: " + type + "\n" + infoLog);
+				ZN_CORE_ERROR("ERROR::SHADER_LINKING_ERROR of type: " + type + "\n" + infoLog)
 			}
 		}
 	}

@@ -33,7 +33,7 @@ namespace zn
 
 		void Print() const noexcept
 		{
-			ZN_CORE_ASSERT(m_Data != nullptr);
+			ZN_CORE_ASSERT(m_Data != nullptr)
 
 			std::printf("\n");
 			std::printf(" ===================================================================\n");

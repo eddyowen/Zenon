@@ -14,10 +14,10 @@ namespace zn
 		
 		bool Init();
 		void Run();
+		
 		void OnKeyPressed(KeyPressedEvent& e);
 		void OnWindowClosed(WindowClosedEvent& e);
 		void OnWindowResized(WindowResizedEvent& e);
-		void ProcessEvents();
 
 	private:
 		bool m_isRunning = false;

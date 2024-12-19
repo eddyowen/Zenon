@@ -25,11 +25,11 @@ namespace zn
 		[[nodiscard]]
 		bool Init(int width, int height, const char* title);
 		void Update();
-		void Close();
+		void Cleanup();
 
-		Signal<zn::WindowClosedEvent&> OnWindowsClosed;
-		Signal<zn::WindowResizedEvent&> OnWindowResized;
-		Signal<zn::KeyPressedEvent&> OnKeyPressed;
+		Signal<WindowClosedEvent&> OnWindowsClosed;
+		Signal<WindowResizedEvent&> OnWindowResized;
+		Signal<KeyPressedEvent&> OnKeyPressed;
 
 	protected:
 		void CloseCallback();
