@@ -78,7 +78,7 @@ if( MSVC )
 endif()
 
 # Add the engine and tests
-add_subdirectory ( "ZenonEngine" )
+add_subdirectory ( "Engine" )
 
 # Add a subdirectory that uses the ZenonEngine and produces an executeable
 add_subdirectory ( "Sandbox" )

@@ -3,11 +3,11 @@ project( Sandbox VERSION 1.0 )
 #======== Engine Setup =========#
 
 set ( INCLUDE_DIRS
-	"../ZenonEngine"
+	"../Engine"
 )
 
 set ( LINK_LIBS
-	"ZenonEngine"
+	"Engine"
 )
 
 # == Setup visual studio source groups / filters == #
