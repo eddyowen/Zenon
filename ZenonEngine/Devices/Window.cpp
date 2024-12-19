@@ -139,17 +139,17 @@ namespace zn
 
 	void Window::GLFW_CloseCallback(GLFWwindow* wnd)
 	{ 
-		((Window*)glfwGetWindowUserPointer(wnd))->CloseCallback();
+		static_cast<Window*>(glfwGetWindowUserPointer(wnd))->CloseCallback();
 	}
 
 	void Window::GLFW_FrameBufferResizeCallback(GLFWwindow* wnd, int width, int height)
 	{
-		((Window*)glfwGetWindowUserPointer(wnd))->WindowResizedCallback(width, height);
+		static_cast<Window*>(glfwGetWindowUserPointer(wnd))->WindowResizedCallback(width, height);
 	}
 	
 	void Window::GLFW_KeyCallback(GLFWwindow* wnd, int key, int scanCode, int action, int mods)
 	{
-		Window* window = ((Window*)glfwGetWindowUserPointer(wnd));
+		Window* window = static_cast<Window*>(glfwGetWindowUserPointer(wnd));
 
 		switch (action)
 		{
