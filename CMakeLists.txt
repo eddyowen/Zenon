@@ -31,6 +31,7 @@ set(SUBMODULES_LIST
     "external/glfw"
     "external/glm"
     "external/spdlog"
+    "external/imgui"
 )
 
 configure_file(Config/RootDirectory.h.in Config/RootDirectory.h)

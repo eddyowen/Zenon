@@ -20,6 +20,8 @@ set (INCLUDE_DIRS
 	../external/assimp
 	../external/spdlog/include
 	../external/stb_image
+	../external/imgui
+	../external/imgui/backends
 )
 
 # GLFW
@@ -55,11 +57,19 @@ if(NOT TARGET spdlog)
 	set_target_properties(spdlog PROPERTIES FOLDER "External")
 endif()
 
+if(NOT TARGET imgui)
+	file(GLOB IMGUI_SOURCES ../external/imgui/*.cpp ../external/imgui/backends/imgui_impl_glfw.cpp ../external/imgui/backends/imgui_impl_opengl3.cpp) 
+	add_library(imgui STATIC ${IMGUI_SOURCES})
+	target_include_directories(imgui PUBLIC ../external/imgui ../external/imgui/backends ../external/glfw/include)		
+	set_target_properties(imgui PROPERTIES FOLDER "External")
+endif()
+
 set (LINK_LIBS
     glfw ${GLFW_LIBRARIES}
 	glad
 	opengl32.lib
 	spdlog
+	imgui
 )
 
 ### Setup visual studio source groups / filters ###
@@ -67,7 +77,7 @@ file(GLOB_RECURSE _source_list
     *.cpp* src/*.h* src/*.hpp* *.h* ${GENERATED_INC_FOLDER}/*.h ${GENERATED_INC_FOLDER}/*.cpp *.inl
 )
 
-################# Add library and link ######################
+################# Add Engine library and link ######################
 
 # If STATIC/SHARED is omitted when defining the library, the default
 # will depend on the value of the property BUILD_SHARED_LIBS
