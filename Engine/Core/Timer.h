@@ -21,7 +21,6 @@ namespace zn
             m_running = true;
         }
 
-        // Stop the timer
         void Stop()
         {
             if (m_running)
@@ -32,7 +31,6 @@ namespace zn
             }
         }
 
-        // Resume the timer
         void Resume()
         {
             if (!m_running)
@@ -42,7 +40,6 @@ namespace zn
             }
         }
 
-        // Reset the timer to zero
         void Reset()
         {
             m_startTime = clock_type::now();
@@ -50,7 +47,7 @@ namespace zn
             m_running = false;
         }
 
-        // Get the elapsed time in seconds
+        // In seconds
         double GetElapsedTime() const
         {
             if (m_running)
