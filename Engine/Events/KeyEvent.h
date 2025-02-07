@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Events/Event.h"
-#include "Core/KeyCodes.h"
+#include "Input/KeyCodes.h"
 
 namespace zn
 {

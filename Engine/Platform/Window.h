@@ -1,9 +1,9 @@
 #pragma once
 
 #include "Events/Event.h"
-#include "Graphics/Shader.h"
-#include "Graphics/VertexArray.h"
-#include "Graphics/Texture.h"
+#include "Renderer/Shader.h"
+#include "Renderer/VertexArray.h"
+#include "Renderer/Texture.h"
 
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>

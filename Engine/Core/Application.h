@@ -2,7 +2,7 @@
 
 #include "Events/ApplicationEvent.h"
 #include "Events/KeyEvent.h"
-#include "Devices/Window.h"
+#include "Platform/Window.h"
 
 namespace zn
 {
