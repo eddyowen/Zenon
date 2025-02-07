@@ -42,10 +42,6 @@ foreach(submodule_path IN LISTS SUBMODULES_LIST)
   add_git_submodule(${submodule_path})
 endforeach()
 
-#foreach( _submodule IN ${SUBMODULES_LIST} )
-#    add_git_submodule( _submodule )
-#endforeach()
-
 # Generated folder used for Cmake generated files
 set(GENERATED_INC_FOLDER ${CMAKE_BINARY_DIR})
 

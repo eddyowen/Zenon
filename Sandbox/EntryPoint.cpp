@@ -2,10 +2,12 @@
 
 int main(int argc, char *argv[])
 {
-	zn::Application app{};
-	if (app.Init())
+    using namespace zn;
+    
+	SharedPtr<Application> app = CreateShared<Application>();
+	if (app->Init())
 	{
-		app.Run();
+		app->Run();
 	}
 
 	return 0;

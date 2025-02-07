@@ -15,7 +15,7 @@ namespace zn
 
 		logSinks[0]->set_pattern("%^[%T] %n: %v%$");
 
-		s_coreLogger = CreateShared<spdlog::logger>("LogCore", begin(logSinks), end(logSinks));
+		s_coreLogger = CreateShared<spdlog::logger>("ZenonCore", begin(logSinks), end(logSinks));
 		spdlog::register_logger(s_coreLogger);
 		s_coreLogger->set_level(spdlog::level::trace);
 		s_coreLogger->flush_on(spdlog::level::trace);

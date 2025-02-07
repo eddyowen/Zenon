@@ -1,10 +1,6 @@
 #pragma once
 
-#include "Core/Delegate.h"
-#include "Core/Signal.h"
 #include "Events/Event.h"
-#include "Events/ApplicationEvent.h"
-#include "Events/KeyEvent.h"
 #include "Graphics/Shader.h"
 #include "Graphics/VertexArray.h"
 #include "Graphics/Texture.h"
@@ -26,10 +22,6 @@ namespace zn
 		bool Init(int width, int height, const char* title);
 		void Update();
 		void Cleanup();
-
-		Signal<WindowClosedEvent&> OnWindowsClosed;
-		Signal<WindowResizedEvent&> OnWindowResized;
-		Signal<KeyPressedEvent&> OnKeyPressed;
 
 	protected:
 		void CloseCallback();

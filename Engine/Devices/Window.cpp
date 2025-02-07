@@ -1,7 +1,10 @@
 #include "Window.h"
 
 #include "Core/Log.h"
+#include "Core/Assert.h"
 #include "Core/FileSystem.h"
+#include "Events/ApplicationEvent.h"
+#include "Events/KeyEvent.h"
 
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
@@ -107,11 +110,10 @@ namespace zn
 #endif
 		
 		// TEMPORAL ///////////////////////////////////////
-		m_basicShader = CreateUnique<zn::Shader>("Basic Shader", 
-			FileSystem::GetPath("Content/Shaders/vertex.glsl").c_str(), FileSystem::GetPath("Content/Shaders/fragment.glsl").c_str());
+		m_basicShader = CreateUnique<zn::Shader>("Basic Shader", "Content/Shaders/vertex.glsl", "Content/Shaders/fragment.glsl");
 
-		m_texture = CreateUnique<zn::Texture>(FileSystem::GetPath("Content/Textures/wall.jpg"));
-		m_texture2 = CreateUnique<zn::Texture>(FileSystem::GetPath("Content/Textures/george.jpg"));
+		m_texture = CreateUnique<zn::Texture>("Content/Textures/wall.jpg");
+		m_texture2 = CreateUnique<zn::Texture>("Content/Textures/george.jpg");
 
 		m_vertexArray = CreateUnique<zn::VertexArray>();
 		m_vertexArray->Bind();
@@ -147,7 +149,7 @@ namespace zn
 		glfwSetWindowShouldClose(m_window, GL_TRUE);
 		
 		WindowClosedEvent e;
-		OnWindowsClosed.Emit(e);
+		EventSystem::Instance().Post(e);
 	}
 
 	void Window::WindowResizedCallback(int width, int height)
@@ -158,13 +160,13 @@ namespace zn
 		glViewport(0, 0, m_width, m_height);
 
 		WindowResizedEvent e{m_width, m_height};
-		OnWindowResized.Emit(e);
+		EventSystem::Instance().Post(e);
 	}
 	
 	void Window::KeyPressedCallback(int key)
 	{
 		KeyPressedEvent e(key, 0);
-		OnKeyPressed.Emit(e);
+		EventSystem::Instance().Post(e);
 	}
 
 	void Window::GLFW_CloseCallback(GLFWwindow* wnd)
@@ -221,6 +223,8 @@ namespace zn
 		
 		glfwDestroyWindow(m_window);
 		glfwTerminate();
+
+		m_window = nullptr;
 	}
 
 	bool Window::ShouldClose() const
@@ -325,19 +329,19 @@ namespace zn
 		switch (severity)
 		{
 			case GL_DEBUG_SEVERITY_HIGH:
-				ZN_CORE_ERROR(std::format("Debug message ({}): {}\n{}\n{}\n{}\n", id, message, messageSource, messageType, "Severity: high"))
+				ZN_CORE_ERROR("Debug message ({}): {}\n{}\n{}\n{}\n", id, message, messageSource, messageType, "Severity: high")
 				break;
 
 			case GL_DEBUG_SEVERITY_MEDIUM:  
-				ZN_CORE_WARN(std::format("Debug message ({}): {}\n{}\n{}\n{}\n", id, message, messageSource, messageType, "Severity: medium"))
+				ZN_CORE_WARN("Debug message ({}): {}\n{}\n{}\n{}\n", id, message, messageSource, messageType, "Severity: medium")
 				break;
 
 			case GL_DEBUG_SEVERITY_LOW:          
-				ZN_CORE_TRACE(std::format("Debug message ({}): {}\n{}\n{}\n{}\n", id, message, messageSource, messageType, "Severity: low"))
+				ZN_CORE_TRACE("Debug message ({}): {}\n{}\n{}\n{}\n", id, message, messageSource, messageType, "Severity: low")
 				break;
 
 			case GL_DEBUG_SEVERITY_NOTIFICATION:
-				ZN_CORE_TRACE(std::format("Debug message ({}): {}\n{}\n{}\n{}\n", id, message, messageSource, messageType, "Severity: notification"))
+				ZN_CORE_TRACE("Debug message ({}): {}\n{}\n{}\n{}\n", id, message, messageSource, messageType, "Severity: notification")
 				break;
 		}
 

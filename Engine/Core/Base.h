@@ -1,11 +1,7 @@
 #pragma once
 
-#include <cstdint>
 #include <functional>
-#include <string>
 #include <format>
-#include <sstream>
-#include <fstream>
 
 #ifdef ZN_DEBUG
 	#if defined(ZN_WINDOWS_PLATFORM)
@@ -37,4 +33,10 @@ namespace zn
 	{
 		return std::make_shared<T>(std::forward<Args>(args)...);
 	}
+
+	template<typename T>
+	using WeakPtr = std::weak_ptr<T>;
+
+	template<typename T>
+	using EnableSharedFromThis = std::enable_shared_from_this<T>;
 }

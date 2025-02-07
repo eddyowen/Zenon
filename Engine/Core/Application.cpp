@@ -1,11 +1,6 @@
 #include "Application.h"
 
 #include "Core/Log.h"
-#include "Core/Signal.h"
-#include "Utils/MemoryViewer.h"
-
-#include <array>
-#include <vector>
 
 namespace zn
 {
@@ -19,10 +14,10 @@ namespace zn
 			return false;
 		}
 
-		m_window.OnWindowsClosed.Connect(*this, &Application::OnWindowClosed);
-		m_window.OnWindowResized.Connect(*this, &Application::OnWindowResized);
-		m_window.OnKeyPressed.Connect(*this, &Application::OnKeyPressed);
-
+		m_keyPressedConnection = EventSystem::Instance().Subscribe<KeyPressedEvent>(shared_from_this(), &Application::OnKeyPressed);
+		m_windowClosedConnection = EventSystem::Instance().Subscribe<WindowClosedEvent>(shared_from_this(), &Application::OnWindowClosed);
+		m_windowResizedConnection = EventSystem::Instance().Subscribe<WindowResizedEvent>(shared_from_this(), &Application::OnWindowResized);
+			
 		return true;
 	}
 
@@ -36,21 +31,27 @@ namespace zn
 		}
 	}
 
-	void Application::OnKeyPressed(KeyPressedEvent& e)
+	bool Application::OnKeyPressed(const KeyPressedEvent& e)
 	{
-		ZN_CORE_TRACE(e.ToString())
+		ZN_CORE_TRACE("KeyPressedEvent: {}. ({}) repeats", e.KeyCode,  e.RepeatCount)
+		
+		return true;
 	}
 
-	void Application::OnWindowClosed(WindowClosedEvent& e)
+	bool Application::OnWindowClosed(const WindowClosedEvent& e)
 	{
-		ZN_CORE_TRACE(e.ToString())
+		ZN_CORE_TRACE("Window ClosedEvent")
 		
 		m_window.Cleanup();
 		m_isRunning = false;
+		
+		return true;
 	}
 
-	void Application::OnWindowResized(WindowResizedEvent& e)
+	bool Application::OnWindowResized(const WindowResizedEvent& e)
 	{
-		ZN_CORE_TRACE(e.ToString())
+		ZN_CORE_TRACE("Window ResizedEvent")
+		
+		return true;
 	}
 }

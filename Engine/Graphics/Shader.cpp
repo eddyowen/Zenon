@@ -1,5 +1,6 @@
 #include "Shader.h"
 
+#include "Core/FileSystem.h"
 #include "Core/Log.h"
 
 namespace zn
@@ -13,37 +14,28 @@ namespace zn
 
 	void Shader::Load(const char* vertexPath, const char* fragmentPath) 
 	{
-		std::string vertexCode;
-		std::string fragmentCode;
-
-		std::ifstream vShaderFile;
-		std::ifstream fShaderFile;
-
-		vShaderFile.exceptions(std::ifstream::failbit | std::ifstream::badbit);
-		fShaderFile.exceptions(std::ifstream::failbit | std::ifstream::badbit);
-
-		try
+		if (!FileSystem::Exists(vertexPath))
 		{
-			vShaderFile.open(vertexPath);
-			fShaderFile.open(fragmentPath);
-
-			std::stringstream vShaderStream, fShaderStream;
-			vShaderStream << vShaderFile.rdbuf();
-			fShaderStream << fShaderFile.rdbuf();
-
-			vShaderFile.close();
-			fShaderFile.close();
-
-			vertexCode = vShaderStream.str();
-			fragmentCode = fShaderStream.str();
+			ZN_CORE_ERROR("[Shader::Load] File {} does not exist", vertexPath)
+			return;
 		}
-		catch (std::ifstream::failure& e)
+		
+		auto vertexCode = FileSystem::ReadFileAsString(vertexPath);
+		if (!vertexCode)
 		{
-			ZN_CORE_ERROR("ERROR::SHADER::FILE_NOT_SUCCESSFULLY_READ - Shader Namme: " + m_name)
+			ZN_CORE_ERROR("[Shader::Load] Failed to read vertex shader code from {}", vertexPath)
+			return;
 		}
 
-		const char* vShaderCode = vertexCode.c_str();
-		const char* fShaderCode = fragmentCode.c_str();
+		auto fragmentCode = FileSystem::ReadFileAsString(fragmentPath);
+		if (!fragmentCode)
+		{
+			ZN_CORE_ERROR("[Shader::Load] Failed to read fragment shader code from {}", vertexPath)
+			return;
+		}
+
+		const char* vShaderCode = vertexCode.value().c_str();
+		const char* fShaderCode = fragmentCode.value().c_str();
 
 		GLuint vertex, fragment;
 

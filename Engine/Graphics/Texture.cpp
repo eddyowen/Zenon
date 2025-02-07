@@ -13,11 +13,19 @@ namespace zn
 {
 	Texture::Texture(const std::string& path)
 	{
+		if (!FileSystem::Exists(path))
+		{
+			ZN_CORE_ERROR("[ERROR][Texture::Texture] File {} does not exist", path)
+			return;
+		}
+		
+		FileSystem::Path fullPath = FileSystem::GetFullPath(path).value();
+		
 		stbi_set_flip_vertically_on_load(1);
 
 		int width, height, channels;
 
-		stbi_uc* data = stbi_load(path.c_str(), &width, &height, &channels, 0);
+		stbi_uc* data = stbi_load(fullPath.string().c_str(), &width, &height, &channels, 0);
 		if (data)
 		{
 			m_isLoaded = true;

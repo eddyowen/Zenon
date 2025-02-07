@@ -6,21 +6,32 @@
 
 namespace zn
 {
-	class Application
+	class Application : public EnableSharedFromThis<Application>
 	{
 	public:
 		Application() = default;
 		~Application() = default;
 		
+		Application(const Application& other) = delete;
+		Application(Application&& other) noexcept = delete;
+		
+		Application& operator=(const Application& other) = delete;
+		Application& operator=(Application&& other) noexcept = delete;
+		
 		bool Init();
 		void Run();
-		
-		void OnKeyPressed(KeyPressedEvent& e);
-		void OnWindowClosed(WindowClosedEvent& e);
-		void OnWindowResized(WindowResizedEvent& e);
+
+		bool OnKeyPressed(const KeyPressedEvent& e);
+		bool OnWindowClosed(const WindowClosedEvent& e);
+		bool OnWindowResized(const WindowResizedEvent& e);
 
 	private:
 		bool m_isRunning = false;
+
 		Window m_window{};
+
+		EventConnection<KeyPressedEvent> m_keyPressedConnection;
+		EventConnection<WindowClosedEvent> m_windowClosedConnection;
+		EventConnection<WindowResizedEvent> m_windowResizedConnection;
 	};
 }
