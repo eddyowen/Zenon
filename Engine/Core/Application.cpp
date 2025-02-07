@@ -4,11 +4,11 @@
 
 namespace zn
 {
-	bool Application::Init()
+	bool Application::Init(const std::string& appName)
 	{
 		Log::Init();
 		
-		if (!m_window.Init(1200, 1200, "Zenon Engine"))
+		if (!m_window.Init(1200, 1200, appName))
 		{
 			ZN_CORE_ERROR("Failed to initialize Window. Closing Application")
 			return false;
@@ -23,35 +23,38 @@ namespace zn
 
 	void Application::Run()
 	{
-		m_isRunning = true;
-
-		while (m_isRunning)
+		while (!m_window.ShouldClose())
 		{
-			m_window.Update();
+			m_window.PollEvents();
+
+			// Process events ..
+			
+			// Calculate delta ..
+
+			// Update Renderer ..
+			
+			m_window.Clear();
+			m_window.Draw();
+
+			m_window.SwapBuffers();
 		}
 	}
 
 	bool Application::OnKeyPressed(const KeyPressedEvent& e)
 	{
 		ZN_CORE_TRACE("KeyPressedEvent: {}. ({}) repeats", e.KeyCode,  e.RepeatCount)
-		
 		return true;
 	}
 
 	bool Application::OnWindowClosed(const WindowClosedEvent& e)
 	{
 		ZN_CORE_TRACE("Window ClosedEvent")
-		
-		m_window.Cleanup();
-		m_isRunning = false;
-		
 		return true;
 	}
 
 	bool Application::OnWindowResized(const WindowResizedEvent& e)
 	{
 		ZN_CORE_TRACE("Window ResizedEvent")
-		
 		return true;
 	}
 }

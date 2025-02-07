@@ -3,66 +3,40 @@
 #include "Core/Log.h"
 #include "FileSystem/FileSystem.h"
 
-#define STB_IMAGE_IMPLEMENTATION
-#include "stb_image.h"
-
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 
+#include "Core/Assert.h"
+
 namespace zn
 {
-	Texture::Texture(const std::string& path)
+	Texture::Texture(
+		unsigned char* data,
+		int width,
+		int height,
+		int channels,
+		unsigned int internalFormat,
+		unsigned int dataFormat)
 	{
-		if (!FileSystem::Exists(path))
-		{
-			ZN_CORE_ERROR("[ERROR][Texture::Texture] File {} does not exist", path)
-			return;
-		}
+		m_width = width;
+		m_height = height;
+		m_channels = channels;
 		
-		FileSystem::Path fullPath = FileSystem::GetFullPath(path).value();
+		m_data = data;
 		
-		stbi_set_flip_vertically_on_load(1);
+		m_internalFormat = internalFormat;
+		m_dataFormat = dataFormat;
 
-		int width, height, channels;
+		glCreateTextures(GL_TEXTURE_2D, 1, &m_rendererID);
+		glTextureStorage2D(m_rendererID, 1, m_internalFormat, m_width, m_height);
 
-		stbi_uc* data = stbi_load(fullPath.string().c_str(), &width, &height, &channels, 0);
-		if (data)
-		{
-			m_isLoaded = true;
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
 
-			m_width = width;
-			m_height = height;
-			m_channels = channels;
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
-			GLenum internalFormat = 0, dataFormat = 0;
-			if (channels == 4)
-			{
-				internalFormat = GL_RGBA8;
-				dataFormat = GL_RGBA;
-			}
-			else if (channels == 3)
-			{
-				internalFormat = GL_RGB8;
-				dataFormat = GL_RGB;
-			}
-
-			glCreateTextures(GL_TEXTURE_2D, 1, &m_rendererID);
-			glTextureStorage2D(m_rendererID, 1, internalFormat, m_width, m_height);
-
-			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-
-			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
-			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-
-			glTextureSubImage2D(m_rendererID, 0, 0, 0, m_width, m_height, dataFormat, GL_UNSIGNED_BYTE, data);
-		}
-		else
-		{
-			ZN_CORE_ERROR("Failed to load texture: {0}", path)
-		}
-
-		stbi_image_free(data);
+		glTextureSubImage2D(m_rendererID, 0, 0, 0, m_width, m_height, m_dataFormat, GL_UNSIGNED_BYTE, m_data);
 	}
 
 	Texture::~Texture()

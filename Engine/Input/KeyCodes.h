@@ -2,7 +2,7 @@
 
 namespace zn
 {
-	using KeyCode = uint16_t;
+	using KeyCode = int;
 
 	namespace Key
 	{

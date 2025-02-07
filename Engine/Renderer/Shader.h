@@ -13,10 +13,8 @@ namespace zn
 	class Shader 
 	{
 	public:
-		Shader(const std::string& name, const char* vertexPath, const char* fragmentPath);
+		Shader(const char* vertCode, const char* fragCode);
 		~Shader() = default;
-
-		void Load(const char* vertexPath, const char* fragmentPath);
 
 		void Bind() const;
 		void Unbind() const;
@@ -31,6 +29,5 @@ namespace zn
 		void CheckCompileErrors(unsigned int rendererId, const std::string& type) const;
 		
 		uint32_t m_rendererID;
-		std::string m_name;
 	};
 }

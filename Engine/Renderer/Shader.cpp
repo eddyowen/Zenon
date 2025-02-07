@@ -5,47 +5,15 @@
 
 namespace zn
 {
-	Shader::Shader(const std::string& name, const char* vertexPath, const char* fragmentPath)
+	Shader::Shader(const char* vertCode, const char* fragCode)
 	{
-		m_name = name;
-
-		Load(vertexPath, fragmentPath);
-	}
-
-	void Shader::Load(const char* vertexPath, const char* fragmentPath) 
-	{
-		if (!FileSystem::Exists(vertexPath))
-		{
-			ZN_CORE_ERROR("[Shader::Load] File {} does not exist", vertexPath)
-			return;
-		}
-		
-		auto vertexCode = FileSystem::ReadFileAsString(vertexPath);
-		if (!vertexCode)
-		{
-			ZN_CORE_ERROR("[Shader::Load] Failed to read vertex shader code from {}", vertexPath)
-			return;
-		}
-
-		auto fragmentCode = FileSystem::ReadFileAsString(fragmentPath);
-		if (!fragmentCode)
-		{
-			ZN_CORE_ERROR("[Shader::Load] Failed to read fragment shader code from {}", vertexPath)
-			return;
-		}
-
-		const char* vShaderCode = vertexCode.value().c_str();
-		const char* fShaderCode = fragmentCode.value().c_str();
-
-		GLuint vertex, fragment;
-
-		vertex = glCreateShader(GL_VERTEX_SHADER);
-		glShaderSource(vertex, 1, &vShaderCode, nullptr);
+		GLuint vertex = glCreateShader(GL_VERTEX_SHADER);
+		glShaderSource(vertex, 1, &vertCode, nullptr);
 		glCompileShader(vertex);
 		CheckCompileErrors(vertex, "VERTEX");
 
-		fragment = glCreateShader(GL_FRAGMENT_SHADER);
-		glShaderSource(fragment, 1, &fShaderCode, nullptr);
+		GLuint fragment = glCreateShader(GL_FRAGMENT_SHADER);
+		glShaderSource(fragment, 1, &fragCode, nullptr);
 		glCompileShader(fragment);
 		CheckCompileErrors(fragment, "FRAGMENT");
 

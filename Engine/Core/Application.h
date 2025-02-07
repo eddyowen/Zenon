@@ -18,7 +18,7 @@ namespace zn
 		Application& operator=(const Application& other) = delete;
 		Application& operator=(Application&& other) noexcept = delete;
 		
-		bool Init();
+		bool Init(const std::string& appName);
 		void Run();
 
 		bool OnKeyPressed(const KeyPressedEvent& e);
@@ -26,8 +26,6 @@ namespace zn
 		bool OnWindowResized(const WindowResizedEvent& e);
 
 	private:
-		bool m_isRunning = false;
-
 		Window m_window{};
 
 		EventConnection<KeyPressedEvent> m_keyPressedConnection;

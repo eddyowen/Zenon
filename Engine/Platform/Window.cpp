@@ -13,19 +13,31 @@
 #include "imgui.h"
 #include "imgui_impl_glfw.h"
 #include "imgui_impl_opengl3.h"
+#include "Resource/ResourceManager.h"
 
 namespace zn
 {
 	Window::~Window()
 	{
+		// ImGui Cleanup
+		ImGui_ImplOpenGL3_Shutdown();
+		ImGui_ImplGlfw_Shutdown();
+		ImGui::DestroyContext();
+		
+		glfwDestroyWindow(m_window);
+		glfwTerminate();
 		m_window = nullptr;
 	}
 
-	bool Window::Init(int width, int height, const char* title)
+	bool Window::Init(int width, int height, const std::string& name)
 	{
+		m_width = width;
+		m_height = height;
+		m_name = name;
+		
 		if (!glfwInit())
 		{
-			ZN_CORE_CRITICAL("Failed to initialize GLFW");
+			ZN_CORE_CRITICAL("Failed to initialize GLFW")
 			return false;
 		}
 
@@ -36,7 +48,7 @@ namespace zn
 		glfwWindowHint(GLFW_OPENGL_DEBUG_CONTEXT, true);
 #endif
 
-		m_window = glfwCreateWindow(width, height, title, nullptr, nullptr);
+		m_window = glfwCreateWindow(m_width, m_height, m_name.c_str(), nullptr, nullptr);
 		if (!m_window)
 		{
 			ZN_CORE_CRITICAL("Failed to create GLFW window")
@@ -84,9 +96,6 @@ namespace zn
 		
 		// Setup user pointer as this is the only way 
 		// I have to access data within GLFW callbacks
-		m_width = width;
-		m_height = height;
-		m_title = title;
 		glfwSetWindowUserPointer(m_window, this);
 
 		// Setup Event Callbacks here
@@ -110,10 +119,20 @@ namespace zn
 #endif
 		
 		// TEMPORAL ///////////////////////////////////////
-		m_basicShader = CreateUnique<zn::Shader>("Basic Shader", "Content/Shaders/vertex.glsl", "Content/Shaders/fragment.glsl");
+		if (auto shader = ResourceManager::LoadShader("Basic Shader", "Content/Shaders/vertex.glsl", "Content/Shaders/fragment.glsl"))
+		{
+			m_basicShader = shader.value();
+		}
 
-		m_texture = CreateUnique<zn::Texture>("Content/Textures/wall.jpg");
-		m_texture2 = CreateUnique<zn::Texture>("Content/Textures/george.jpg");
+		if (auto wallTexture = ResourceManager::LoadTexture("Wall", "Content/Textures/wall.jpg"))
+		{
+			m_wallTexture = wallTexture.value();
+		}
+
+		if (auto georgeTexture = ResourceManager::LoadTexture("George", "Content/Textures/george.jpg"))
+		{
+			m_georgeTexture = georgeTexture.value();
+		}
 
 		m_vertexArray = CreateUnique<zn::VertexArray>();
 		m_vertexArray->Bind();
@@ -142,6 +161,39 @@ namespace zn
 		// TEMPORAL ///////////////////////////////////////
 		m_transform = glm::mat4(1.0f);
 		return true;
+
+		//// TEMPORAL ///////////////////////////////////////
+		//m_basicShader = CreateUnique<zn::Shader>("Basic Shader", "Content/Shaders/vertex.glsl", "Content/Shaders/fragment.glsl");
+		//
+		//m_texture = CreateUnique<zn::Texture>("Content/Textures/wall.jpg");
+		//m_texture2 = CreateUnique<zn::Texture>("Content/Textures/george.jpg");
+		//
+		//m_vertexArray = CreateUnique<zn::VertexArray>();
+		//m_vertexArray->Bind();
+		//
+		//VertexBuffer vertexBuffer{};
+		//vertexBuffer.Bind();
+		//vertexBuffer.SetData(vertices, sizeof(vertices));
+		//
+		//VertexBufferLayout vertexBufferLayout;
+		//vertexBufferLayout.PushElement<float>(3);
+		//vertexBufferLayout.PushElement<float>(3);
+		//vertexBufferLayout.PushElement<float>(2); //texture coords
+		//
+		//m_vertexArray->AddVertexBuffer(vertexBuffer, vertexBufferLayout);
+		//
+		//IndexBuffer indexBuffer{};
+		//indexBuffer.Bind();
+		//indexBuffer.SetData(indices, 6);
+		//
+		//vertexBuffer.Unbind();
+		//
+		////// remember: do NOT unbind the EBO while a VAO is active as the bound element buffer object IS stored in the VAO; keep the EBO bound.
+		////indexBuffer.Unbind();
+		//
+		//m_vertexArray->Unbind();
+		//// TEMPORAL ///////////////////////////////////////
+		//m_transform = glm::mat4(1.0f);
 	}
 
 	void Window::CloseCallback()
@@ -165,7 +217,7 @@ namespace zn
 	
 	void Window::KeyPressedCallback(int key)
 	{
-		KeyPressedEvent e(key, 0);
+		KeyPressedEvent e{key, 0};
 		EventSystem::Instance().Post(e);
 	}
 
@@ -203,33 +255,25 @@ namespace zn
 		}
 	}
 
-	void Window::Update()
-	{
-		if (!ShouldClose())
-		{
-			Clear();
-			Draw();
-			SwapBuffers();
-			PollEvents();
-		}
-	}
-
-	void Window::Cleanup()
-	{
-		// ImGui Cleanup
-		ImGui_ImplOpenGL3_Shutdown();
-		ImGui_ImplGlfw_Shutdown();
-		ImGui::DestroyContext();
-		
-		glfwDestroyWindow(m_window);
-		glfwTerminate();
-
-		m_window = nullptr;
-	}
-
 	bool Window::ShouldClose() const
 	{
 		return glfwWindowShouldClose(m_window);
+	}
+
+	void Window::PollEvents() const
+	{
+		glfwPollEvents();
+		
+		if (glfwGetWindowAttrib(m_window, GLFW_ICONIFIED) != 0)
+		{
+			ImGui_ImplGlfw_Sleep(10);
+		}
+	}
+
+	void Window::Clear() const
+	{
+		glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
+		glClear(GL_COLOR_BUFFER_BIT);
 	}
 
 	void Window::Draw() const
@@ -238,13 +282,13 @@ namespace zn
 		transform = glm::rotate(transform, glm::radians(float(glfwGetTime() * 120.0f)), glm::vec3(0.0f, 1.0f, 0.0f));
 		transform = glm::scale(transform, glm::vec3(0.5f, 0.5f, 0.5f));
 
-		m_texture->Bind();
+		m_wallTexture->Bind();
 		m_basicShader->Bind();
 		m_basicShader->SetInt("texture1", 0);
 		m_basicShader->SetInt("texture2", 1);
 
-		m_texture->Bind();
-		m_texture2->Bind(1);
+		m_wallTexture->Bind();
+		m_georgeTexture->Bind(1);
 		m_vertexArray->Bind();
 
 		m_basicShader->SetMat4("transform", transform);
@@ -270,27 +314,48 @@ namespace zn
 			ImGui::RenderPlatformWindowsDefault();
 			glfwMakeContextCurrent(backup_current_context);
 		}
-	}
 
-	void Window::Clear() const
-	{
-		glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
-		glClear(GL_COLOR_BUFFER_BIT);
+		//glm::mat4 transform = glm::mat4(1.0f);
+		//transform = glm::rotate(transform, glm::radians(float(glfwGetTime() * 120.0f)), glm::vec3(0.0f, 1.0f, 0.0f));
+		//transform = glm::scale(transform, glm::vec3(0.5f, 0.5f, 0.5f));
+		//
+		//m_texture->Bind();
+		//m_basicShader->Bind();
+		//m_basicShader->SetInt("texture1", 0);
+		//m_basicShader->SetInt("texture2", 1);
+		//
+		//m_texture->Bind();
+		//m_texture2->Bind(1);
+		//m_vertexArray->Bind();
+		//
+		//m_basicShader->SetMat4("transform", transform);
+		//
+		//glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+		//
+		//// Start the Dear ImGui frame
+		//ImGui_ImplOpenGL3_NewFrame();
+		//ImGui_ImplGlfw_NewFrame();
+		//ImGui::NewFrame();
+		//
+		//bool show_demo_window = true;
+		//ImGui::ShowDemoWindow(&show_demo_window);
+		//
+		//ImGui::Render();
+		//ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+		//
+		//ImGuiIO& io = ImGui::GetIO(); (void)io;
+		//if (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable)
+		//{
+		//	GLFWwindow* backup_current_context = glfwGetCurrentContext();
+		//	ImGui::UpdatePlatformWindows();
+		//	ImGui::RenderPlatformWindowsDefault();
+		//	glfwMakeContextCurrent(backup_current_context);
+		//}
 	}
-
+	
 	void Window::SwapBuffers() const
 	{
 		glfwSwapBuffers(m_window);
-	}
-
-	void Window::PollEvents() const
-	{
-		glfwPollEvents();
-		
-		if (glfwGetWindowAttrib(m_window, GLFW_ICONIFIED) != 0)
-		{
-			ImGui_ImplGlfw_Sleep(10);
-		}
 	}
 
 #ifdef ZN_DEBUG

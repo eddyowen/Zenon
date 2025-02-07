@@ -5,7 +5,7 @@ int main(int argc, char *argv[])
     using namespace zn;
     
 	SharedPtr<Application> app = CreateShared<Application>();
-	if (app->Init())
+	if (app->Init("Sandbox"))
 	{
 		app->Run();
 	}
