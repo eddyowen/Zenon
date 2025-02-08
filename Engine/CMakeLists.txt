@@ -30,7 +30,7 @@ if(NOT TARGET glfw)
 		set(${_glfw3_option} OFF CACHE INTERNAL "")
 	endforeach()
 	set(GLFW_INCLUDE_NONE OFF CACHE INTERNAL "")
-	add_subdirectory(../external/glfw glfw)
+	add_subdirectory(../external/glfw glfw EXCLUDE_FROM_ALL)
 	set_target_properties(glfw PROPERTIES FOLDER "External")
 endif()
 
