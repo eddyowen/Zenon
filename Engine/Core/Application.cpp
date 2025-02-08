@@ -10,7 +10,13 @@ namespace zn
 		
 		if (!m_window.Init(1200, 1200, appName))
 		{
-			ZN_CORE_ERROR("Failed to initialize Window. Closing Application")
+			ZN_CORE_CRITICAL("[Application::Init] Failed to initialize Window. Closing Application")
+			return false;
+		}
+
+		if (!m_renderer.Init())
+		{
+			ZN_CORE_CRITICAL("[Application::Init] Failed to initialize Renderer. Closing Application")
 			return false;
 		}
 
@@ -30,12 +36,11 @@ namespace zn
 			// Process events ..
 			
 			// Calculate delta ..
-
-			// Update Renderer ..
 			
-			m_window.Clear();
-			m_window.Draw();
-
+			m_renderer.ClearScreen(0.2f, 0.3f, 0.3f, 1.0f);
+			m_renderer.Render();
+			
+			m_window.RenderImGUI();
 			m_window.SwapBuffers();
 		}
 	}

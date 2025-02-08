@@ -23,8 +23,7 @@ namespace zn
 		bool Init(int width, int height, const std::string& name);
 		
 		void PollEvents() const;
-		void Clear() const;
-		void Draw() const;
+		void RenderImGUI() const;
 		void SwapBuffers() const;
 		bool ShouldClose() const;
 
@@ -43,34 +42,10 @@ namespace zn
 #endif
 
 	private:
+		GLFWwindow* m_window = nullptr;
+		
 		int m_width = 0;
 		int m_height = 0;
-		GLFWwindow* m_window = nullptr;
 		std::string m_name;
-
-		// TEMPORAL ///////////////////////////////////////
-		SharedPtr<Shader> m_basicShader;
-		UniquePtr<VertexArray> m_vertexArray;
-
-		SharedPtr<Texture> m_wallTexture;
-		SharedPtr<Texture> m_georgeTexture;
-		
-		glm::mat4 m_transform;
-		
-		unsigned int VBO, EBO, VAO;
-
-		float vertices[32] = {
-			// positions          // colors           // texture coords
-			 0.5f,  0.5f, 0.0f,   1.0f, 0.0f, 0.0f,   1.0f, 1.0f, // top right
-			 0.5f, -0.5f, 0.0f,   0.0f, 1.0f, 0.0f,   1.0f, 0.0f, // bottom right
-			-0.5f, -0.5f, 0.0f,   0.0f, 0.0f, 1.0f,   0.0f, 0.0f, // bottom left
-			-0.5f,  0.5f, 0.0f,   1.0f, 1.0f, 0.0f,   0.0f, 1.0f  // top left 
-		};
-
-		unsigned int indices[6] = {  // note that we start from 0!
-			0, 1, 3,  // first Triangle
-			1, 2, 3   // second Triangle
-		};
-		//////////////////////////////////////////////////
 	};
 }

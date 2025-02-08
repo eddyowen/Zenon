@@ -3,6 +3,7 @@
 #include "Events/ApplicationEvent.h"
 #include "Events/KeyEvent.h"
 #include "Platform/Window.h"
+#include "Renderer/Renderer.h"
 
 namespace zn
 {
@@ -27,6 +28,7 @@ namespace zn
 
 	private:
 		Window m_window{};
+		Renderer m_renderer{};
 
 		EventConnection<KeyPressedEvent> m_keyPressedConnection;
 		EventConnection<WindowClosedEvent> m_windowClosedConnection;
