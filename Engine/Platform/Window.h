@@ -9,8 +9,6 @@
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 
-struct GLFWwindow;
-
 namespace zn
 {
 	class Window
@@ -26,6 +24,9 @@ namespace zn
 		void RenderImGUI() const;
 		void SwapBuffers() const;
 		bool ShouldClose() const;
+
+		[[nodiscard]] 
+		GLFWwindow* GetNativeWindow() const { return m_window; }
 
 	protected:
 		void CloseCallback();

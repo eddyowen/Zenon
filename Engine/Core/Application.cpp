@@ -20,6 +20,8 @@ namespace zn
 			return false;
 		}
 
+		m_inputSystem.Init(m_window.GetNativeWindow());
+
 		m_keyPressedConnection = EventSystem::Instance().Subscribe<KeyPressedEvent>(shared_from_this(), &Application::OnKeyPressed);
 		m_windowClosedConnection = EventSystem::Instance().Subscribe<WindowClosedEvent>(shared_from_this(), &Application::OnWindowClosed);
 		m_windowResizedConnection = EventSystem::Instance().Subscribe<WindowResizedEvent>(shared_from_this(), &Application::OnWindowResized);
@@ -33,7 +35,8 @@ namespace zn
 		{
 			m_window.PollEvents();
 
-			// Process events ..
+			// Process Input ..
+			m_inputSystem.Update();
 			
 			// Calculate delta ..
 			
@@ -47,7 +50,7 @@ namespace zn
 
 	bool Application::OnKeyPressed(const KeyPressedEvent& e)
 	{
-		ZN_CORE_TRACE("KeyPressedEvent: {}. ({}) repeats", e.KeyCode,  e.RepeatCount)
+		ZN_CORE_TRACE("KeyPressedEvent: {}. ({}) repeats", KeyCodeToGLFW(e.KeyCode),  e.RepeatCount)
 		return true;
 	}
 

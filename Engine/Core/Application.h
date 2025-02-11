@@ -2,6 +2,7 @@
 
 #include "Events/ApplicationEvent.h"
 #include "Events/KeyEvent.h"
+#include "Input/InputSystem.h"
 #include "Platform/Window.h"
 #include "Renderer/Renderer.h"
 
@@ -28,6 +29,7 @@ namespace zn
 
 	private:
 		Window m_window{};
+		InputSystem m_inputSystem{};
 		Renderer m_renderer{};
 
 		EventConnection<KeyPressedEvent> m_keyPressedConnection;

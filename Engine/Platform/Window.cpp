@@ -37,7 +37,7 @@ namespace zn
 		
 		if (!glfwInit())
 		{
-			ZN_CORE_CRITICAL("Failed to initialize GLFW")
+			ZN_CORE_CRITICAL("[Window::Init] Failed to initialize GLFW. Aborting")
 			return false;
 		}
 
@@ -51,7 +51,7 @@ namespace zn
 		m_window = glfwCreateWindow(m_width, m_height, m_name.c_str(), nullptr, nullptr);
 		if (!m_window)
 		{
-			ZN_CORE_CRITICAL("Failed to create GLFW window")
+			ZN_CORE_CRITICAL("[Window::Init] Failed to create GLFW window. Aborting")
 			glfwTerminate();
 			return false;
 		}
@@ -61,7 +61,7 @@ namespace zn
 
 		if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
 		{
-			ZN_CORE_CRITICAL("Failed to initialize GLAD")
+			ZN_CORE_CRITICAL("[Window::Init] Failed to initialize GLAD. Aborting")
 			glfwTerminate();
 			return false;
 		}
@@ -114,7 +114,7 @@ namespace zn
 			glDebugMessageCallback(OpenGLDebugOutput, nullptr);
 			glDebugMessageControl(GL_DONT_CARE, GL_DONT_CARE, GL_DONT_CARE, 0, nullptr, GL_TRUE);
 			
-			ZN_CORE_INFO("OpenGL Debug Context successfully initialized")
+			ZN_CORE_INFO("[Window::Init] OpenGL Debug Context successfully initialized")
 		}
 #endif
 		return true;
@@ -141,7 +141,7 @@ namespace zn
 	
 	void Window::KeyPressedCallback(int key)
 	{
-		KeyPressedEvent e{key, 0};
+		KeyPressedEvent e{static_cast<zn::KeyCode>(key), 0};
 		EventSystem::Instance().Post(e);
 	}
 
