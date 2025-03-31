@@ -1,0 +1,28 @@
+{
+    "version": 6,
+    "configurePresets": [
+        {
+            "name": "zenon-msvc-default",
+            "displayName": "Zenon MSVC Default",
+            "description": "Default configuration",
+            "generator": "Visual Studio 17 2022",
+            "binaryDir": "${sourceDir}/Generated"
+        }
+    ],
+    "buildPresets": [
+        {
+            "name": "zenon-debug",
+            "displayName": "Sandbox MSVC Debug",
+            "configurePreset": "zenon-msvc-default",
+            "targets": ["Sandbox"],
+            "configuration": "Debug"
+        },
+        {
+            "name": "zenon-release",
+            "displayName": "Sandbox MSVC Release",
+            "configurePreset": "zenon-msvc-default",
+            "targets": ["Sandbox"],
+            "configuration": "Release"
+        }
+    ]
+}

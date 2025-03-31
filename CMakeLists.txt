@@ -1,10 +1,16 @@
-cmake_minimum_required(VERSION 3.28)
+cmake_minimum_required(VERSION 3.25)
 
-project ("ZenonEngine" VERSION 1.0)
+project ("ZenonEngine" VERSION 0.1)
+
+# C++20 standard
+set(CMAKE_CXX_STANDARD 20)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_CXX_EXTENSIONS OFF)
 
 # Let us use our *.cmake files now
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/CMake")
 
+include(FetchContent)
 include(CommonInc)
 include(GitSubmodules)
 
@@ -39,10 +45,6 @@ foreach(submodule_path IN LISTS SUBMODULES_LIST)
   add_git_submodule(${submodule_path})
 endforeach()
 
-# C++20 standard
-set(CMAKE_CXX_STANDARD 20)
-set(CMAKE_CXX_STANDARD_REQUIRED ON)
-set(CMAKE_CXX_EXTENSIONS OFF)
 
 if(MSVC)
     add_definitions(-D_CRT_SECURE_NO_WARNINGS)

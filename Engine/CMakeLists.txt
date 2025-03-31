@@ -1,4 +1,4 @@
-project ( Engine VERSION 1.0 )
+project ( Engine VERSION 0.1 )
 
 # Take care of warnings about strcpy
 if(MSVC)
