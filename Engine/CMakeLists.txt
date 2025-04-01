@@ -1,4 +1,4 @@
-project ( Engine VERSION 0.1 )
+project (Engine VERSION 0.1)
 
 # Take care of warnings about strcpy
 if(MSVC)
@@ -6,10 +6,6 @@ if(MSVC)
 endif()
 
 set (ZENON_ENGINE_SOURCE_PATH "${CMAKE_CURRENT_SOURCE_DIR}")
-
-if(MSVC)
-	add_definitions(-D_CRT_SECURE_NO_WARNINGS)
-endif()
 
 include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 
@@ -74,7 +70,7 @@ set (LINK_LIBS
 
 ### Setup visual studio source groups / filters ###
 file(GLOB_RECURSE _source_list
-    *.cpp* src/*.h* src/*.hpp* *.h* ${GENERATED_INC_FOLDER}/*.h ${GENERATED_INC_FOLDER}/*.cpp *.inl
+    *.cpp* src/*.h* src/*.hpp* *.h *.inl
 )
 
 ################# Add Engine library and link ######################

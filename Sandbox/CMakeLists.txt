@@ -1,4 +1,4 @@
-project( Sandbox VERSION 1.0 )
+project(Sandbox VERSION 1.0)
 
 #======== Engine Setup =========#
 
@@ -6,7 +6,7 @@ set (INCLUDE_DIRS
 	"../Engine"
 )
 
-set ( LINK_LIBS
+set (LINK_LIBS
 	"Engine"
 )
 
@@ -28,5 +28,3 @@ target_link_libraries(${PROJECT_NAME} LINK_PUBLIC ${LINK_LIBS})
 
 # Prettify folders in solution
 assign_source_group(${_source_list})
-
-set_property(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} PROPERTY VS_STARTUP_PROJECT Sandbox)

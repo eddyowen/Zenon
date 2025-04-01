@@ -7,18 +7,14 @@ set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
+set(FETCHCONTENT_BASE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/external")
+
 # Let us use our *.cmake files now
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/CMake")
 
 include(FetchContent)
 include(CommonInc)
 include(GitSubmodules)
-
-# Generated folder used for Cmake generated files
-set(GENERATED_INC_FOLDER ${CMAKE_BINARY_DIR})
-file(MAKE_DIRECTORY "${GENERATED_INC_FOLDER}")
-
-set (ZENON_ROOT_DIR "${CMAKE_CURRENT_SOURCE_DIR}")
 
 configure_file(Config/RootDirectory.h.in Config/RootDirectory.h)
 include_directories(${CMAKE_BINARY_DIR}/Config)
@@ -45,7 +41,6 @@ foreach(submodule_path IN LISTS SUBMODULES_LIST)
   add_git_submodule(${submodule_path})
 endforeach()
 
-
 if(MSVC)
     add_definitions(-D_CRT_SECURE_NO_WARNINGS)
 	if (NOT DEFINED NOMINMAX)
@@ -68,6 +63,4 @@ add_subdirectory ("Sandbox")
 set_property(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} PROPERTY VS_STARTUP_PROJECT Sandbox)
 
 zn_log("Compiler: ${CMAKE_CXX_COMPILER_ID} ${CMAKE_CXX_COMPILER_VERSION}")
-zn_log("Generated dir: ${GENERATED_INC_FOLDER}")
 zn_log("CMake module path: ${CMAKE_MODULE_PATH}")
-zn_log("Engine root dir: ${ZENON_ROOT_DIR}")
