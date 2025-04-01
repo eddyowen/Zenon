@@ -6,6 +6,8 @@
 ## === ZENON ENGINE  === ##
 Build/
 Generated/
+ThirdParty/
+external/
 
 # User-specific files
 *.rsuser

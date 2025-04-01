@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.25)
+cmake_minimum_required(VERSION 3.10...3.25)
 
 project ("ZenonEngine" VERSION 0.1)
 
@@ -7,14 +7,11 @@ set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
-set(FETCHCONTENT_BASE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/external")
-
 # Let us use our *.cmake files now
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/CMake")
-
-include(FetchContent)
 include(CommonInc)
-include(GitSubmodules)
+
+set(FETCHCONTENT_BASE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/ThirdParty" CACHE PATH "Base directory for FetchContent" FORCE)
 
 configure_file(Config/RootDirectory.h.in Config/RootDirectory.h)
 include_directories(${CMAKE_BINARY_DIR}/Config)
@@ -27,19 +24,6 @@ if(WIN32)
     set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/Build/bin/Win32/$<CONFIG>")
     set(CMAKE_COMPILE_PDB_OUTPUT_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/Build/bin-int/Win32/$<CONFIG>")
 endif()
-
-# List of submodules (specify the relative path from the project root)
-set(SUBMODULES_LIST
-    "external/glfw"
-    "external/glm"
-    "external/spdlog"
-    "external/imgui"
-)
-
-# Iterate over the submodule list and initialize each
-foreach(submodule_path IN LISTS SUBMODULES_LIST)
-  add_git_submodule(${submodule_path})
-endforeach()
 
 if(MSVC)
     add_definitions(-D_CRT_SECURE_NO_WARNINGS)

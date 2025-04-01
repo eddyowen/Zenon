@@ -4,83 +4,116 @@ project (Engine VERSION 0.1)
 if(MSVC)
     add_definitions(-D_CRT_SECURE_NO_WARNINGS)
 endif()
-
-set (ZENON_ENGINE_SOURCE_PATH "${CMAKE_CURRENT_SOURCE_DIR}")
-
+	
 include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 
-set (INCLUDE_DIRS
-	../external/glad/include
-	../external/glfw/include
-	../external/glm
-	../external/assimp
-	../external/spdlog/include
-	../external/stb_image
-	../external/imgui
-	../external/imgui/backends
+# ################### Dependencies #######################
+
+include(FetchContent)
+
+# === GLFW ===
+
+set(GLFW_BUILD_TESTS OFF CACHE INTERNAL "")
+set(GLFW_BUILD_EXAMPLES OFF CACHE INTERNAL "")
+set(GLFW_BUILD_DOCS OFF CACHE INTERNAL "")
+set(GLFW_INSTALL OFF CACHE INTERNAL "")
+set(GLFW_INCLUDE_NONE OFF CACHE INTERNAL "")
+
+FetchContent_Declare(
+	glfw
+	GIT_REPOSITORY https://github.com/glfw/glfw.git
+	EXCLUDE_FROM_ALL
+	)
+FetchContent_MakeAvailable(glfw)
+set_target_properties(glfw PROPERTIES FOLDER "ThirdParty")
+
+# === GLAD ===
+
+FetchContent_Declare(
+  glad
+  GIT_REPOSITORY https://github.com/Dav1dde/glad.git
+  EXCLUDE_FROM_ALL
 )
+FetchContent_MakeAvailable(glad)
+set_target_properties(glad PROPERTIES FOLDER "ThirdParty")
 
-# GLFW
-if(NOT TARGET glfw)
-	foreach(_glfw3_option "GLFW_BUILD_TESTS" "GLFW_BUILD_EXAMPLES" "GLFW_BUILD_DOCS" "GLFW_INSTALL")
-		set(${_glfw3_option} OFF CACHE INTERNAL "")
-	endforeach()
-	set(GLFW_INCLUDE_NONE OFF CACHE INTERNAL "")
-	add_subdirectory(../external/glfw glfw EXCLUDE_FROM_ALL)
-	set_target_properties(glfw PROPERTIES FOLDER "External")
-endif()
+# === GLM ===
 
-# GLAD
-if(NOT TARGET glad)
-	add_subdirectory(../external/glad glad)
-	set_target_properties(glad PROPERTIES FOLDER "External")
-endif()
+FetchContent_Declare(
+  glm
+  GIT_REPOSITORY https://github.com/g-truc/glm.git
+  EXCLUDE_FROM_ALL
+)
+FetchContent_MakeAvailable(glm)
+set_target_properties(glm PROPERTIES FOLDER "ThirdParty")
 
-# ASSIMP
-#if(NOT TARGET Assimp)
-#	foreach(_assimp_option "BUILD_SHARED_LIBS" "ASSIMP_INSTALL")
-#		set(${_assimp_option} OFF CACHE INTERNAL "")
-#	endforeach()
-#	add_subdirectory(../external/assimp assimp)
-#	set_target_properties(assimp PROPERTIES FOLDER "External")
-#	set_target_properties(UpdateAssimpLibsDebugSymbolsAndDLLs PROPERTIES FOLDER "External")
-#	set_target_properties(unit PROPERTIES FOLDER "External")
-#	set_target_properties(zlibstatic PROPERTIES FOLDER "External")
-#endif()
+# === STB ===
 
-if(NOT TARGET spdlog)
-	add_subdirectory(../external/spdlog spdlog)
-	set_target_properties(spdlog PROPERTIES FOLDER "External")
-endif()
+FetchContent_Declare(
+  stb
+  GIT_REPOSITORY https://github.com/nothings/stb.git
+  EXCLUDE_FROM_ALL
+)
+FetchContent_MakeAvailable(stb)
+
+# === SPDLOG ===
+
+FetchContent_Declare(
+  spdlog
+  GIT_REPOSITORY https://github.com/gabime/spdlog.git
+  GIT_TAG v1.x
+  EXCLUDE_FROM_ALL
+)
+FetchContent_MakeAvailable(spdlog)
+set_target_properties(spdlog PROPERTIES FOLDER "ThirdParty")
+
+# === IMGUI ===
+
+FetchContent_Declare(
+  imgui
+  GIT_REPOSITORY https://github.com/ocornut/imgui.git
+  GIT_TAG docking
+  EXCLUDE_FROM_ALL
+)
+FetchContent_MakeAvailable(imgui)
 
 if(NOT TARGET imgui)
-	file(GLOB IMGUI_SOURCES ../external/imgui/*.cpp ../external/imgui/backends/imgui_impl_glfw.cpp ../external/imgui/backends/imgui_impl_opengl3.cpp) 
-	add_library(imgui STATIC ${IMGUI_SOURCES})
-	target_include_directories(imgui PUBLIC ../external/imgui ../external/imgui/backends ../external/glfw/include)		
-	set_target_properties(imgui PROPERTIES FOLDER "External")
+  file(GLOB IMGUI_SOURCES 
+    ${imgui_SOURCE_DIR}/*.cpp
+    ${imgui_SOURCE_DIR}/backends/imgui_impl_glfw.cpp
+    ${imgui_SOURCE_DIR}/backends/imgui_impl_opengl3.cpp
+  )
+  add_library(imgui STATIC ${IMGUI_SOURCES})
+  target_include_directories(imgui PUBLIC 
+    ${imgui_SOURCE_DIR}
+    ${imgui_SOURCE_DIR}/backends
+    ${glfw_SOURCE_DIR}/include
+  )
+  set_target_properties(imgui PROPERTIES FOLDER "ThirdParty")
 endif()
 
 set (LINK_LIBS
     glfw ${GLFW_LIBRARIES}
 	glad
-	opengl32.lib
+	glm
 	spdlog
 	imgui
+	opengl32.lib
 )
 
-### Setup visual studio source groups / filters ###
+# ################ Add Engine library and link ######################
+
+# Setup visual studio source groups / filters
 file(GLOB_RECURSE _source_list
     *.cpp* src/*.h* src/*.hpp* *.h *.inl
 )
-
-################# Add Engine library and link ######################
 
 # If STATIC/SHARED is omitted when defining the library, the default
 # will depend on the value of the property BUILD_SHARED_LIBS
 add_library (${PROJECT_NAME} ${_source_list})
 
 # Make sure the compiler can find include files for our Engine library
-target_include_directories (${PROJECT_NAME} PUBLIC ${INCLUDE_DIRS})
+target_include_directories (${PROJECT_NAME} PUBLIC ${INCLUDE_DIRS} ${stb_SOURCE_DIR})
 
 # Link libs
 target_link_libraries(${PROJECT_NAME} LINK_PUBLIC ${LINK_LIBS})

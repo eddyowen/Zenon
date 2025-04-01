@@ -1,7 +1,5 @@
 project(Sandbox VERSION 1.0)
 
-#======== Engine Setup =========#
-
 set (INCLUDE_DIRS
 	"../Engine"
 )
@@ -10,12 +8,11 @@ set (LINK_LIBS
 	"Engine"
 )
 
-# == Setup visual studio source groups / filters == #
+# ============== Add Exe and link ================= #
 
+# Setup visual studio source groups / filters ==
 file(GLOB_RECURSE _source_list
     *.cpp* src/*.h* src/*.hpp* *.h* *.inl)
-
-# ============== Add Exe and link ================= #
 
 # Link our normal libraries and create an executeable 
 add_executable(${PROJECT_NAME} ${_source_list})
