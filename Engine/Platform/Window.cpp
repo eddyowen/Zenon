@@ -65,6 +65,8 @@ namespace zn
 			glfwTerminate();
 			return false;
 		}
+		// Configure global opengl state
+		glEnable(GL_DEPTH_TEST);
 		
 		const char* glslVersion = "#version 450";
 		
