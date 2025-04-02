@@ -6,7 +6,10 @@
             "displayName": "Zenon MSVC Default",
             "description": "Default configuration",
             "generator": "Visual Studio 17 2022",
-            "binaryDir": "${sourceDir}/Generated"
+            "binaryDir": "${sourceDir}/Generated",
+            "cacheVariables": {
+                "CMAKE_POLICY_VERSION_MINIMUM": "3.5"
+            }
         }
     ],
     "buildPresets": [

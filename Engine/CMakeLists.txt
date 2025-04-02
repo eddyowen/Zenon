@@ -19,8 +19,7 @@ set(GLFW_BUILD_DOCS OFF CACHE INTERNAL "")
 set(GLFW_INSTALL OFF CACHE INTERNAL "")
 set(GLFW_INCLUDE_NONE OFF CACHE INTERNAL "")
 
-FetchContent_Declare(
-	glfw
+FetchContent_Declare(glfw
 	GIT_REPOSITORY https://github.com/glfw/glfw.git
 	EXCLUDE_FROM_ALL
 	)
@@ -29,8 +28,7 @@ set_target_properties(glfw PROPERTIES FOLDER "ThirdParty")
 
 # === GLAD ===
 
-FetchContent_Declare(
-  glad
+FetchContent_Declare(glad
   GIT_REPOSITORY https://github.com/Dav1dde/glad.git
   EXCLUDE_FROM_ALL
 )
@@ -39,8 +37,7 @@ set_target_properties(glad PROPERTIES FOLDER "ThirdParty")
 
 # === GLM ===
 
-FetchContent_Declare(
-  glm
+FetchContent_Declare(glm
   GIT_REPOSITORY https://github.com/g-truc/glm.git
   EXCLUDE_FROM_ALL
 )
@@ -49,8 +46,7 @@ set_target_properties(glm PROPERTIES FOLDER "ThirdParty")
 
 # === STB ===
 
-FetchContent_Declare(
-  stb
+FetchContent_Declare(stb
   GIT_REPOSITORY https://github.com/nothings/stb.git
   EXCLUDE_FROM_ALL
 )
@@ -58,8 +54,7 @@ FetchContent_MakeAvailable(stb)
 
 # === SPDLOG ===
 
-FetchContent_Declare(
-  spdlog
+FetchContent_Declare(spdlog
   GIT_REPOSITORY https://github.com/gabime/spdlog.git
   GIT_TAG v1.x
   EXCLUDE_FROM_ALL
@@ -69,8 +64,7 @@ set_target_properties(spdlog PROPERTIES FOLDER "ThirdParty")
 
 # === IMGUI ===
 
-FetchContent_Declare(
-  imgui
+FetchContent_Declare(imgui
   GIT_REPOSITORY https://github.com/ocornut/imgui.git
   GIT_TAG docking
   EXCLUDE_FROM_ALL
