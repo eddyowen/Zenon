@@ -8,7 +8,7 @@
             "generator": "Visual Studio 17 2022",
             "binaryDir": "${sourceDir}/Generated",
             "cacheVariables": {
-                "CMAKE_POLICY_VERSION_MINIMUM": "3.5"
+                "CMAKE_SUPPRESS_DEVELOPER_WARNINGS": "ON"
             }
         }
     ],

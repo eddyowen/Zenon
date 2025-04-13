@@ -59,7 +59,7 @@ namespace zn
 		glfwMakeContextCurrent(m_window);
 		glfwSwapInterval(1); // Force VSYNC
 
-		if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
+		if (!gladLoadGL(glfwGetProcAddress))
 		{
 			ZN_CORE_CRITICAL("[Window::Init] Failed to initialize GLAD. Aborting")
 			glfwTerminate();

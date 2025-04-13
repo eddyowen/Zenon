@@ -43,7 +43,7 @@ goto :notRecognizedCommand
 :gensln
     echo.
     pushd ..\
-    call cmake -G "Visual Studio 17 2022" -B Generated
+    call cmake -G "Visual Studio 17 2022" -B Generated -DCMAKE_SUPPRESS_DEVELOPER_WARNINGS=ON
 
     IF %ERRORLEVEL% == 0 (
         goto:successBuild

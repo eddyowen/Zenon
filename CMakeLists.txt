@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.25)
+cmake_minimum_required(VERSION 3.20...3.31)
 
 project ("ZenonEngine" VERSION 0.1)
 
