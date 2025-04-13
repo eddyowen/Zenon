@@ -1,14 +1,17 @@
 @echo off
-
-:: Get an ESC characters
 setlocal
+
+:: Enable ANSI escape support
+>nul 2>&1 reg query "HKCU\Console" || reg add "HKCU\Console"
+reg add "HKCU\Console" /v VirtualTerminalLevel /t REG_DWORD /d 1 /f >nul
+
 call :setESC
 
 echo %ESC%[36m===========================================%ESC%[0m
-echo             ZN Project Gen Tool
+echo          Zenon Gengine Build Tool
 echo %ESC%[36m===========================================%ESC%[0m
 
-:: Build System commands handling
+:: Handle commands
 set "command=%~1"
 if "%command%"=="gensln" goto :%command% 
 if "%command%"=="opensln" goto :%command%
@@ -17,9 +20,8 @@ if "%command%"=="" goto :emptyCommand
 if "%command%"=="--help" goto :help
 goto :notRecognizedCommand
 
-:: Help menu 
 :help
-    echo %ESC%[36m                  Help menu%ESC%[36m
+    echo %ESC%[36m                Help menu%ESC%[36m
     echo %ESC%[36m-------------------------------------------%ESC%[0m
     echo.
     echo %ESC%[36m^>%ESC%[0m Usage: zen [command]
@@ -29,89 +31,68 @@ goto :notRecognizedCommand
     echo %ESC%[36m-%ESC%[0m clean            Cleans compiled data from the build directory.
     goto :eof
 
-:: Warning message thrown due an empty command
 :emptyCommand
-    echo %ESC%[33mNo command was entered. Type "zen --help" for help. %ESC%[0m
+    echo %ESC%[33mNo command was entered. Type "zen --help" for help.%ESC%[0m
     goto :eof
 
-:: Error message thrown due an unrecognized command
 :notRecognizedCommand
-    echo %ESC%[31m[ERROR]: Not such an EON command. Type "zen --help" for help. %ESC%[0m
+    echo %ESC%[31m[ERROR]: Not a recognized ZN command. Type "zen --help" for help.%ESC%[0m
     goto :eof
 
-:: Generates the solution files
 :gensln
     echo.
-    pushd ..\
+    pushd "..\"
     call cmake -G "Visual Studio 17 2022" -B Generated -DCMAKE_SUPPRESS_DEVELOPER_WARNINGS=ON
 
-    IF %ERRORLEVEL% == 0 (
-        goto:successBuild
-    ) ELSE (
+    if %ERRORLEVEL% == 0 (
         echo.
-        echo %ESC%[31m[ERROR] Errors encountered while generating the solution. Check the error list above.%ESC%[0m
-        popd
-        goto :eof 
+        echo %ESC%[32m[SUCCESS]: Solution successfully generated!%ESC%[0m
+    ) else (
+        echo.
+        echo %ESC%[31m[ERROR]: Errors encountered while generating the solution. Check the output above.%ESC%[0m
     )
-
-:successBuild
-    echo.
-    echo %ESC%[32m[SUCCESS]: Solution successfully generated! %ESC%[0m
     popd
     goto :eof
 
-:: Opens your solution
 :opensln
     echo.
-    IF EXIST "..\Generated\" (
+    if exist "..\Generated\" (
         pushd "..\Generated\"
-        IF EXIST ZenonEngine.sln (
-            start ZenonEngine.sln
-            echo %ESC%[32m[SUCCESS]: Openning the solution! %ESC%[0m
-            popd
-            goto :eof
-        ) ELSE (
-            echo %ESC%[31m[ERROR]: Cannot find solution files. Please, execute "zen gensln" to generate project files %ESC%[0m
-            popd
-            goto :eof
+        if exist "ZenonEngine.sln" (
+            start "" "ZenonEngine.sln"
+            echo %ESC%[32m[SUCCESS]: Opening the solution!%ESC%[0m
+        ) else (
+            echo %ESC%[31m[ERROR]: Cannot find solution file. Use "zen gensln" first.%ESC%[0m
         )
-
-    ) ELSE (
-        echo %ESC%[31m[ERROR]: Cannot find solution files. Please, execute "zen gensln" to generate project files %ESC%[0m
-        goto :eof
+        popd
+    ) else (
+        echo %ESC%[31m[ERROR]: Cannot find solution directory. Use "zen gensln" first.%ESC%[0m
     )
+    goto :eof
 
-:: Deteles your build files
 :clean
     echo.
-    pushd ..\
+    pushd "..\"
     
-    IF EXIST "Build\" (
+    if exist "Build\" (
         rmdir /S /Q "Build\"
-        echo.
-        echo %ESC%[32m[SUCCESS]: Build files succesfully deleted %ESC%[0m
-        goto :deleteGenerated
-    ) ELSE (
-        echo %ESC%[33m[WARNING]: Build directory not found. No files to clean %ESC%[0m
-        goto :deleteGenerated
+        echo %ESC%[32m[SUCCESS]: Build files successfully deleted.%ESC%[0m
+    ) else (
+        echo %ESC%[33m[WARNING]: Build directory not found.%ESC%[0m
     )
 
-    :deleteGenerated
+    if exist "Generated\" (
+        rmdir /S /Q "Generated\"
+        echo %ESC%[32m[SUCCESS]: Solution files successfully deleted.%ESC%[0m
+    ) else (
+        echo %ESC%[33m[WARNING]: Solution files directory not found.%ESC%[0m
+    )
+    
+    popd
+    goto :eof
 
-        IF EXIST "Generated\" (
-            rmdir /S /Q "Generated\"
-            echo %ESC%[32m[SUCCESS]: Solution files succesfully deleted %ESC%[0m
-            popd
-            goto :eof
-        ) ELSE (
-            echo %ESC%[33m[WARNING]: Solution files directory not found. No files to clean %ESC%[0m
-            popd
-            goto :eof
-        )
-
-:: Generates a ESC character used to set line foreground and background colors
 :setESC
     for /F "tokens=1,2 delims=#" %%a in ('"prompt #$H#$E# & echo on & for %%b in (1) do rem"') do (
         set ESC=%%b
-        exit /B 0
     )
+    exit /B 0
