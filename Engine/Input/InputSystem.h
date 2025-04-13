@@ -2,8 +2,6 @@
 
 #include "KeyCodes.h"
 
-#include <unordered_map>
-
 struct GLFWwindow;
 
 namespace zn

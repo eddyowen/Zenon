@@ -50,7 +50,7 @@ namespace zn
 
 	bool Application::OnKeyPressed(const KeyPressedEvent& e)
 	{
-		ZN_CORE_TRACE("KeyPressedEvent: {}. ({}) repeats", KeyCodeToGLFW(e.KeyCode),  e.RepeatCount)
+		ZN_CORE_TRACE("KeyPressedEvent: {}. ({}) repeats", static_cast<KeyCodeType>(e.KeyCode),  e.RepeatCount)
 		return true;
 	}
 

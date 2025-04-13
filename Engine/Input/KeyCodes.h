@@ -144,12 +144,12 @@ namespace zn
         RightAlt,
         RightSuper,
         Menu,
-		LAST
+    	UNKNOWN,
     };
 	
-	constexpr size_t KeyCodesCount = static_cast<size_t>(KeyCode::LAST);
+	constexpr size_t KeyCodesCount = static_cast<size_t>(KeyCode::UNKNOWN);
 	
-	constexpr std::array<int, KeyCodesCount>KeyCodesMapping_GFLW
+	constexpr std::array<int, KeyCodesCount> KeyCodesMapping_GFLW
 	{
         GLFW_KEY_SPACE,
         GLFW_KEY_APOSTROPHE,
@@ -272,12 +272,4 @@ namespace zn
         GLFW_KEY_RIGHT_SUPER,
         GLFW_KEY_MENU
     };
-
-
-	constexpr int KeyCodeToGLFW(KeyCode key)
-	{
-		ZN_CORE_ASSERT(key != KeyCode::LAST);
-
-		return KeyCodesMapping_GFLW[static_cast<int>(key)];
-	}
 }

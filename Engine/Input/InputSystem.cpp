@@ -5,6 +5,13 @@
 
 namespace zn
 {
+    static constexpr int KeyCodeToGLFW(KeyCode key)
+    {
+        ZN_CORE_ASSERT(key != KeyCode::UNKNOWN)
+        
+        return KeyCodesMapping_GFLW[static_cast<int>(key)];
+    }
+    
     bool InputSystem::Init(GLFWwindow* window)
     {
         if(!window)
@@ -39,8 +46,8 @@ namespace zn
 
     bool InputSystem::IsKeyDown(KeyCode key) const
     {
-        ZN_CORE_ASSERT(key != KeyCode::LAST);
-
+        ZN_CORE_ASSERT(key != KeyCode::UNKNOWN)
+        
         const int keyIdx = static_cast<int>(key);
         return m_keyStates[keyIdx] && !m_keyStatesPrev[keyIdx];
     }
