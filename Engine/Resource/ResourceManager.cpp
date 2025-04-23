@@ -58,7 +58,7 @@ namespace zn
         auto it = s_Shaders.find(name);
         if (it == s_Shaders.end())
         {
-            ZN_CORE_ERROR("[ResourceManager::LoadShader] Failed to retrieve shader. Shader ({}) resource doesn't exist in the registry", name)
+            ZN_CORE_ERROR("[ResourceManager::GetShader] Failed to retrieve shader. Shader ({}) resource doesn't exist in the registry", name)
             return std::nullopt;
         }
         
@@ -84,11 +84,13 @@ namespace zn
         stbi_set_flip_vertically_on_load(1);
 
         int width, height, channels;
-        unsigned int internalFormat, dataFormat;
 
         stbi_uc* data = stbi_load(fullPath.string().c_str(), &width, &height, &channels, 0);
         if (data)
         {
+            unsigned int dataFormat;
+            unsigned int internalFormat;
+            
             if (channels == 4)
             {
                 internalFormat = GL_RGBA8;
@@ -114,7 +116,14 @@ namespace zn
 
     ResourceManager::TextureResource ResourceManager::GetTexture(const std::string& name)
     {
-        return std::nullopt;
+        auto it = s_Textures.find(name);
+        if (it == s_Textures.end())
+        {
+            ZN_CORE_ERROR("[ResourceManager::GetTexture] Failed to retrieve texture. Texture ({}) resource doesn't exist in the registry", name)
+            return std::nullopt;
+        }
+        
+        return it->second;
     }
 
     void ResourceManager::Shutdown()

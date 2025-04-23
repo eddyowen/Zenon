@@ -4,64 +4,72 @@
 
 namespace zn
 {
-    class Timer
+    namespace Time
     {
-    public:
-        using clock_type = std::chrono::high_resolution_clock;
-        using timePoint_type = std::chrono::time_point<clock_type>;
-        using duration_type = std::chrono::duration<double>;
+        using Clock = std::chrono::high_resolution_clock;
+        using TimePoint = std::chrono::time_point<Clock>;
+        using Duration = std::chrono::duration<double>;
 
-        Timer() :
-            m_startTime(clock_type::now()), m_running(false) {}
-
-        // Start or restart the timer
-        void start()
+        static TimePoint GetCurrentTime()
         {
-            m_startTime = clock_type::now();
-            m_running = true;
+            return Clock::now();
         }
-
-        void Stop()
+        
+        class Timer
         {
-            if (m_running)
-            {
-                duration_type elapsed = clock_type::now() - m_startTime;
-                m_accumulatedTime += elapsed.count();
-                m_running = false;
-            }
-        }
+        public:
+            Timer() :
+                m_startTime(Clock::now()), m_running(false) {}
 
-        void Resume()
-        {
-            if (!m_running)
+            // Start or restart the timer
+            void Start()
             {
-                m_startTime = clock_type::now();
+                m_startTime = Clock::now();
                 m_running = true;
             }
-        }
 
-        void Reset()
-        {
-            m_startTime = clock_type::now();
-            m_accumulatedTime = 0.0;
-            m_running = false;
-        }
-
-        // In seconds
-        double GetElapsedTime() const
-        {
-            if (m_running)
+            void Stop()
             {
-                duration_type elapsed = clock_type::now() - m_startTime;
-                return m_accumulatedTime + elapsed.count();
+                if (m_running)
+                {
+                    Duration elapsed = Clock::now() - m_startTime;
+                    m_accumulatedTime += elapsed.count();
+                    m_running = false;
+                }
             }
-            
-            return m_accumulatedTime;
-        }
 
-    private:
-        timePoint_type m_startTime;
-        double m_accumulatedTime = 0.0; // Accumulated time in seconds when stopped
-        bool m_running;
-    };
+            void Resume()
+            {
+                if (!m_running)
+                {
+                    m_startTime = Clock::now();
+                    m_running = true;
+                }
+            }
+
+            void Reset()
+            {
+                m_startTime = Clock::now();
+                m_accumulatedTime = 0.0;
+                m_running = false;
+            }
+
+            // In seconds
+            double GetElapsedTime() const
+            {
+                if (m_running)
+                {
+                    Duration elapsed = Clock::now() - m_startTime;
+                    return m_accumulatedTime + elapsed.count();
+                }
+            
+                return m_accumulatedTime;
+            }
+
+        private:
+            TimePoint m_startTime;
+            double m_accumulatedTime = 0.0; // Accumulated time in seconds when stopped
+            bool m_running;
+        };
+    }
 }

@@ -1,6 +1,7 @@
 #include "Application.h"
 
-#include "Core/Log.h"
+#include "Log.h"
+#include "Timer.h"
 
 namespace zn
 {
@@ -31,14 +32,44 @@ namespace zn
 
 	void Application::Run()
 	{
+		const Time::Duration fixedDelta(1 / 60.f);
+		double accumulator = 0.0;
+
+		constexpr int maxUpdatesPerFrame = 5;
+		constexpr double maxFrameTime = 0.25; // capped at 4 FPS equivalent
+		
+		Time::TimePoint previousTime = Time::GetCurrentTime();
+		
 		while (!m_window.ShouldClose())
 		{
-			m_window.PollEvents();
-
-			// Process Input ..
-			m_inputSystem.Update();
+			Time::TimePoint currentTime = Time::GetCurrentTime();
+			Time::Duration frameDuration = currentTime - previousTime;
+			double deltaTime = frameDuration.count();
 			
-			// Calculate delta ..
+			previousTime = currentTime;
+			
+			m_window.PollEvents();
+			m_inputSystem.Update();
+
+			// Clamp frameTime to prevent big accumulator jumps on stalls
+			//frameTime = std::min(frameTime, maxFrameTime);
+			//accumulator += frameTime;
+			//
+			//int frameUpdates = 0;
+			//while (accumulator >= fixedDelta.count())
+			//{
+			//	if (frameUpdates >= maxUpdatesPerFrame)
+			//	{
+			//		accumulator = 0.0;
+			//		break;
+			//	}
+			//
+			//	//Update Simulation(dt)
+			//	accumulator -= fixedDelta.count();
+			//	frameUpdates++;
+			//}
+
+			//double interpolationAlpha = accumulator / fixedDelta.count();
 			
 			m_renderer.ClearScreen(0.2f, 0.3f, 0.3f, 1.0f);
 			m_renderer.Render();
