@@ -2,6 +2,7 @@
 
 #include "Events/ApplicationEvent.h"
 #include "Events/KeyEvent.h"
+#include "Camera/Camera.h"
 #include "Input/InputSystem.h"
 #include "Platform/Window.h"
 #include "Renderer/Renderer.h"
@@ -24,15 +25,21 @@ namespace zn
 		void Run();
 
 		bool OnKeyPressed(const KeyPressedEvent& e);
+		bool OnScrollChanged(const ScrollChangedEvent& e);
 		bool OnWindowClosed(const WindowClosedEvent& e);
 		bool OnWindowResized(const WindowResizedEvent& e);
+
+	private:
+		void ProcessInput(float deltaTime);
 
 	private:
 		Window m_window{};
 		InputSystem m_inputSystem{};
 		Renderer m_renderer{};
+		Camera m_camera{};
 
 		EventConnection<KeyPressedEvent> m_keyPressedConnection;
+		EventConnection<ScrollChangedEvent> m_scrollChangedConnection;
 		EventConnection<WindowClosedEvent> m_windowClosedConnection;
 		EventConnection<WindowResizedEvent> m_windowResizedConnection;
 	};

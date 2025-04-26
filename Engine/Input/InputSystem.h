@@ -9,12 +9,6 @@ namespace zn
     class InputSystem
     {
     public:
-        struct KeyState
-        {
-            bool IsDown = false;
-            bool WasDown = false;
-        };
-
         InputSystem() = default;
         ~InputSystem() = default;
 
@@ -30,10 +24,16 @@ namespace zn
         bool GetKeyState(KeyCode key) const;
         bool IsKeyDown(KeyCode key) const;
 
+        double GetMouseX() const { return m_mouseX; }
+        double GetMouseY() const { return m_mouseY; };
+
     private:
         GLFWwindow* m_window = nullptr;
 
         std::array<bool, KeyCodesCount> m_keyStates{};
         std::array<bool, KeyCodesCount> m_keyStatesPrev{};
+
+        double m_mouseX = 0.0;
+        double m_mouseY = 0.0;
     };
 }

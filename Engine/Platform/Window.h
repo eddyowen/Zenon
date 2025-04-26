@@ -28,6 +28,9 @@ namespace zn
 		[[nodiscard]] 
 		GLFWwindow* GetNativeWindow() const { return m_window; }
 
+		int GetWidth() const { return m_width; }
+		int GetHeight() const { return m_height; }
+
 	protected:
 		void CloseCallback();
 		void WindowResizedCallback(int width, int height);
@@ -36,6 +39,8 @@ namespace zn
 		static void GLFW_CloseCallback(GLFWwindow* wnd);
 		static void GLFW_FrameBufferResizeCallback(GLFWwindow* wnd, int width, int height);
 		static void GLFW_KeyCallback(GLFWwindow* wnd, int key, int scanCode, int action, int mods);
+		static void GLFW_CursorPosCallback(GLFWwindow* window, double posX, double poxY);
+		static void GLFW_ScrollCallback(GLFWwindow* window, double offsetX, double offsetY);
 
 #ifdef ZN_DEBUG
 		static void APIENTRY OpenGLDebugOutput(GLenum source, GLenum type, unsigned int id,

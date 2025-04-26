@@ -104,6 +104,10 @@ namespace zn
 		glfwSetWindowCloseCallback(m_window, &Window::GLFW_CloseCallback);
 		glfwSetFramebufferSizeCallback(m_window, &Window::GLFW_FrameBufferResizeCallback);
 		glfwSetKeyCallback(m_window, &Window::GLFW_KeyCallback);
+		glfwSetCursorPosCallback(m_window, &Window::GLFW_CursorPosCallback);
+		glfwSetScrollCallback(m_window, &Window::GLFW_ScrollCallback);
+
+		glfwSetInputMode(m_window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 
 #ifdef ZN_DEBUG
 		int flags;
@@ -179,6 +183,24 @@ namespace zn
 				break;
 			}
 		}
+	}
+
+	void Window::GLFW_CursorPosCallback(GLFWwindow* window, double posX, double poxY)
+	{
+		CursorMovedEvent e;
+		e.PosX = posX;
+		e.PosY = poxY;
+		
+		EventSystem::Instance().Post(e);
+	}
+
+	void Window::GLFW_ScrollCallback(GLFWwindow* window, double offsetX, double offsetY)
+	{
+		ScrollChangedEvent e;
+		e.OffsetX = offsetX;
+		e.OffsetY = offsetY;
+
+		EventSystem::Instance().Post(e);
 	}
 
 	bool Window::ShouldClose() const

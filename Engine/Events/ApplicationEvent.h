@@ -1,4 +1,5 @@
 #pragma once
+#include <cstdint>
 
 namespace zn
 {
@@ -8,5 +9,17 @@ namespace zn
 	{
 		int Width;
 		int Height;
+	};
+
+	struct CursorMovedEvent
+	{
+		int PosX;
+		int PosY;
+	};
+
+	struct ScrollChangedEvent
+	{
+		int OffsetX;
+		int OffsetY;
 	};
 }

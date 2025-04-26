@@ -29,6 +29,12 @@ namespace zn
 
     void InputSystem::Update()
     {
+        ZN_CORE_ASSERT(m_window != nullptr)
+
+        // Update mouse position
+        glfwGetCursorPos(m_window, &m_mouseX, &m_mouseY);
+
+        // Update key states
         m_keyStatesPrev = m_keyStates;
 
         for(int i = 0; i < KeyCodesCount; i++)
@@ -40,6 +46,8 @@ namespace zn
 
     bool InputSystem::GetKeyState(KeyCode key) const
     {
+        ZN_CORE_ASSERT(m_window != nullptr)
+        
         int state = glfwGetKey(m_window, KeyCodeToGLFW(static_cast<KeyCode>(key)));
         return state == GLFW_PRESS ? true : false;
     }

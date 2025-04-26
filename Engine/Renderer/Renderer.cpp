@@ -9,8 +9,10 @@
 
 namespace zn
 {
-    bool Renderer::Init()
+    bool Renderer::Init(int width, int height)
     {
+        SetAspectRatio(width, height);
+        
         // TEMPORAL ///////////////////////////////////////
         if (auto shader = ResourceManager::LoadShader("Basic Shader", "Content/Shaders/vertex.glsl", "Content/Shaders/fragment.glsl"))
         {
@@ -65,20 +67,14 @@ namespace zn
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     }
 
-    void Renderer::Render() const
+    void Renderer::Render(const Camera& camera) const
     {
-        glm::mat4 view = glm::mat4(1.0f);
-        view = glm::translate(view, glm::vec3(0.0f, 0.0f, -6.0f));
+        const glm::mat4 projection = glm::perspective(camera.GetZoom(), m_aspectRatio, 0.1f, 100.0f);
 
-        glm::mat4 projection;
-        projection = glm::perspective(glm::radians(45.0f), 1200.0f / 1200.0f, 0.1f, 100.0f);
-
-        m_wallTexture->Bind();
         m_basicShader->Bind();
         m_basicShader->SetInt("texture1", 0);
         m_basicShader->SetInt("texture2", 1);
-        //m_basicShader->SetMat4("model", model);
-        m_basicShader->SetMat4("view", view);
+        m_basicShader->SetMat4("view", camera.GetViewMatrix());
         m_basicShader->SetMat4("projection", projection);
 
         m_wallTexture->Bind();
@@ -108,5 +104,10 @@ namespace zn
 
         //glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
         glDrawArrays(GL_TRIANGLES, 0, 36);
+    }
+
+    void Renderer::SetAspectRatio(int width, int height)
+    {
+        m_aspectRatio = (float)width / (float)height;
     }
 }

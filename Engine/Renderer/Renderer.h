@@ -1,6 +1,7 @@
 ﻿#pragma once
 
 #include "Core/Base.h"
+#include "Camera/Camera.h"
 
 #include <array>
 
@@ -20,11 +21,13 @@ namespace zn
         Renderer() = default;
         ~Renderer() = default;
 
-        bool Init();
+        bool Init(int width, int height);
         void Shutdown();
-        
+
+        void Render(const Camera& camera) const;
+
+        void SetAspectRatio(int width, int height);
         void ClearScreen(float r, float g, float b, float a) const;
-        void Render() const;
         
     private:
         // TEMPORAL ///////////////////////////////////////
@@ -37,6 +40,8 @@ namespace zn
         glm::mat4 m_transform;
 		
         unsigned int VBO, EBO, VAO;
+
+        float m_aspectRatio;
 
         static constexpr std::array<float, 180> vertices { 
             -0.5f, -0.5f, -0.5f,  0.0f, 0.0f,
