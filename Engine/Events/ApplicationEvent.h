@@ -7,19 +7,19 @@ namespace zn
 	
 	struct WindowResizedEvent
 	{
-		int Width;
-		int Height;
+		uint32_t Width;
+		uint32_t Height;
 	};
 
 	struct CursorMovedEvent
 	{
-		int PosX;
-		int PosY;
+		double PosX;
+		double PosY;
 	};
 
 	struct ScrollChangedEvent
 	{
-		int OffsetX;
-		int OffsetY;
+		double OffsetX;
+		double OffsetY;
 	};
 }

@@ -29,7 +29,7 @@ namespace zn
 		m_window = nullptr;
 	}
 
-	bool Window::Init(int width, int height, const std::string& name)
+	bool Window::Init(uint32_t width, uint32_t height, const std::string& name)
 	{
 		m_width = width;
 		m_height = height;
@@ -141,7 +141,10 @@ namespace zn
 
 		glViewport(0, 0, m_width, m_height);
 
-		WindowResizedEvent e{m_width, m_height};
+		WindowResizedEvent e;
+		e.Width = m_width;
+		e.Height = m_height;
+		
 		EventSystem::Instance().Post(e);
 	}
 	
@@ -187,11 +190,22 @@ namespace zn
 
 	void Window::GLFW_CursorPosCallback(GLFWwindow* window, double posX, double poxY)
 	{
-		CursorMovedEvent e;
-		e.PosX = posX;
-		e.PosY = poxY;
+		ImGui_ImplGlfw_CursorPosCallback(window, posX, poxY);
+
+		if (!ImGui::GetIO().WantCaptureMouse)
+		{
+			CursorMovedEvent e;
+			e.PosX = posX;
+			e.PosY = poxY;
 		
-		EventSystem::Instance().Post(e);
+			EventSystem::Instance().Post(e);
+
+			glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+		}
+		else
+		{
+			glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+		}
 	}
 
 	void Window::GLFW_ScrollCallback(GLFWwindow* window, double offsetX, double offsetY)

@@ -11,12 +11,20 @@ namespace zn
 {
     bool Renderer::Init(int width, int height)
     {
-        SetAspectRatio(width, height);
-        
         // TEMPORAL ///////////////////////////////////////
-        if (auto shader = ResourceManager::LoadShader("Basic Shader", "Content/Shaders/vertex.glsl", "Content/Shaders/fragment.glsl"))
+        if (auto shader = ResourceManager::LoadShader("Default Shader", "Content/Shaders/default.vert", "Content/Shaders/default.frag"))
         {
             m_basicShader = shader.value();
+        }
+
+        if (auto lightDebugCubeShader = ResourceManager::LoadShader("Light Cube Shader", "Content/Shaders/light_cube.vert", "Content/Shaders/light_cube.frag"))
+        {
+            m_lightDebugCubeShader = lightDebugCubeShader.value();
+        }
+
+        if (auto lightingShader = ResourceManager::LoadShader("Lighting Shader", "Content/Shaders/lighting.vert", "Content/Shaders/lighting.frag"))
+        {
+            m_lightingShader = lightingShader.value();
         }
 
         if (auto wallTexture = ResourceManager::LoadTexture("Wall", "Content/Textures/wall.jpg"))
@@ -47,11 +55,45 @@ namespace zn
         //indexBuffer.SetData(indices, 6);
 		
         vertexBuffer.Unbind();
-		
         m_vertexArray->Unbind();
-        
+
         //// remember: do NOT unbind the EBO while a VAO is active as the bound element buffer object IS stored in the VAO; keep the EBO bound.
        // indexBuffer.Unbind();
+
+        // LIGHTING EXAMPLE SETUP
+        // ------------------------------------------------
+
+        m_lightDegugCubeVA = CreateUnique<VertexArray>();
+        m_lightDegugCubeVA->Bind();
+
+        VertexBuffer lightDebugCubeVB{};
+        lightDebugCubeVB.Bind();
+        lightDebugCubeVB.SetData(lightCubeVerts.data(), lightCubeVerts.size() * sizeof(float));
+		
+        VertexBufferLayout lightDebugCubeVBL;
+        lightDebugCubeVBL.PushElement<float>(3); // positions
+
+        m_lightDegugCubeVA->AddVertexBuffer(lightDebugCubeVB, lightDebugCubeVBL);
+
+        lightDebugCubeVB.Unbind();
+        m_lightDegugCubeVA->Unbind();
+
+        // --------------------------------
+        
+        m_lightingCubeVA = CreateUnique<VertexArray>();
+        m_lightingCubeVA->Bind();
+
+        VertexBuffer lightingCubeVB{};
+        lightingCubeVB.Bind();
+        lightingCubeVB.SetData(lightCubeVerts.data(), lightCubeVerts.size() * sizeof(float));
+		
+        VertexBufferLayout lightingCubeVBL;
+        lightingCubeVBL.PushElement<float>(3); // positions
+
+        m_lightingCubeVA->AddVertexBuffer(lightingCubeVB, lightingCubeVBL);
+
+        lightingCubeVB.Unbind();
+        m_lightingCubeVA->Unbind();
         
         return true;
     }
@@ -67,20 +109,18 @@ namespace zn
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     }
 
-    void Renderer::Render(const Camera& camera) const
+    void Renderer::TexturedCubesExample(const Camera& camera) const
     {
-        const glm::mat4 projection = glm::perspective(camera.GetZoom(), m_aspectRatio, 0.1f, 100.0f);
-
         m_basicShader->Bind();
         m_basicShader->SetInt("texture1", 0);
         m_basicShader->SetInt("texture2", 1);
         m_basicShader->SetMat4("view", camera.GetViewMatrix());
-        m_basicShader->SetMat4("projection", projection);
-
+        m_basicShader->SetMat4("projection", camera.GetProjection());
+        
         m_wallTexture->Bind();
         m_georgeTexture->Bind(1);
         m_vertexArray->Bind();
-
+        
         int counter = 0;
         for(unsigned int i = 0; i < 10; i++)
         {
@@ -88,17 +128,17 @@ namespace zn
             model = glm::translate(model, cubePositions[i]);
             float angle = 20.0f * i; 
             model = glm::rotate(model, glm::radians(angle), glm::vec3(1.0f, 0.3f, 0.5f));
-
+        
             if(i == 0 || counter == 3)
             {
                 model = glm::rotate(model, glm::radians(float(glfwGetTime() * 120.0f)), glm::vec3(1.0f, 1.0f, 1.0f));
                 counter = 0;
             }
-
+        
             m_basicShader->SetMat4("model", model);
-
+        
             glDrawArrays(GL_TRIANGLES, 0, 36);
-
+        
             counter++;
         }
 
@@ -106,8 +146,45 @@ namespace zn
         glDrawArrays(GL_TRIANGLES, 0, 36);
     }
 
-    void Renderer::SetAspectRatio(int width, int height)
+    void Renderer::LightingExample(const Camera& camera) const
     {
-        m_aspectRatio = (float)width / (float)height;
+        glm::vec3 lightDebugCubePos(0.0f, 0.0f, 0.0f);
+        
+        glm::mat4 lightModel = glm::mat4(1.0f);
+        lightModel = glm::translate(lightModel, lightDebugCubePos);
+        lightModel = glm::scale(lightModel, glm::vec3(.6f));
+
+        m_lightDebugCubeShader->Bind();
+        m_lightDebugCubeShader->SetMat4("model", lightModel);
+        m_lightDebugCubeShader->SetMat4("view", camera.GetViewMatrix());
+        m_lightDebugCubeShader->SetMat4("projection", camera.GetProjection());
+
+        m_lightDegugCubeVA->Bind();
+        glDrawArrays(GL_TRIANGLES, 0, 36);
+        m_lightDegugCubeVA->Unbind();
+
+        glm::vec3 cubePos(3.0f, 0.0f, 0.0f);
+        
+        glm::mat4 cubeModel = glm::mat4(1.0f);
+        cubeModel = glm::translate(cubeModel, cubePos);
+
+        m_lightingShader->Bind();
+        m_lightingShader->SetMat4("model", cubeModel);
+        m_lightingShader->SetMat4("view", camera.GetViewMatrix());
+        m_lightingShader->SetMat4("projection", camera.GetProjection());
+        m_lightingShader->SetVec3("lightColor",  { 1.0f, 1.0f, 1.0f });
+        m_lightingShader->SetVec3("objectColor", { 0.0f, 1.0f, 1.0f });
+
+        m_lightingCubeVA->Bind();
+        glDrawArrays(GL_TRIANGLES, 0, 36);
+        m_lightingCubeVA->Unbind();
+    }
+
+    void Renderer::Render(const Camera& camera) const
+    {
+        ClearScreen(0.3f, 0.3f, 0.3f, 1.0f);
+
+        //TexturedCubesExample(camera, projection);
+        LightingExample(camera);
     }
 }

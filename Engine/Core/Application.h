@@ -21,24 +21,28 @@ namespace zn
 		Application& operator=(const Application& other) = delete;
 		Application& operator=(Application&& other) noexcept = delete;
 		
-		bool Init(const std::string& appName);
+		bool Init(const std::string& appName, uint32_t windowWidth, uint32_t windowHeight);
 		void Run();
+		void Shutdown();
 
 		bool OnKeyPressed(const KeyPressedEvent& e);
+		bool OnCursosMoved(const CursorMovedEvent& e);
 		bool OnScrollChanged(const ScrollChangedEvent& e);
 		bool OnWindowClosed(const WindowClosedEvent& e);
 		bool OnWindowResized(const WindowResizedEvent& e);
 
 	private:
-		void ProcessInput(float deltaTime);
+		void ProcessInput(double deltaTime);
 
 	private:
 		Window m_window{};
 		InputSystem m_inputSystem{};
 		Renderer m_renderer{};
-		Camera m_camera{};
+		
+		Camera m_camera;
 
 		EventConnection<KeyPressedEvent> m_keyPressedConnection;
+		EventConnection<CursorMovedEvent> m_cursorMovedConnection;
 		EventConnection<ScrollChangedEvent> m_scrollChangedConnection;
 		EventConnection<WindowClosedEvent> m_windowClosedConnection;
 		EventConnection<WindowResizedEvent> m_windowResizedConnection;

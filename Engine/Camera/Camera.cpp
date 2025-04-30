@@ -1,27 +1,30 @@
 #include "Camera.h"
 
-#include <algorithm>
-#include <ios>
-
+#define GLM_ENABLE_EXPERIMENTAL
 #include "glm/ext/matrix_transform.hpp"
+#include "glm/gtx/quaternion.hpp"
 
 namespace zn
 {
-    Camera::Camera(const glm::vec3& position, const glm::vec3& up, float yaw, float pitch)
+    Camera::Camera(float aspectRatio, float fov, float nearClip, float farClip, float yaw, float pitch)
+        : m_aspectRatio(aspectRatio), m_fov(fov), m_nearClip(nearClip), m_farClip(farClip), m_yaw(yaw), m_pitch(pitch)
     {
-        m_position = position;
-        m_worldUp = up;
-        m_yaw = yaw;
-        m_pitch = pitch;
-
+        m_worldUp = m_up;
+        
         m_movementSpeed = 1.25f;
-        m_mouseSensitivity = 0.1f;
-        m_zoom = 45.0f;
+        m_mouseSensitivity = 0.03f;
 
+        UpdateProjection();
         UpdateVectors();
     }
 
-    void Camera::ProcessKeyboard(MovementDirection direction, float deltaTime)
+    void Camera::SetLastMousePosition(float x, float y)
+    {
+        m_lastMouseX = x;
+        m_lastMouseY = y;
+    }
+
+    void Camera::ProcessKeyboard(MovementDirection direction, double deltaTime)
     {
         float velocity = m_movementSpeed * deltaTime;
 
@@ -33,26 +36,32 @@ namespace zn
             m_position -= m_right * velocity;
         else if (direction == MovementDirection::Right)
             m_position += m_right * velocity;
+
+        UpdateView();
     }
 
-    void Camera::ProccessMoveMovement(float currentMouseX, float currentMouseY)
+    void Camera::ProccessMouseMovement(float currentMouseX, float currentMouseY)
     {
         if (m_invertYaw)
             currentMouseX *= -1.0f;
         if (m_invertPitch)
             currentMouseY *= -1.0f;
-        
-        float offsetX = lastMouseX - currentMouseX;
-        float offsetY = currentMouseY - lastMouseY; // inverted as y-coordinate ranges from bottom to top
 
-        lastMouseX = currentMouseX;
-        lastMouseY = currentMouseY;
-
-        offsetX *= m_mouseSensitivity;
-        offsetY *= m_mouseSensitivity;
+        if (m_firstMouseMovement)
+        {
+            m_lastMouseX = currentMouseX;
+            m_lastMouseY = currentMouseY;
+            m_firstMouseMovement = false;
+        }
         
-        m_yaw += offsetX;
-        m_pitch += offsetY;
+        float offsetX = m_lastMouseX - currentMouseX;
+        float offsetY = currentMouseY - m_lastMouseY; // inverted as y-coordinate ranges from bottom to top
+
+        m_lastMouseX = currentMouseX;
+        m_lastMouseY = currentMouseY;
+
+        m_yaw += offsetX * m_mouseSensitivity;
+        m_pitch += offsetY * m_mouseSensitivity;
 
         m_pitch = std::min(m_pitch, 89.0f);
         m_pitch = std::max(m_pitch, -89.0f);
@@ -62,16 +71,36 @@ namespace zn
 
     void Camera::ProcessMouseScroll(float offsetX, float offsetY)
     {
-        m_zoom -= offsetY;
-        m_zoom = std::max(m_zoom, 1.0f);
-        m_zoom = std::min(m_zoom, 45.0f);
+        m_fov -= offsetY;
+        m_fov = std::max(m_fov, 1.0f);
+        m_fov = std::min(m_fov, 45.0f);
     }
 
     glm::mat4 Camera::GetViewMatrix() const
     {
-        return glm::lookAt(m_position, m_position + m_forward, m_up);
+        return m_view;
     }
 
+    glm::mat4 Camera::GetProjection() const
+    {
+        return m_projection;
+    }
+
+    glm::mat4 Camera::GetViewProjectionMatrix() const
+    {
+        return m_projection * m_view;
+    }
+
+    void Camera::UpdateView()
+    {
+        m_view = glm::lookAt(m_position, m_position + m_forward, m_up);
+    }
+
+    void Camera::UpdateProjection()
+    {
+        m_projection = glm::perspective(glm::radians(m_fov), m_aspectRatio, m_nearClip, m_farClip);
+    }
+    
     void Camera::UpdateVectors()
     {
         glm::vec3 forward;
@@ -83,6 +112,8 @@ namespace zn
 
         m_right = glm::normalize(glm::cross(m_forward, m_worldUp));
         m_up = glm::normalize(glm::cross(m_right, m_forward));
+
+        UpdateView();
     }
 }
 

@@ -1,10 +1,6 @@
 #pragma once
 
-#include "Events/Event.h"
-#include "Renderer/Shader.h"
 #include "Renderer/VertexArray.h"
-#include "Renderer/Texture.h"
-#include "Resource/ResourceManager.h"
 
 #include <glad/gl.h>
 #include <GLFW/glfw3.h>
@@ -18,7 +14,7 @@ namespace zn
 		~Window();
 
 		[[nodiscard]]
-		bool Init(int width, int height, const std::string& name);
+		bool Init(uint32_t width, uint32_t height, const std::string& name);
 		
 		void PollEvents() const;
 		void RenderImGUI() const;
@@ -28,8 +24,8 @@ namespace zn
 		[[nodiscard]] 
 		GLFWwindow* GetNativeWindow() const { return m_window; }
 
-		int GetWidth() const { return m_width; }
-		int GetHeight() const { return m_height; }
+		uint32_t GetWidth() const { return m_width; }
+		uint32_t GetHeight() const { return m_height; }
 
 	protected:
 		void CloseCallback();
@@ -50,8 +46,9 @@ namespace zn
 	private:
 		GLFWwindow* m_window = nullptr;
 		
-		int m_width = 0;
-		int m_height = 0;
 		std::string m_name;
+		
+		uint32_t m_width = 0;
+		uint32_t m_height = 0;
 	};
 }
