@@ -2,14 +2,9 @@
 
 #include "Core/Base.h"
 
-#include <functional>
-#include <vector>
-#include <unordered_map>
 #include <typeindex>
 #include <any>
 #include <algorithm>
-#include <memory>
-#include <type_traits>
 #include <concepts> 
 
 namespace zn
@@ -18,7 +13,7 @@ namespace zn
 	class Connection 
 	{
 	public:
-		using HandlerId = int;
+		using HandlerId = u64;
 		
 	    Connection(class EventSystem* eventSystem, HandlerId id)
 	        : m_eventSystem(eventSystem), m_id(id) {}
@@ -54,7 +49,7 @@ namespace zn
 	class EventSystem 
 	{
 	public:
-	    using HandlerId = int;
+	    using HandlerId = u64;
 
 		static EventSystem& Instance()
 		{
@@ -76,9 +71,9 @@ namespace zn
 		[[nodiscard]]
 	    SharedPtr<Connection<EventT>> Subscribe(Callable&& callback, int priority = 0, FilterCallable&& filter = nullptr)
 	    {
-	        std::function<bool(const EventT&)> func = std::forward<Callable>(callback);
+	        Func<bool(const EventT&)> func = std::forward<Callable>(callback);
 	    	
-	        std::function<bool(const EventT&)> filterFunc;
+	        Func<bool(const EventT&)> filterFunc;
 	        if constexpr (!std::is_same_v<FilterCallable, std::nullptr_t>) 
 	        {
 	            filterFunc = std::forward<FilterCallable>(filter);
@@ -101,7 +96,7 @@ namespace zn
 	    template<typename EventT, typename T, typename MemFn>
 	    requires std::is_member_function_pointer_v<MemFn>
 		[[nodiscard]]
-	    SharedPtr<Connection<EventT>> Subscribe(SharedPtr<T> instance, MemFn memFn, int priority = 0, std::function<bool(const EventT&)> filter = nullptr)
+	    SharedPtr<Connection<EventT>> Subscribe(SharedPtr<T> instance, MemFn memFn, int priority = 0, Func<bool(const EventT&)> filter = nullptr)
 	    {
 	        WeakPtr<T> weakInstance = instance;
 	        auto callback = [weakInstance, memFn](const EventT& event) -> bool
@@ -147,86 +142,86 @@ namespace zn
 	    struct HandlerEntry 
 	    {
 	        HandlerId Id;
-	        int Priority;
-	        std::function<bool(const EventT&)> Callback;
-	        std::function<bool(const EventT&)> Filter;
+	        i64 Priority;
+	        Func<bool(const EventT&)> Callback;
+	        Func<bool(const EventT&)> Filter;
 	    };
 	    
 	    template<typename EventT>
-	    std::vector<HandlerEntry<EventT>>& GetHandlerList() 
+	    Vector<HandlerEntry<EventT>>& GetHandlerList() 
 	    {
 	        std::type_index key(typeid(EventT));
 	        
 	        auto it = m_handlerMap.find(key);
 	        if (it == m_handlerMap.end())
 	        {
-	            it = m_handlerMap.try_emplace(key, std::vector<HandlerEntry<EventT>>{}).first;
+	            it = m_handlerMap.try_emplace(key, Vector<HandlerEntry<EventT>>{}).first;
 	        }
 	        
-	        return *std::any_cast<std::vector<HandlerEntry<EventT>>>(&it->second);
+	        return *std::any_cast<Vector<HandlerEntry<EventT>>>(&it->second);
 	    }
 	    
-	    std::unordered_map<std::type_index, std::any> m_handlerMap;
+	    UMap<std::type_index, std::any> m_handlerMap;
 	    HandlerId m_nextHandlerId = 0;
 	};
 }
 
 
-        //// --- Lambda-based subscription ---
-        //auto connLambda = dispatcher.Subscribe<NewKeyEvent>(
-        //    [](const NewKeyEvent& event) -> bool {
-        //        ZN_CORE_INFO("[Lambda] KeyEvent: key = {}", event.key)
-        //        if (event.key == 42) {
-        //            ZN_CORE_INFO("Consumed by lambda handler.")
-        //            return true;
-        //        }
-        //        return false;
-        //    },
-        //    10  // high priority
-        //);
-        //
-        //// --- Free function subscription ---
-        //auto connFreeFunc = dispatcher.Subscribe<NewKeyEvent>(freeKeyHandler, 5);
-        //
-        //// --- Member function subscription ---
-        //std::shared_ptr<KeyHandler> keyHandlerInstance= std::make_shared<KeyHandler>();
-        //auto connMember = dispatcher.Subscribe<NewKeyEvent>(app, &Application::handleKey, 7);
-        //
-        //// --- Const member function subscription ---
-        //const  std::shared_ptr<KeyHandler> constKeyHandlerInstance= std::make_shared<KeyHandler>();
-        //auto connMemberConst = dispatcher.Subscribe<NewKeyEvent>(constKeyHandlerInstance, &KeyHandler::handleKeyConst, 6);
-        //
-        //// --- Subscription with filter ---
-        //// For MouseMoveEvent, process only if x > 100.
-        //auto connMouse = dispatcher.Subscribe<NewMouseMoveEvent>(
-        //    [](const NewMouseMoveEvent& event) -> bool {
-        //        ZN_CORE_INFO("[Lambda] MouseMoveEvent: x = {}, y = {}", event.x, event.y)
-        //        return false;
-        //    },
-        //    0,  // default priority
-        //    [](const NewMouseMoveEvent& event) -> bool {
-        //        return event.x > 100;
-        //    }
-        //);
-        //
-        //// --- Post events ---
-        //ZN_CORE_INFO("Posting KeyEvent with key = 13...")
-        //NewKeyEvent keyEvent1 { 13, 0, 1, 0 };
-        //dispatcher.Post(keyEvent1);
-        //
-        //ZN_CORE_INFO("\nPosting KeyEvent with key = 42...")
-        //NewKeyEvent keyEvent2 { 42, 0, 1, 0 };
-        //dispatcher.Post(keyEvent2);
-        //
-        //ZN_CORE_INFO("\nPosting MouseMoveEvent with x = 50...")
-        //NewMouseMoveEvent mouseEvent1 { 50, 200 };
-        //dispatcher.Post(mouseEvent1);
-        //
-        //ZN_CORE_INFO("\nPosting MouseMoveEvent with x = 150...")
-        //NewMouseMoveEvent mouseEvent2 { 150, 250 };
-        //dispatcher.Post(mouseEvent2);
-        //
-        //// --- Demonstrate dynamic unsubscription ---
-        //ZN_CORE_INFO("\nDisconnecting free function handler and posting KeyEvent...")
-        //connFreeFunc->disconnect();
-        //dispatcher.Post(keyEvent1);
+//// --- Lambda-based subscription ---
+//auto connLambda = dispatcher.Subscribe<NewKeyEvent>(
+//    [](const NewKeyEvent& event) -> bool {
+//        ZN_CORE_INFO("[Lambda] KeyEvent: key = {}", event.key)
+//        if (event.key == 42) {
+//            ZN_CORE_INFO("Consumed by lambda handler.")
+//            return true;
+//        }
+//        return false;
+//    },
+//    10  // high priority
+//);
+//
+//// --- Free function subscription ---
+//auto connFreeFunc = dispatcher.Subscribe<NewKeyEvent>(freeKeyHandler, 5);
+//
+//// --- Member function subscription ---
+//std::shared_ptr<KeyHandler> keyHandlerInstance= std::make_shared<KeyHandler>();
+//auto connMember = dispatcher.Subscribe<NewKeyEvent>(app, &Application::handleKey, 7);
+//
+//// --- Const member function subscription ---
+//const  std::shared_ptr<KeyHandler> constKeyHandlerInstance= std::make_shared<KeyHandler>();
+//auto connMemberConst = dispatcher.Subscribe<NewKeyEvent>(constKeyHandlerInstance, &KeyHandler::handleKeyConst, 6);
+//
+//// --- Subscription with filter ---
+//// For MouseMoveEvent, process only if x > 100.
+//auto connMouse = dispatcher.Subscribe<NewMouseMoveEvent>(
+//    [](const NewMouseMoveEvent& event) -> bool {
+//        ZN_CORE_INFO("[Lambda] MouseMoveEvent: x = {}, y = {}", event.x, event.y)
+//        return false;
+//    },
+//    0,  // default priority
+//    [](const NewMouseMoveEvent& event) -> bool {
+//        return event.x > 100;
+//    }
+//);
+//
+//// --- Post events ---
+//ZN_CORE_INFO("Posting KeyEvent with key = 13...")
+//NewKeyEvent keyEvent1 { 13, 0, 1, 0 };
+//dispatcher.Post(keyEvent1);
+//
+//ZN_CORE_INFO("\nPosting KeyEvent with key = 42...")
+//NewKeyEvent keyEvent2 { 42, 0, 1, 0 };
+//dispatcher.Post(keyEvent2);
+//
+//ZN_CORE_INFO("\nPosting MouseMoveEvent with x = 50...")
+//NewMouseMoveEvent mouseEvent1 { 50, 200 };
+//dispatcher.Post(mouseEvent1);
+//
+//ZN_CORE_INFO("\nPosting MouseMoveEvent with x = 150...")
+//NewMouseMoveEvent mouseEvent2 { 150, 250 };
+//dispatcher.Post(mouseEvent2);
+//
+//// --- Demonstrate dynamic unsubscription ---
+//ZN_CORE_INFO("\nDisconnecting free function handler and posting KeyEvent...")
+//connFreeFunc->disconnect();
+//dispatcher.Post(keyEvent1);
