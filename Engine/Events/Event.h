@@ -18,21 +18,18 @@ namespace zn
 	class Connection 
 	{
 	public:
-		Connection(const Connection& other) = delete;
-		Connection(Connection&& other) noexcept = delete;
-		
-		Connection& operator=(const Connection& other) = default;
-		Connection& operator=(Connection&& other) noexcept = default;
-
 		using HandlerId = int;
-	    
+		
 	    Connection(class EventSystem* eventSystem, HandlerId id)
 	        : m_eventSystem(eventSystem), m_id(id) {}
 
-	    ~Connection() 
-	    {
-	        Disconnect();
-	    }
+		~Connection() { Disconnect(); }
+		
+		Connection(const Connection& other) = delete;
+		Connection(Connection&& other) noexcept = delete;
+		
+		Connection& operator=(const Connection& other) = delete;
+		Connection& operator=(Connection&& other) noexcept = delete;
 
 	    void Disconnect() 
 	    {
@@ -52,7 +49,7 @@ namespace zn
 	};
 
 	template<typename EventT>
-	using EventConnection = std::shared_ptr<Connection<EventT>>;
+	using EventConnection = SharedPtr<Connection<EventT>>;
 
 	class EventSystem 
 	{
@@ -69,12 +66,15 @@ namespace zn
 		~EventSystem() = default;
 		
 		EventSystem(const EventSystem&) = delete;
+		EventSystem(EventSystem&&) = delete;
+		
 		EventSystem& operator=(const EventSystem&) = delete;
+		EventSystem& operator=(EventSystem&&) = delete; 
 	    
 	    template<typename EventT, typename Callable, typename FilterCallable = std::nullptr_t>
 	    requires std::invocable<Callable, const EventT&> && std::same_as<std::invoke_result_t<Callable, const EventT&>, bool>
 		[[nodiscard]]
-	    std::shared_ptr<Connection<EventT>> Subscribe(Callable&& callback, int priority = 0, FilterCallable&& filter = nullptr)
+	    SharedPtr<Connection<EventT>> Subscribe(Callable&& callback, int priority = 0, FilterCallable&& filter = nullptr)
 	    {
 	        std::function<bool(const EventT&)> func = std::forward<Callable>(callback);
 	    	
