@@ -4,11 +4,12 @@
 
 #include "Log.h"
 #include "Timer.h"
+
 #include "Resource/ResourceManager.h"
 
 namespace zn
 {
-	bool Application::Init(const std::string& appName, uint32_t windowWidth, uint32_t windowHeight)
+	bool Application::Init(const String& appName, u32 windowWidth, u32 windowHeight)
 	{
 		Log::Init();
 		
@@ -53,7 +54,7 @@ namespace zn
 		{
 			Time::TimePoint currentTime = Time::GetCurrentTime();
 			Time::Duration frameDuration = currentTime - previousTime;
-			double deltaTime = frameDuration.count();
+			f64 deltaTime = frameDuration.count();
 			
 			previousTime = currentTime;
 

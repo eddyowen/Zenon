@@ -8,7 +8,7 @@ namespace zn
     {
         using Clock = std::chrono::high_resolution_clock;
         using TimePoint = std::chrono::time_point<Clock>;
-        using Duration = std::chrono::duration<double>;
+        using Duration = std::chrono::duration<f64>;
 
         static TimePoint GetCurrentTime()
         {
@@ -68,7 +68,7 @@ namespace zn
 
         private:
             TimePoint m_startTime;
-            double m_accumulatedTime = 0.0; // Accumulated time in seconds when stopped
+            f64 m_accumulatedTime = 0.0; // Accumulated time in seconds when stopped
             bool m_running;
         };
     }

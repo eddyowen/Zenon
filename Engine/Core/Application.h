@@ -1,5 +1,7 @@
 #pragma once
 
+#include "Base.h"
+
 #include "Events/ApplicationEvent.h"
 #include "Events/KeyEvent.h"
 #include "Camera/Camera.h"
@@ -21,7 +23,7 @@ namespace zn
 		Application& operator=(const Application& other) = delete;
 		Application& operator=(Application&& other) noexcept = delete;
 		
-		bool Init(const std::string& appName, uint32_t windowWidth, uint32_t windowHeight);
+		bool Init(const String& appName, u32 windowWidth, u32 windowHeight);
 		void Run();
 		void Shutdown();
 
