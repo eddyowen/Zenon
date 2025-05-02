@@ -9,7 +9,7 @@ namespace zn
 {
     namespace
     {
-        static constexpr u16 KeyCodeToGLFW(KeyCode key)
+        constexpr u16 KeyCodeToGLFW(KeyCode key)
         {
             ZN_CORE_ASSERT(key != KeyCode::UNKNOWN)
             
@@ -17,7 +17,7 @@ namespace zn
         }
     }
     
-    bool InputSystem::Init(GLFWwindow* window)
+    b8 InputSystem::Init(GLFWwindow* window)
     {
         if(!window)
         {
@@ -49,7 +49,7 @@ namespace zn
         }
     }
 
-    bool InputSystem::GetKeyState(KeyCode key) const
+    b8 InputSystem::GetKeyState(KeyCode key) const
     {
         ZN_CORE_ASSERT(m_window != nullptr)
         
@@ -57,7 +57,7 @@ namespace zn
         return state == GLFW_PRESS ? true : false;
     }
 
-    bool InputSystem::IsKeyDown(KeyCode key) const
+    b8 InputSystem::IsKeyDown(KeyCode key) const
     {
         ZN_CORE_ASSERT(key != KeyCode::UNKNOWN)
         
