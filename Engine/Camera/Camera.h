@@ -1,8 +1,7 @@
 #pragma once
 
 #include "Core/Base.h"
-
-#include <glm/glm.hpp>
+#include "Math/Math.h"
 
 namespace zn
 {
@@ -38,9 +37,9 @@ namespace zn
         void SetMouseSensitivity(f32 sensitivity) { m_mouseSensitivity = sensitivity; }
         void SetLastMousePosition(f32 x, f32 y);
 
-        glm::mat4 GetViewMatrix() const;
-        glm::mat4 GetProjection() const;
-        glm::mat4 GetViewProjectionMatrix() const;
+        math::m4 GetViewMatrix() const;
+        math::m4 GetProjection() const;
+        math::m4 GetViewProjectionMatrix() const;
         
     private:
         void UpdateView();
@@ -48,14 +47,14 @@ namespace zn
         void UpdateVectors();
         
     private:
-        glm::mat4 m_view;
-        glm::mat4 m_projection;
+        math::m4 m_view;
+        math::m4 m_projection;
         
-        glm::vec3 m_position = { 0.0f, 0.0f, 0.0f };
-        glm::vec3 m_up = { 0.0f, 1.0f, 0.0f };
-        glm::vec3 m_forward;
-        glm::vec3 m_right;
-        glm::vec3 m_worldUp;
+        math::v3 m_position = { 0.0f, 0.0f, 0.0f };
+        math::v3 m_up = { 0.0f, 1.0f, 0.0f };
+        math::v3 m_forward;
+        math::v3 m_right;
+        math::v3 m_worldUp;
 
         f32 m_aspectRatio;
         f32 m_fov;

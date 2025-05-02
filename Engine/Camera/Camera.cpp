@@ -1,8 +1,5 @@
 #include "Camera.h"
 
-#include "glm/ext/matrix_clip_space.hpp"
-#include "glm/ext/matrix_transform.hpp"
-
 namespace zn
 {
     Camera::Camera(f32 aspectRatio, f32 fov, f32 nearClip, f32 farClip, f32 yaw, f32 pitch)
@@ -75,17 +72,17 @@ namespace zn
         m_fov = std::min(m_fov, 45.0f);
     }
 
-    glm::mat4 Camera::GetViewMatrix() const
+    math::m4 Camera::GetViewMatrix() const
     {
         return m_view;
     }
 
-    glm::mat4 Camera::GetProjection() const
+    math::m4 Camera::GetProjection() const
     {
         return m_projection;
     }
 
-    glm::mat4 Camera::GetViewProjectionMatrix() const
+    math::m4 Camera::GetViewProjectionMatrix() const
     {
         return m_projection * m_view;
     }
@@ -102,7 +99,7 @@ namespace zn
     
     void Camera::UpdateVectors()
     {
-        glm::vec3 forward;
+        math::v3 forward;
         forward.x = glm::cos(glm::radians(m_yaw)) * glm::cos(glm::radians(m_pitch));
         forward.y = glm::sin(glm::radians(m_pitch));
         forward.z = glm::sin(glm::radians(m_yaw)) * glm::cos(glm::radians(m_pitch));

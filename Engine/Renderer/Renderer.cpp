@@ -137,14 +137,14 @@ namespace zn
         int counter = 0;
         for(uSize i = 0; i < 10; i++)
         {
-            glm::mat4 model = glm::mat4(1.0f);
+            math::m4 model = math::m4(1.0f);
             model = glm::translate(model, cubePositions[i]);
             f32 angle = 20.0f * i; 
-            model = glm::rotate(model, glm::radians(angle), glm::vec3(1.0f, 0.3f, 0.5f));
+            model = glm::rotate(model, glm::radians(angle), math::v3(1.0f, 0.3f, 0.5f));
         
             if(i == 0 || counter == 3)
             {
-                model = glm::rotate(model, glm::radians(f32(glfwGetTime() * 120.0f)), glm::vec3(1.0f, 1.0f, 1.0f));
+                model = glm::rotate(model, glm::radians(f32(glfwGetTime() * 120.0f)), math::v3(1.0f, 1.0f, 1.0f));
                 counter = 0;
             }
         
@@ -161,11 +161,11 @@ namespace zn
 
     void Renderer::LightingExample(const Camera& camera) const
     {
-        glm::vec3 lightDebugCubePos(0.0f, 0.0f, 0.0f);
+        math::v3 lightDebugCubePos(0.0f, 0.0f, 0.0f);
         
-        glm::mat4 lightModel = glm::mat4(1.0f);
+        math::m4 lightModel = math::m4(1.0f);
         lightModel = glm::translate(lightModel, lightDebugCubePos);
-        lightModel = glm::scale(lightModel, glm::vec3(.6f));
+        lightModel = glm::scale(lightModel, math::v3(.6f));
 
         m_lightDebugCubeShader->Bind();
         m_lightDebugCubeShader->SetMat4("model", lightModel);
@@ -176,9 +176,9 @@ namespace zn
         glDrawArrays(GL_TRIANGLES, 0, 36);
         m_lightDegugCubeVA->Unbind();
 
-        glm::vec3 cubePos(3.0f, 0.0f, 0.0f);
+        math::v3 cubePos(3.0f, 0.0f, 0.0f);
         
-        glm::mat4 cubeModel = glm::mat4(1.0f);
+        math::m4 cubeModel = math::m4(1.0f);
         cubeModel = glm::translate(cubeModel, cubePos);
 
         m_lightingShader->Bind();

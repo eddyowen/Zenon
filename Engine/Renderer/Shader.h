@@ -1,8 +1,7 @@
 #pragma once
 
 #include "Core/Base.h"
-
-#include <glm/glm.hpp>
+#include "Math/Math.h"
 
 namespace zn
 {
@@ -17,9 +16,9 @@ namespace zn
 
 		void SetInt(const String& name, i32 value) const;
 		void SetFloat(const String& name, f32 value) const;
-		void SetVec3(const String& name, const glm::vec3& value) const;
-		void SetVec4(const String& name, const glm::vec4& value) const;
-		void SetMat4(const String& name, const glm::mat4& value) const;
+		void SetVec3(const String& name, const math::v3& value) const;
+		void SetVec4(const String& name, const math::v4& value) const;
+		void SetMat4(const String& name, const math::m4& value) const;
 
 	private:
 		static void CheckCompileErrors(u32 rendererId, const String& type);

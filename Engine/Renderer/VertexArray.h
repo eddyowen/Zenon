@@ -13,7 +13,12 @@ namespace zn
 	public:
 		VertexBuffer();
 		~VertexBuffer();
+
+		VertexBuffer(const VertexBuffer& other) = delete;
+		VertexBuffer(VertexBuffer&& other) noexcept = delete;
 		
+		VertexBuffer& operator=(const VertexBuffer& other) = delete;
+		VertexBuffer& operator=(VertexBuffer&& other) noexcept = delete;
 
 		void Bind() const;
 		void Unbind() const;
@@ -29,6 +34,12 @@ namespace zn
 	public:
 		IndexBuffer();
 		~IndexBuffer();
+
+		IndexBuffer(const IndexBuffer& other) = delete;
+		IndexBuffer(IndexBuffer&& other) noexcept = delete;
+		
+		IndexBuffer& operator=(const IndexBuffer& other) = delete;
+		IndexBuffer& operator=(IndexBuffer&& other) noexcept = delete;
 
 		void Bind() const;
 		void Unbind() const;
@@ -108,6 +119,12 @@ namespace zn
 	public:
 		VertexArray();
 		~VertexArray();
+
+		VertexArray(const VertexArray& other) = delete;
+		VertexArray(VertexArray&& other) noexcept = delete;
+		
+		VertexArray& operator=(const VertexArray& other) = delete;
+		VertexArray& operator=(VertexArray&& other) noexcept = delete;
 
 		void Bind() const;
 		void Unbind() const;
