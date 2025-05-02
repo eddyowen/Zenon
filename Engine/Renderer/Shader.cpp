@@ -1,11 +1,15 @@
 #include "Shader.h"
 
-#include "FileSystem/FileSystem.h"
 #include "Core/Log.h"
+#include "FileSystem/FileSystem.h"
+
+#include <glad/gl.h>
+#include <GLFW/glfw3.h>
+#include <glm/gtc/type_ptr.hpp>
 
 namespace zn
 {
-	Shader::Shader(const char* vertCode, const char* fragCode)
+	Shader::Shader(const c8* vertCode, const c8* fragCode)
 	{
 		GLuint vertex = glCreateShader(GL_VERTEX_SHADER);
 		glShaderSource(vertex, 1, &vertCode, nullptr);
@@ -27,7 +31,7 @@ namespace zn
 		glDeleteShader(fragment);
 	}
 
-	void Shader::CheckCompileErrors(unsigned int rendererId, const std::string& type) const
+	void Shader::CheckCompileErrors(u32 rendererId, const String& type)
 	{
 		GLint success;
 		GLchar infoLog[1024];
@@ -62,31 +66,31 @@ namespace zn
 		glUseProgram(0);
 	}
 
-	void Shader::SetInt(const std::string& name, int value)
+	void Shader::SetInt(const String& name, i32 value) const
 	{
 		GLint location = glGetUniformLocation(m_rendererID, name.c_str());
 		glUniform1i(location, value);
 	}
 
-	void Shader::SetFloat(const std::string& name, float value)
+	void Shader::SetFloat(const String& name, f32 value) const
 	{
 		GLint location = glGetUniformLocation(m_rendererID, name.c_str());
 		glUniform1f(location, value);
 	}
 
-	void Shader::SetVec3(const std::string& name, const glm::vec3& value)
+	void Shader::SetVec3(const String& name, const glm::vec3& value) const
 	{
 		GLint location = glGetUniformLocation(m_rendererID, name.c_str());
 		glUniform3fv(location, 1, glm::value_ptr(value));
 	}
 
-	void Shader::SetVec4(const std::string& name, const glm::vec4& value)
+	void Shader::SetVec4(const String& name, const glm::vec4& value) const
 	{
 		GLint location = glGetUniformLocation(m_rendererID, name.c_str());
 		glUniform4fv(location, 1, glm::value_ptr(value));
 	}
 
-	void Shader::SetMat4(const std::string& name, const glm::mat4& value)
+	void Shader::SetMat4(const String& name, const glm::mat4& value) const
 	{
 		GLint location = glGetUniformLocation(m_rendererID, name.c_str());
 		glUniformMatrix4fv(location, 1, GL_FALSE, glm::value_ptr(value));

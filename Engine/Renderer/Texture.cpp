@@ -11,12 +11,12 @@
 namespace zn
 {
 	Texture::Texture(
-		unsigned char* data,
+		u8* data,
 		int width,
 		int height,
 		int channels,
-		unsigned int internalFormat,
-		unsigned int dataFormat)
+		u32 internalFormat,
+		u32 dataFormat)
 	{
 		m_width = width;
 		m_height = height;

@@ -1,12 +1,14 @@
 ﻿#include "FileSystem.h"
 
+#include "Core/Log.h"
+
 #include <fstream>
 
 namespace zn
 {
-    std::string FileSystem::PathNormalizer::Normalize(std::string_view path)
+    String FileSystem::PathNormalizer::Normalize(StringView path)
     {
-        std::string normalized(path);
+        String normalized(path);
         
         // Convert backslashes to forward slashes
         std::ranges::replace(normalized, '\\', '/');
@@ -21,7 +23,7 @@ namespace zn
         return normalized;
     }
 
-    bool FileSystem::Exists(const std::string& path)
+    b8 FileSystem::Exists(const String& path)
     {
         try
         {
@@ -39,7 +41,7 @@ namespace zn
         }
     }
 
-    bool FileSystem::IsFile(const std::string& path)
+    b8 FileSystem::IsFile(const String& path)
     {
         try
         {
@@ -56,7 +58,7 @@ namespace zn
         }
     }
 
-    bool FileSystem::IsDirectory(const std::string& path)
+    b8 FileSystem::IsDirectory(const String& path)
     {
         try
         {
@@ -73,9 +75,9 @@ namespace zn
         }
     }
 
-    std::vector<std::string> FileSystem::ListDirectory(const std::string& path)
+    Vector<String> FileSystem::ListDirectory(const String& path)
     {
-        std::vector<std::string> entries;
+        Vector<String> entries;
             
         if(auto fullPath = GetFullPath(path))
         {
@@ -103,7 +105,7 @@ namespace zn
         return {};
     }
 
-    std::optional<std::vector<std::byte>> FileSystem::ReadFileAsBinary(const std::string& path)
+    Opt<Vector<Byte>> FileSystem::ReadFileAsBinary(const String& path)
     {
         try
         {
@@ -119,7 +121,7 @@ namespace zn
                 std::streamsize size = file.tellg();
                 file.seekg(0, std::ios::beg);
 
-                std::vector<std::byte> buffer(size);
+                Vector<Byte> buffer(size);
                 if (!file.read(reinterpret_cast<char*>(buffer.data()), size))
                 {
                     ZN_CORE_ERROR("[FileSystem::ReadFileAsBinary] Failed to read file at '" + path + "'")
@@ -139,7 +141,7 @@ namespace zn
         }
     }
 
-    std::optional<std::string> FileSystem::ReadFileAsString(const std::string& path)
+    Opt<String> FileSystem::ReadFileAsString(const String& path)
     {
         try
         {
@@ -155,7 +157,7 @@ namespace zn
                 const std::streamsize size = file.tellg();
                 file.seekg(0, std::ios::beg);
 
-                std::string buffer;
+                String buffer;
                 buffer.resize(static_cast<size_t>(size));
             
                 if (!file.read(buffer.data(), size))
@@ -177,9 +179,9 @@ namespace zn
         }
     }
 
-    std::optional<FileSystem::Path> FileSystem::GetFullPath(const std::string& path)
+    Opt<FileSystem::Path> FileSystem::GetFullPath(const String& path)
     {
-        std::string normalized = PathNormalizer::Normalize(path);
+        String normalized = PathNormalizer::Normalize(path);
         Path fileSystemPath(normalized);
             
         if (fileSystemPath.is_absolute())
@@ -192,7 +194,7 @@ namespace zn
 
         // Security check: prevent directory traversal
         Path relativeToRoot = fullPath.lexically_relative(GetRoot());
-        if (relativeToRoot.generic_string().find("..") != std::string::npos)
+        if (relativeToRoot.generic_string().find("..") != String::npos)
         {
             ZN_CORE_ERROR("[FileSystem::GetFullPath] Path escapes root directory: " + normalized)
             return std::nullopt;

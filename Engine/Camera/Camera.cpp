@@ -1,12 +1,11 @@
 #include "Camera.h"
 
-#define GLM_ENABLE_EXPERIMENTAL
+#include "glm/ext/matrix_clip_space.hpp"
 #include "glm/ext/matrix_transform.hpp"
-#include "glm/gtx/quaternion.hpp"
 
 namespace zn
 {
-    Camera::Camera(float aspectRatio, float fov, float nearClip, float farClip, float yaw, float pitch)
+    Camera::Camera(f32 aspectRatio, f32 fov, f32 nearClip, f32 farClip, f32 yaw, f32 pitch)
         : m_aspectRatio(aspectRatio), m_fov(fov), m_nearClip(nearClip), m_farClip(farClip), m_yaw(yaw), m_pitch(pitch)
     {
         m_worldUp = m_up;
@@ -18,15 +17,15 @@ namespace zn
         UpdateVectors();
     }
 
-    void Camera::SetLastMousePosition(float x, float y)
+    void Camera::SetLastMousePosition(f32 x, f32 y)
     {
         m_lastMouseX = x;
         m_lastMouseY = y;
     }
 
-    void Camera::ProcessKeyboard(MovementDirection direction, double deltaTime)
+    void Camera::ProcessKeyboard(MovementDirection direction, f64 deltaTime)
     {
-        float velocity = m_movementSpeed * deltaTime;
+        f32 velocity = m_movementSpeed * deltaTime;
 
         if (direction == MovementDirection::Forward)
             m_position += m_forward * velocity;
@@ -40,7 +39,7 @@ namespace zn
         UpdateView();
     }
 
-    void Camera::ProccessMouseMovement(float currentMouseX, float currentMouseY)
+    void Camera::ProccessMouseMovement(f32 currentMouseX, f32 currentMouseY)
     {
         if (m_invertYaw)
             currentMouseX *= -1.0f;
@@ -54,8 +53,8 @@ namespace zn
             m_firstMouseMovement = false;
         }
         
-        float offsetX = m_lastMouseX - currentMouseX;
-        float offsetY = currentMouseY - m_lastMouseY; // inverted as y-coordinate ranges from bottom to top
+        f32 offsetX = m_lastMouseX - currentMouseX;
+        f32 offsetY = currentMouseY - m_lastMouseY; // inverted as y-coordinate ranges from bottom to top
 
         m_lastMouseX = currentMouseX;
         m_lastMouseY = currentMouseY;
@@ -69,7 +68,7 @@ namespace zn
         UpdateVectors();
     }
 
-    void Camera::ProcessMouseScroll(float offsetX, float offsetY)
+    void Camera::ProcessMouseScroll(f32 offsetX, f32 offsetY)
     {
         m_fov -= offsetY;
         m_fov = std::max(m_fov, 1.0f);

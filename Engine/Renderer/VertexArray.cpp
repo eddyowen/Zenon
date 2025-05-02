@@ -12,7 +12,7 @@ namespace zn
 		glDeleteBuffers(1, &m_rendererID);
 	}
 
-	void VertexBuffer::SetData(const void* data, unsigned int size)
+	void VertexBuffer::SetData(const void* data, uSize size)
 	{
 		glBufferData(GL_ARRAY_BUFFER, size, data, GL_STATIC_DRAW);
 	}
@@ -37,7 +37,7 @@ namespace zn
 		glDeleteBuffers(1, &m_rendererID);
 	}
 
-	void IndexBuffer::SetData(const unsigned int* indices, unsigned int count)
+	void IndexBuffer::SetData(const unsigned int* indices, uSize count)
 	{
 		glBufferData(GL_ELEMENT_ARRAY_BUFFER, count * sizeof(unsigned int), indices, GL_STATIC_DRAW);
 	}
@@ -50,11 +50,6 @@ namespace zn
 	void IndexBuffer::Unbind() const
 	{
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
-	}
-
-	unsigned int IndexBuffer::GetCount() const
-	{
-		return m_count;
 	}
 
 	VertexArray::VertexArray()
@@ -72,17 +67,17 @@ namespace zn
 		Bind();
 		vertexBuffer.Bind();
 
-		const std::vector<VertexBufferLayout::VertexBufferElement>& elements = layout.GetElements();
-		unsigned int offset = 0;
+		const Vector<VertexBufferLayout::VertexBufferElement>& elements = layout.GetElements();
+		uSize offset = 0;
 
-		for (unsigned int i = 0; i < elements.size(); i++)
+		for (uSize i = 0; i < elements.size(); i++)
 		{
 			const VertexBufferLayout::VertexBufferElement& element = elements[i];
 
 			glEnableVertexAttribArray(i);
-			glVertexAttribPointer(i, element.count, element.type, element.normalized, layout.GetStride(), (const void*)offset);
+			glVertexAttribPointer(i, element.Count, element.Type, element.Normalized, layout.GetStride(), (const void*)offset);
 
-			offset += element.count * VertexBufferLayout::VertexBufferElement::GetSizeOfType(element.type);
+			offset += element.Count * VertexBufferLayout::VertexBufferElement::GetSizeOfType(element.Type);
 		}
 	}
 

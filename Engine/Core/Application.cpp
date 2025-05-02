@@ -1,15 +1,14 @@
 #include "Application.h"
 
-#include <imgui_internal.h>
-
 #include "Log.h"
 #include "Timer.h"
-
 #include "Resource/ResourceManager.h"
+
+#include <imgui_internal.h>
 
 namespace zn
 {
-	bool Application::Init(const String& appName, u32 windowWidth, u32 windowHeight)
+	b8 Application::Init(const String& appName, u32 windowWidth, u32 windowHeight)
 	{
 		Log::Init();
 		
@@ -19,7 +18,7 @@ namespace zn
 			return false;
 		}
 
-		m_camera = { static_cast<float>(windowWidth) / static_cast<float>(windowHeight) };
+		m_camera = { static_cast<f32>(windowWidth) / static_cast<f32>(windowHeight) };
 		m_camera.SetPosition(glm::vec3(1.5f, 0.0f, 4.0f));
 		// just so the camera doesn't jump with the first mouse interaction
 		m_camera.SetLastMousePosition(windowWidth / 2.0f, windowHeight / 2.0f); 
@@ -44,9 +43,9 @@ namespace zn
 	void Application::Run()
 	{
 		//const Time::Duration fixedDelta(1 / 60.f);
-		//double accumulator = 0.0;
+		//f64 accumulator = 0.0;
 		//constexpr int maxUpdatesPerFrame = 5;
-		//constexpr double maxFrameTime = 0.25; // capped at 4 FPS equivalent
+		//constexpr f64 maxFrameTime = 0.25; // capped at 4 FPS equivalent
 		
 		Time::TimePoint previousTime = Time::GetCurrentTime();
 		
@@ -81,7 +80,7 @@ namespace zn
 			
 			ProcessInput(deltaTime);
 			
-			//double interpolationAlpha = accumulator / fixedDelta.count();
+			//f64 interpolationAlpha = accumulator / fixedDelta.count();
 			
 			m_renderer.Render(m_camera);
 			
@@ -94,43 +93,43 @@ namespace zn
 
 	void Application::Shutdown()
 	{
-		ResourceManager::Shutdown();
-		m_renderer.Shutdown();
+		//ResourceManager::Shutdown();
+		//m_renderer.Shutdown();
 	}
 
-	bool Application::OnKeyPressed(const KeyPressedEvent& e)
+	b8 Application::OnKeyPressed(const KeyPressedEvent& e)
 	{
 		ZN_CORE_TRACE("KeyPressedEvent: {}. ({}) repeats", static_cast<KeyCodeType>(e.KeyCode),  e.RepeatCount)
 		return true;
 	}
 
-	bool Application::OnCursosMoved(const CursorMovedEvent& e)
+	b8 Application::OnCursosMoved(const CursorMovedEvent& e)
 	{
-		m_camera.ProccessMouseMovement(static_cast<float>(e.PosX), static_cast<float>(e.PosY));
+		m_camera.ProccessMouseMovement(static_cast<f32>(e.PosX), static_cast<f32>(e.PosY));
 		
 		return true;
 	}
 
-	bool Application::OnScrollChanged(const ScrollChangedEvent& e)
+	b8 Application::OnScrollChanged(const ScrollChangedEvent& e)
 	{
 		m_camera.ProcessMouseScroll(e.OffsetX, e.OffsetY);
 		return true;
 	}
 
-	bool Application::OnWindowClosed(const WindowClosedEvent& e)
+	b8 Application::OnWindowClosed(const WindowClosedEvent& e)
 	{
 		ZN_CORE_TRACE("Window ClosedEvent"	)
 		return true;
 	}
 
-	bool Application::OnWindowResized(const WindowResizedEvent& e)
+	b8 Application::OnWindowResized(const WindowResizedEvent& e)
 	{
 		ZN_CORE_TRACE("Window ResizedEvent")
 		m_camera.SetViewportSize(e.Width, e.Height);
 		return true;
 	}
 
-	void Application::ProcessInput(double deltaTime)
+	void Application::ProcessInput(f64 deltaTime)
 	{
 		if (m_inputSystem.GetKeyState(KeyCode::W))
 			m_camera.ProcessKeyboard(Camera::MovementDirection::Forward, deltaTime);

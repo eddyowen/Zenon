@@ -35,7 +35,10 @@ namespace zn
 	        }
 	    }
 
-	    bool Connected() const { return m_eventSystem != nullptr; }
+		[[nodiscard]]
+	    b8 Connected() const { return m_eventSystem != nullptr; }
+
+		[[nodiscard]]
 	    HandlerId GetId() const { return m_id; }
 	    
 	private:
@@ -67,13 +70,13 @@ namespace zn
 		EventSystem& operator=(EventSystem&&) = delete; 
 	    
 	    template<typename EventT, typename Callable, typename FilterCallable = std::nullptr_t>
-	    requires std::invocable<Callable, const EventT&> && std::same_as<std::invoke_result_t<Callable, const EventT&>, bool>
+	    requires std::invocable<Callable, const EventT&> && std::same_as<std::invoke_result_t<Callable, const EventT&>, b8>
 		[[nodiscard]]
 	    SharedPtr<Connection<EventT>> Subscribe(Callable&& callback, int priority = 0, FilterCallable&& filter = nullptr)
 	    {
-	        Func<bool(const EventT&)> func = std::forward<Callable>(callback);
+	        Func<b8(const EventT&)> func = std::forward<Callable>(callback);
 	    	
-	        Func<bool(const EventT&)> filterFunc;
+	        Func<b8(const EventT&)> filterFunc;
 	        if constexpr (!std::is_same_v<FilterCallable, std::nullptr_t>) 
 	        {
 	            filterFunc = std::forward<FilterCallable>(filter);
@@ -96,10 +99,10 @@ namespace zn
 	    template<typename EventT, typename T, typename MemFn>
 	    requires std::is_member_function_pointer_v<MemFn>
 		[[nodiscard]]
-	    SharedPtr<Connection<EventT>> Subscribe(SharedPtr<T> instance, MemFn memFn, int priority = 0, Func<bool(const EventT&)> filter = nullptr)
+	    SharedPtr<Connection<EventT>> Subscribe(SharedPtr<T> instance, MemFn memFn, int priority = 0, Func<b8(const EventT&)> filter = nullptr)
 	    {
 	        WeakPtr<T> weakInstance = instance;
-	        auto callback = [weakInstance, memFn](const EventT& event) -> bool
+	        auto callback = [weakInstance, memFn](const EventT& event) -> b8
 	        {
 	            if (auto strongInstance = weakInstance.lock()) 
 	            {
@@ -143,8 +146,9 @@ namespace zn
 	    {
 	        HandlerId Id;
 	        i64 Priority;
-	        Func<bool(const EventT&)> Callback;
-	        Func<bool(const EventT&)> Filter;
+	    	
+	        Func<b8(const EventT&)> Callback;
+	        Func<b8(const EventT&)> Filter;
 	    };
 	    
 	    template<typename EventT>
@@ -169,7 +173,7 @@ namespace zn
 
 //// --- Lambda-based subscription ---
 //auto connLambda = dispatcher.Subscribe<NewKeyEvent>(
-//    [](const NewKeyEvent& event) -> bool {
+//    [](const NewKeyEvent& event) -> b8 {
 //        ZN_CORE_INFO("[Lambda] KeyEvent: key = {}", event.key)
 //        if (event.key == 42) {
 //            ZN_CORE_INFO("Consumed by lambda handler.")
@@ -194,12 +198,12 @@ namespace zn
 //// --- Subscription with filter ---
 //// For MouseMoveEvent, process only if x > 100.
 //auto connMouse = dispatcher.Subscribe<NewMouseMoveEvent>(
-//    [](const NewMouseMoveEvent& event) -> bool {
+//    [](const NewMouseMoveEvent& event) -> b8 {
 //        ZN_CORE_INFO("[Lambda] MouseMoveEvent: x = {}, y = {}", event.x, event.y)
 //        return false;
 //    },
 //    0,  // default priority
-//    [](const NewMouseMoveEvent& event) -> bool {
+//    [](const NewMouseMoveEvent& event) -> b8 {
 //        return event.x > 100;
 //    }
 //);

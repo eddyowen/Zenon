@@ -1,18 +1,19 @@
 #pragma once
 
+#include <array>
 #include <cstdint>       
+#include <functional>
+#include <map>           
+#include <memory>        
+#include <optional>      
 #include <vector>        
+#include <set>           
 #include <string>        
 #include <string_view>   
-#include <map>           
-#include <unordered_map> 
-#include <set>           
-#include <unordered_set> 
-#include <memory>        
-#include <utility>       
-#include <optional>      
-#include <functional>
 #include <type_traits>
+#include <unordered_map> 
+#include <unordered_set> 
+#include <utility>       
 
 #ifdef ZN_DEBUG
 	#if defined(ZN_WINDOWS_PLATFORM)
@@ -44,9 +45,22 @@ using i64 = std::int64_t;
 using u64 = std::uint64_t;
 
 //-----------------------------------------------------------------------------
+// Boolean Types
+//-----------------------------------------------------------------------------
+using b8 = bool; // Less common to alias bool
+
+//-----------------------------------------------------------------------------
+// Character Types
+//-----------------------------------------------------------------------------
+using c8 = char;         // Usually for ASCII / UTF-8 code units
+using c16 = char16_t;    // For UTF-16 code units
+using c32 = char32_t;    // For UTF-32 code units / Unicode code points
+using wc = wchar_t;      // Wide character (platform-dependent size)
+
+//-----------------------------------------------------------------------------
 // Size and Pointer Difference Types
 //-----------------------------------------------------------------------------
-using sizet   = std::size_t;
+using uSize   = std::size_t;
 using diff = std::ptrdiff_t;
 
 //-----------------------------------------------------------------------------
@@ -63,8 +77,26 @@ using String     = std::string;
 using StringView = std::string_view;
 
 //-----------------------------------------------------------------------------
+// Memory Types
+//-----------------------------------------------------------------------------
+using Byte = std::byte;
+
+//-----------------------------------------------------------------------------
+// Numeric Limits
+//-----------------------------------------------------------------------------
+constexpr u32 U32_MAX = std::numeric_limits<u32>::max();
+constexpr i32 I32_MAX = std::numeric_limits<i32>::max();
+constexpr i32 I32_MIN = std::numeric_limits<i32>::min();
+
+constexpr f32 F32_EPSILON = std::numeric_limits<f32>::epsilon();
+constexpr f64 F64_EPSILON = std::numeric_limits<f64>::epsilon();
+
+//-----------------------------------------------------------------------------
 // Standard Container Types
 //-----------------------------------------------------------------------------
+template<typename T, uSize N>
+using Array = std::array<T, N>;
+
 template<typename T>
 using Vector = std::vector<T>;
 

@@ -3,12 +3,6 @@
 #include "Core/Base.h"
 #include "Camera/Camera.h"
 
-#include <array>
-
-#include <glm/glm.hpp>
-#include <glm/gtc/matrix_transform.hpp>
-#include <glm/gtc/type_ptr.hpp>
-
 namespace zn
 {
     class Shader;
@@ -18,14 +12,20 @@ namespace zn
     class Renderer
     {
     public:
-        Renderer() = default;
-        ~Renderer() = default;
+        Renderer();
+        ~Renderer();
 
-        bool Init(int width, int height);
+        Renderer(const Renderer& other) = delete;
+        Renderer(Renderer&& other) noexcept = delete;
+        
+        Renderer& operator=(const Renderer& other) = delete;
+        Renderer& operator=(Renderer&& other) noexcept = delete;
+
+        b8 Init(u32 width, u32 height);
         void Shutdown();
 
         void Render(const Camera& camera) const;
-        void ClearScreen(float r, float g, float b, float a) const;
+        void ClearScreen(f32 r, f32 g, f32 b, f32 a) const;
         
     private:
         void TexturedCubesExample(const Camera& camera) const;
@@ -43,9 +43,7 @@ namespace zn
         SharedPtr<Texture> m_wallTexture;
         SharedPtr<Texture> m_georgeTexture;
 		
-        float m_aspectRatio;
-
-        static constexpr std::array<float, 180> vertices { 
+        static constexpr Array<f32, 180> vertices { 
             -0.5f, -0.5f, -0.5f,  0.0f, 0.0f,
              0.5f, -0.5f, -0.5f,  1.0f, 0.0f,
              0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
@@ -89,7 +87,7 @@ namespace zn
             -0.5f,  0.5f, -0.5f,  0.0f, 1.0f
         };
 
-        static constexpr std::array<glm::vec3, 10> cubePositions {
+        static constexpr Array<glm::vec3, 10> cubePositions {
             glm::vec3( 0.0f,  0.0f,  0.0f), 
             glm::vec3( 2.0f,  5.0f, -15.0f), 
             glm::vec3(-1.5f, -2.2f, -2.5f),  
@@ -102,7 +100,7 @@ namespace zn
             glm::vec3(-1.3f,  1.0f, -1.5f)  
         };
 
-        static constexpr std::array<float, 108> lightCubeVerts = {
+        static constexpr Array<f32, 108> lightCubeVerts = {
             -0.5f, -0.5f, -0.5f, 
              0.5f, -0.5f, -0.5f,  
              0.5f,  0.5f, -0.5f,  

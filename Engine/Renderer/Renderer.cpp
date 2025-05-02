@@ -1,15 +1,28 @@
 ﻿#include "Renderer.h"
 
 #include "VertexArray.h"
-
 #include "Resource/ResourceManager.h"
 
 #include <glad/gl.h>
 #include <GLFW/glfw3.h>
 
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
+
 namespace zn
 {
-    bool Renderer::Init(int width, int height)
+    Renderer::Renderer()
+    {
+        
+    }
+    
+    Renderer::~Renderer()
+    {
+        
+    }
+
+    b8 Renderer::Init(u32 width, u32 height)
     {
         // TEMPORAL ///////////////////////////////////////
         if (auto shader = ResourceManager::LoadShader("Default Shader", "Content/Shaders/default.vert", "Content/Shaders/default.frag"))
@@ -42,11 +55,11 @@ namespace zn
 
         VertexBuffer vertexBuffer{};
         vertexBuffer.Bind();
-        vertexBuffer.SetData(vertices.data(), vertices.size() * sizeof(float));
+        vertexBuffer.SetData(vertices.data(), vertices.size() * sizeof(f32));
 		
         VertexBufferLayout vertexBufferLayout;
-        vertexBufferLayout.PushElement<float>(3); // positions
-        vertexBufferLayout.PushElement<float>(2); // texture coords
+        vertexBufferLayout.PushElement<f32>(3); // positions
+        vertexBufferLayout.PushElement<f32>(2); // texture coords
 
         m_vertexArray->AddVertexBuffer(vertexBuffer, vertexBufferLayout);
 
@@ -62,16 +75,16 @@ namespace zn
 
         // LIGHTING EXAMPLE SETUP
         // ------------------------------------------------
-
+        
         m_lightDegugCubeVA = CreateUnique<VertexArray>();
         m_lightDegugCubeVA->Bind();
 
         VertexBuffer lightDebugCubeVB{};
         lightDebugCubeVB.Bind();
-        lightDebugCubeVB.SetData(lightCubeVerts.data(), lightCubeVerts.size() * sizeof(float));
+        lightDebugCubeVB.SetData(lightCubeVerts.data(), lightCubeVerts.size() * sizeof(f32));
 		
         VertexBufferLayout lightDebugCubeVBL;
-        lightDebugCubeVBL.PushElement<float>(3); // positions
+        lightDebugCubeVBL.PushElement<f32>(3); // positions
 
         m_lightDegugCubeVA->AddVertexBuffer(lightDebugCubeVB, lightDebugCubeVBL);
 
@@ -85,10 +98,10 @@ namespace zn
 
         VertexBuffer lightingCubeVB{};
         lightingCubeVB.Bind();
-        lightingCubeVB.SetData(lightCubeVerts.data(), lightCubeVerts.size() * sizeof(float));
+        lightingCubeVB.SetData(lightCubeVerts.data(), lightCubeVerts.size() * sizeof(f32));
 		
         VertexBufferLayout lightingCubeVBL;
-        lightingCubeVBL.PushElement<float>(3); // positions
+        lightingCubeVBL.PushElement<f32>(3); // positions
 
         m_lightingCubeVA->AddVertexBuffer(lightingCubeVB, lightingCubeVBL);
 
@@ -103,7 +116,7 @@ namespace zn
         
     }
 
-    void Renderer::ClearScreen(float r, float g, float b, float a) const
+    void Renderer::ClearScreen(f32 r, f32 g, f32 b, f32 a) const
     {
         glClearColor(r, g, b, a);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -122,16 +135,16 @@ namespace zn
         m_vertexArray->Bind();
         
         int counter = 0;
-        for(unsigned int i = 0; i < 10; i++)
+        for(uSize i = 0; i < 10; i++)
         {
             glm::mat4 model = glm::mat4(1.0f);
             model = glm::translate(model, cubePositions[i]);
-            float angle = 20.0f * i; 
+            f32 angle = 20.0f * i; 
             model = glm::rotate(model, glm::radians(angle), glm::vec3(1.0f, 0.3f, 0.5f));
         
             if(i == 0 || counter == 3)
             {
-                model = glm::rotate(model, glm::radians(float(glfwGetTime() * 120.0f)), glm::vec3(1.0f, 1.0f, 1.0f));
+                model = glm::rotate(model, glm::radians(f32(glfwGetTime() * 120.0f)), glm::vec3(1.0f, 1.0f, 1.0f));
                 counter = 0;
             }
         

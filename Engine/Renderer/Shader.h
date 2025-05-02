@@ -2,31 +2,27 @@
 
 #include "Core/Base.h"
 
-#include <glad/gl.h>
-#include <GLFW/glfw3.h>
-
 #include <glm/glm.hpp>
-#include <glm/gtc/type_ptr.hpp>
 
 namespace zn
 {
 	class Shader 
 	{
 	public:
-		Shader(const char* vertCode, const char* fragCode);
+		Shader(const c8* vertCode, const c8* fragCode);
 		~Shader() = default;
 
 		void Bind() const;
 		void Unbind() const;
 
-		void SetInt(const std::string& name, int value);
-		void SetFloat(const std::string& name, float value);
-		void SetVec3(const std::string& name, const glm::vec3& value);
-		void SetVec4(const std::string& name, const glm::vec4& value);
-		void SetMat4(const std::string& name, const glm::mat4& value);
+		void SetInt(const String& name, i32 value) const;
+		void SetFloat(const String& name, f32 value) const;
+		void SetVec3(const String& name, const glm::vec3& value) const;
+		void SetVec4(const String& name, const glm::vec4& value) const;
+		void SetMat4(const String& name, const glm::mat4& value) const;
 
 	private:
-		void CheckCompileErrors(unsigned int rendererId, const std::string& type) const;
+		static void CheckCompileErrors(u32 rendererId, const String& type);
 		
 		uint32_t m_rendererID;
 	};

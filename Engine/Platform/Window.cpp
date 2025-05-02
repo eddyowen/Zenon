@@ -2,18 +2,17 @@
 
 #include "Core/Log.h"
 #include "Core/Assert.h"
-#include "FileSystem/FileSystem.h"
 #include "Events/ApplicationEvent.h"
+#include "Events/Event.h"
 #include "Events/KeyEvent.h"
+#include "FileSystem/FileSystem.h"
 #include "Resource/ResourceManager.h"
-
-#include <glm/glm.hpp>
-#include <glm/gtc/matrix_transform.hpp>
-#include <glm/gtc/type_ptr.hpp>
 
 #include "imgui.h"
 #include "imgui_impl_glfw.h"
 #include "imgui_impl_opengl3.h"
+
+#include <glm/glm.hpp>
 
 namespace zn
 {
@@ -29,7 +28,7 @@ namespace zn
 		m_window = nullptr;
 	}
 
-	bool Window::Init(uint32_t width, uint32_t height, const std::string& name)
+	bool Window::Init(u32 width, u32 height, const String& name)
 	{
 		m_width = width;
 		m_height = height;
@@ -268,7 +267,7 @@ namespace zn
 		if (id == 131169 || id == 131185 || id == 131218 || id == 131204) 
 			return;
 
-		std::string messageSource;
+		String messageSource;
 		switch (source)
 		{
 			case GL_DEBUG_SOURCE_API:             messageSource = "Source: API"; break;
@@ -279,7 +278,7 @@ namespace zn
 			case GL_DEBUG_SOURCE_OTHER:           messageSource = "Source: Other"; break;
 		} 
 
-		std::string messageType;
+		String messageType;
 		switch (type)
 		{
 			case GL_DEBUG_TYPE_ERROR:               messageType = "Type: Error"; break;

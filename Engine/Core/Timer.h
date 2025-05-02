@@ -55,7 +55,7 @@ namespace zn
             }
 
             // In seconds
-            double GetElapsedTime() const
+            f64 GetElapsedTime() const
             {
                 if (m_running)
                 {
@@ -69,7 +69,7 @@ namespace zn
         private:
             TimePoint m_startTime;
             f64 m_accumulatedTime = 0.0; // Accumulated time in seconds when stopped
-            bool m_running;
+            b8 m_running;
         };
     }
 }

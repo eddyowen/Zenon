@@ -1,5 +1,7 @@
 #pragma once
 
+#include "Core/Base.h"
+
 #include "KeyCodes.h"
 
 struct GLFWwindow;
@@ -18,22 +20,22 @@ namespace zn
         InputSystem& operator=(const InputSystem& other) = delete;
         InputSystem& operator=(InputSystem&& other) noexcept = delete;
 
-        bool Init(GLFWwindow* window);
+        b8 Init(GLFWwindow* window);
         void Update();
 
-        bool GetKeyState(KeyCode key) const;
-        bool IsKeyDown(KeyCode key) const;
+        b8 GetKeyState(KeyCode key) const;
+        b8 IsKeyDown(KeyCode key) const;
 
-        double GetMouseX() const { return m_mouseX; }
-        double GetMouseY() const { return m_mouseY; };
+        f64 GetMouseX() const { return m_mouseX; }
+        f64 GetMouseY() const { return m_mouseY; }
 
     private:
         GLFWwindow* m_window = nullptr;
 
-        std::array<bool, KeyCodesCount> m_keyStates{};
-        std::array<bool, KeyCodesCount> m_keyStatesPrev{};
+        Array<b8, KeyCodesCount> m_keyStates{};
+        Array<b8, KeyCodesCount> m_keyStatesPrev{};
 
-        double m_mouseX = 0.0;
-        double m_mouseY = 0.0;
+        f64 m_mouseX = 0.0;
+        f64 m_mouseY = 0.0;
     };
 }

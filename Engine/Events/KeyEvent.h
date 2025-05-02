@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Events/Event.h"
+#include "Core/Base.h"
 #include "Input/KeyCodes.h"
 
 namespace zn
@@ -8,7 +8,7 @@ namespace zn
 	struct KeyPressedEvent
 	{
 		KeyCode KeyCode;
-		uint16_t RepeatCount;
+		u16 RepeatCount;
 	};
 
 	struct KeyReleasedEvent{};

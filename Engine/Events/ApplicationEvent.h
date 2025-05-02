@@ -1,5 +1,6 @@
 #pragma once
-#include <cstdint>
+
+#include "Core/Base.h"
 
 namespace zn
 {
@@ -7,19 +8,19 @@ namespace zn
 	
 	struct WindowResizedEvent
 	{
-		uint32_t Width;
-		uint32_t Height;
+		u32 Width;
+		u32 Height;
 	};
 
 	struct CursorMovedEvent
 	{
-		double PosX;
-		double PosY;
+		f64 PosX;
+		f64 PosY;
 	};
 
 	struct ScrollChangedEvent
 	{
-		double OffsetX;
-		double OffsetY;
+		f64 OffsetX;
+		f64 OffsetY;
 	};
 }

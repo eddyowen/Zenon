@@ -1,15 +1,13 @@
 #pragma once
 
-#include "Core/Assert.h"
+#include "Core/Base.h"
 
 #include <glad/gl.h>
 #include <GLFW/glfw3.h>
 
-#include <array>
-
 namespace zn
 {
-    using KeyCodeType = int;
+    using KeyCodeType = u8;
 
     enum class KeyCode : KeyCodeType
     {
@@ -147,9 +145,9 @@ namespace zn
     	UNKNOWN,
     };
 	
-	constexpr size_t KeyCodesCount = static_cast<size_t>(KeyCode::UNKNOWN);
+	constexpr uSize KeyCodesCount = static_cast<uSize>(KeyCode::UNKNOWN);
 	
-	constexpr std::array<int, KeyCodesCount> KeyCodesMapping_GFLW
+	constexpr Array<u16, KeyCodesCount> KeyCodesMapping_GLFW
 	{
         GLFW_KEY_SPACE,
         GLFW_KEY_APOSTROPHE,

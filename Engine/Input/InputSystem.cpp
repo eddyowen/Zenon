@@ -1,15 +1,20 @@
 #include "InputSystem.h"
 
+#include "Core/Assert.h"
+
 #include <glad/gl.h>
 #include <GLFW/glfw3.h>
 
 namespace zn
 {
-    static constexpr int KeyCodeToGLFW(KeyCode key)
+    namespace
     {
-        ZN_CORE_ASSERT(key != KeyCode::UNKNOWN)
-        
-        return KeyCodesMapping_GFLW[static_cast<int>(key)];
+        static constexpr u16 KeyCodeToGLFW(KeyCode key)
+        {
+            ZN_CORE_ASSERT(key != KeyCode::UNKNOWN)
+            
+            return KeyCodesMapping_GLFW[static_cast<int>(key)];
+        }
     }
     
     bool InputSystem::Init(GLFWwindow* window)
@@ -37,7 +42,7 @@ namespace zn
         // Update key states
         m_keyStatesPrev = m_keyStates;
 
-        for(int i = 0; i < KeyCodesCount; i++)
+        for(uSize i = 0; i < KeyCodesCount; i++)
         {
             int state = glfwGetKey(m_window, KeyCodeToGLFW(static_cast<KeyCode>(i)));
             m_keyStates[i] = state == GLFW_PRESS;
@@ -56,7 +61,7 @@ namespace zn
     {
         ZN_CORE_ASSERT(key != KeyCode::UNKNOWN)
         
-        const int keyIdx = static_cast<int>(key);
+        const u8 keyIdx = static_cast<u8>(key);
         return m_keyStates[keyIdx] && !m_keyStatesPrev[keyIdx];
     }
 }

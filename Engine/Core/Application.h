@@ -2,6 +2,7 @@
 
 #include "Base.h"
 
+#include "Events/Event.h"
 #include "Events/ApplicationEvent.h"
 #include "Events/KeyEvent.h"
 #include "Camera/Camera.h"
@@ -23,18 +24,18 @@ namespace zn
 		Application& operator=(const Application& other) = delete;
 		Application& operator=(Application&& other) noexcept = delete;
 		
-		bool Init(const String& appName, u32 windowWidth, u32 windowHeight);
+		b8 Init(const String& appName, u32 windowWidth, u32 windowHeight);
 		void Run();
 		void Shutdown();
 
-		bool OnKeyPressed(const KeyPressedEvent& e);
-		bool OnCursosMoved(const CursorMovedEvent& e);
-		bool OnScrollChanged(const ScrollChangedEvent& e);
-		bool OnWindowClosed(const WindowClosedEvent& e);
-		bool OnWindowResized(const WindowResizedEvent& e);
+		b8 OnKeyPressed(const KeyPressedEvent& e);
+		b8 OnCursosMoved(const CursorMovedEvent& e);
+		b8 OnScrollChanged(const ScrollChangedEvent& e);
+		b8 OnWindowClosed(const WindowClosedEvent& e);
+		b8 OnWindowResized(const WindowResizedEvent& e);
 
 	private:
-		void ProcessInput(double deltaTime);
+		void ProcessInput(f64 deltaTime);
 
 	private:
 		Window m_window{};

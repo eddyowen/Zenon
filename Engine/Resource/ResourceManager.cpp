@@ -1,19 +1,22 @@
 #include "ResourceManager.h"
 
+#include "Core/Log.h"
 #include "FileSystem/FileSystem.h"
+
+#include "glad/gl.h"
 
 #define STB_IMAGE_IMPLEMENTATION
 #include "stb_image.h"
 
 namespace zn
 {
-    ResourceManager::ShaderMap ResourceManager::s_Shaders;
-    ResourceManager::TextureMap ResourceManager::s_Textures;
+    ResourceManager::ShaderMap ResourceManager::s_shaders;
+    ResourceManager::TextureMap ResourceManager::s_textures;
     
     ResourceManager::ShaderResource ResourceManager::LoadShader(
-        const std::string& resourceName,
-        const std::string& vertPath,
-        const std::string& fragPath)
+        const String& resourceName,
+        const String& vertPath,
+        const String& fragPath)
     {
         if (!FileSystem::Exists(vertPath))
         {
@@ -41,22 +44,22 @@ namespace zn
             return std::nullopt;
         }
         
-        if (auto it = s_Shaders.find(resourceName); it != s_Shaders.end())
+        if (auto it = s_shaders.find(resourceName); it != s_shaders.end())
         {
             ZN_CORE_ERROR("[ResourceManager::LoadShader] Failed to load shader. Shader ({}) resource already exists in the registry", resourceName)
             return std::nullopt;
         }
 
         SharedPtr<Shader> shader = CreateShared<Shader>(vertexCode.value().c_str(), fragmentCode.value().c_str());
-        s_Shaders[resourceName] = shader;
+        s_shaders[resourceName] = shader;
         
         return shader;
     }
 
-    ResourceManager::ShaderResource ResourceManager::GetShader(const std::string& name)
+    ResourceManager::ShaderResource ResourceManager::GetShader(const String& name)
     {
-        auto it = s_Shaders.find(name);
-        if (it == s_Shaders.end())
+        auto it = s_shaders.find(name);
+        if (it == s_shaders.end())
         {
             ZN_CORE_ERROR("[ResourceManager::GetShader] Failed to retrieve shader. Shader ({}) resource doesn't exist in the registry", name)
             return std::nullopt;
@@ -65,7 +68,7 @@ namespace zn
         return it->second;
     }
 
-    ResourceManager::TextureResource ResourceManager::LoadTexture(const std::string& resourceName, const std::string& path)
+    ResourceManager::TextureResource ResourceManager::LoadTexture(const String& resourceName, const String& path)
     {
         if (!FileSystem::Exists(path))
         {
@@ -73,7 +76,7 @@ namespace zn
             return std::nullopt;
         }
         
-        if (auto it = s_Textures.find(resourceName); it != s_Textures.end())
+        if (auto it = s_textures.find(resourceName); it != s_textures.end())
         {
             ZN_CORE_ERROR("[ResourceManager::LoadTexture] Failed to load shader. Shader ({}) resource already exists in the registry", resourceName)
             return std::nullopt;
@@ -103,7 +106,7 @@ namespace zn
             }
             
             SharedPtr<Texture> texture = CreateShared<Texture>(data, width, height, channels, internalFormat, dataFormat);
-            s_Textures[resourceName] = texture;
+            s_textures[resourceName] = texture;
             
             stbi_image_free(data);
 
@@ -114,10 +117,10 @@ namespace zn
         return std::nullopt;
     }
 
-    ResourceManager::TextureResource ResourceManager::GetTexture(const std::string& name)
+    ResourceManager::TextureResource ResourceManager::GetTexture(const String& name)
     {
-        auto it = s_Textures.find(name);
-        if (it == s_Textures.end())
+        auto it = s_textures.find(name);
+        if (it == s_textures.end())
         {
             ZN_CORE_ERROR("[ResourceManager::GetTexture] Failed to retrieve texture. Texture ({}) resource doesn't exist in the registry", name)
             return std::nullopt;

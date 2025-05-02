@@ -13,14 +13,15 @@ namespace zn
 	public:
 		VertexBuffer();
 		~VertexBuffer();
-
-		void SetData(const void* data, unsigned int size);
+		
 
 		void Bind() const;
 		void Unbind() const;
 
+		void SetData(const void* data, uSize size);
+
 	private:
-		uint32_t m_rendererID;
+		u32 m_rendererID;
 	};
 
 	class IndexBuffer
@@ -29,15 +30,15 @@ namespace zn
 		IndexBuffer();
 		~IndexBuffer();
 
-		void SetData(const unsigned int* indices, unsigned int count);
-
 		void Bind() const;
 		void Unbind() const;
-		unsigned int GetCount() const;
+
+		void SetData(const unsigned int* indices, uSize count);
+		uSize GetCount() const { return m_count; }
 
 	private:
-		uint32_t m_rendererID;
-		uint32_t m_count;
+		u32 m_rendererID;
+		uSize m_count;
 	};
 
 	class VertexBufferLayout
@@ -45,9 +46,9 @@ namespace zn
 	public:
 		struct VertexBufferElement
 		{
-			unsigned char normalized;
-			unsigned int type;
-			unsigned int count;
+			unsigned char Normalized;
+			unsigned int Type;
+			uSize Count;
 
 			static unsigned int GetSizeOfType(unsigned int type)
 			{
@@ -62,44 +63,44 @@ namespace zn
 			}
 		};
 
-		VertexBufferLayout() : m_Stride(0) {}
+		VertexBufferLayout() : m_stride(0) {}
 
-		inline const std::vector<VertexBufferElement>& GetElements() const { return m_Elements; }
-		inline unsigned int GetStride() const { return m_Stride; }
+		[[nodiscard]]
+		const Vector<VertexBufferElement>& GetElements() const { return m_elements; }
+		
+		[[nodiscard]]
+		uSize GetStride() const { return m_stride; }
 
 		template<typename T>
-		void PushElement(unsigned int count)
+		void PushElement(uSize count)
 		{
 			ZN_CORE_ASSERT(false)
 		}
 
 		template<>
-		void PushElement<float>(unsigned int count)
+		void PushElement<f32>(uSize count)
 		{
-			m_Elements.push_back({ GL_FALSE, GL_FLOAT, count });
-			m_Stride += count * sizeof(GLfloat);
+			m_elements.push_back({ GL_FALSE, GL_FLOAT, count });
+			m_stride += count * sizeof(GLfloat);
 		}
 
 		template<>
-		void PushElement<unsigned int>(unsigned int count)
+		void PushElement<unsigned int>(uSize count)
 		{
-			m_Elements.push_back({ GL_FALSE, GL_FLOAT, count});
-			m_Stride += count * sizeof(GLuint);
+			m_elements.push_back({ GL_FALSE, GL_UNSIGNED_INT, count});
+			m_stride += count * sizeof(GLuint);
 		}
 
 		template<>
-		void PushElement<unsigned char>(unsigned int count)
+		void PushElement<unsigned char>(uSize count)
 		{
-			m_Elements.push_back({ GL_FALSE, GL_FLOAT, count });
-			m_Stride += count * sizeof(GLubyte);
+			m_elements.push_back({ GL_FALSE, GL_UNSIGNED_BYTE, count });
+			m_stride += count * sizeof(GLubyte);
 		}
 
 	private:
-		template<typename T>
-		struct InvalidPushType : std::false_type {};
-
-		unsigned int m_Stride;
-		std::vector<VertexBufferElement> m_Elements;
+		Vector<VertexBufferElement> m_elements;
+		uSize m_stride;
 	};
 
 	class VertexArray
@@ -114,6 +115,6 @@ namespace zn
 		void AddVertexBuffer(const VertexBuffer& vertexBuffer, const VertexBufferLayout& layout);
 
 	private:
-		uint32_t m_rendererID;
+		u32 m_rendererID;
 	};
 }

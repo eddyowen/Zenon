@@ -1,5 +1,7 @@
 #pragma once
 
+#include "Core/Base.h"
+
 #include <glm/glm.hpp>
 
 namespace zn
@@ -7,7 +9,7 @@ namespace zn
     class Camera
     {
     public:
-        enum class MovementDirection : uint8_t
+        enum class MovementDirection : u8
         {
             Forward,
             Backward,
@@ -16,7 +18,7 @@ namespace zn
         };
 
         Camera() = default;
-        Camera(float aspectRatio, float fov = 45.0f, float nearClip = 0.1f, float farClip = 100.0f, float yaw = -90.0f, float pitch = 0.0f);
+        Camera(f32 aspectRatio, f32 fov = 45.0f, f32 nearClip = 0.1f, f32 farClip = 100.0f, f32 yaw = -90.0f, f32 pitch = 0.0f);
 
         ~Camera() = default;
 
@@ -26,15 +28,15 @@ namespace zn
         Camera& operator=(const Camera&) = default;
         Camera& operator=(Camera&&) = default;
 
-        void ProcessKeyboard(MovementDirection direction, double deltaTime);
-        void ProccessMouseMovement(float currentMouseX, float currentMouseY);
-        void ProcessMouseScroll(float offsetX, float offsetY);
+        void ProcessKeyboard(MovementDirection direction, f64 deltaTime);
+        void ProccessMouseMovement(f32 currentMouseX, f32 currentMouseY);
+        void ProcessMouseScroll(f32 offsetX, f32 offsetY);
 
-        void SetViewportSize(int width, int height) { m_aspectRatio  = static_cast<float>(width) / static_cast<float>(height); }
+        void SetViewportSize(u32 width, u32 height) { m_aspectRatio  = static_cast<f32>(width) / static_cast<f32>(height); }
         void SetPosition(const glm::vec3& position) { m_position = position; UpdateVectors(); }
-        void SetMovementSpeed(float speed) { m_movementSpeed = speed; }
-        void SetMouseSensitivity(float sensitivity) { m_mouseSensitivity = sensitivity; }
-        void SetLastMousePosition(float x, float y);
+        void SetMovementSpeed(f32 speed) { m_movementSpeed = speed; }
+        void SetMouseSensitivity(f32 sensitivity) { m_mouseSensitivity = sensitivity; }
+        void SetLastMousePosition(f32 x, f32 y);
 
         glm::mat4 GetViewMatrix() const;
         glm::mat4 GetProjection() const;
@@ -55,22 +57,22 @@ namespace zn
         glm::vec3 m_right;
         glm::vec3 m_worldUp;
 
-        float m_aspectRatio;
-        float m_fov;
-        float m_nearClip;
-        float m_farClip;
+        f32 m_aspectRatio;
+        f32 m_fov;
+        f32 m_nearClip;
+        f32 m_farClip;
 
-        float m_yaw;
-        float m_pitch;
+        f32 m_yaw;
+        f32 m_pitch;
 
-        float m_movementSpeed;
-        float m_mouseSensitivity;
-        float m_lastMouseX = 0.0f;
-        float m_lastMouseY = 0.0f;
+        f32 m_movementSpeed;
+        f32 m_mouseSensitivity;
+        f32 m_lastMouseX = 0.0f;
+        f32 m_lastMouseY = 0.0f;
 
-        bool m_invertYaw = true;
-        bool m_invertPitch = true;
+        b8 m_invertYaw = true;
+        b8 m_invertPitch = true;
 
-        bool m_firstMouseMovement = true;
+        b8 m_firstMouseMovement = true;
     }; 
 }
