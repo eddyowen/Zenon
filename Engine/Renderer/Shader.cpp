@@ -42,7 +42,7 @@ namespace zn
 			if (!success)
 			{
 				glGetShaderInfoLog(rendererId, 1024, nullptr, infoLog);
-				ZN_CORE_ERROR("ERROR::SHADER_COMPILATION_ERROR of type: " + type + "\n" + infoLog)
+				ZN_CORE_ERROR("ERROR::SHADER_COMPILATION_ERROR of type: " + type + "\n" + infoLog);
 			}
 		}
 		else
@@ -51,7 +51,7 @@ namespace zn
 			if (!success)
 			{
 				glGetProgramInfoLog(rendererId, 1024, nullptr, infoLog);
-				ZN_CORE_ERROR("ERROR::SHADER_LINKING_ERROR of type: " + type + "\n" + infoLog)
+				ZN_CORE_ERROR("ERROR::SHADER_LINKING_ERROR of type: " + type + "\n" + infoLog);
 			}
 		}
 	}

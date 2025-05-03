@@ -6,15 +6,22 @@
 
 #include <imgui_internal.h>
 
+#include "Assert.h"
+
 namespace zn
 {
+	Application::~Application()
+	{
+		
+	}
+
 	b8 Application::Init(const String& appName, u32 windowWidth, u32 windowHeight)
 	{
 		Log::Init();
 		
 		if (!m_window.Init(windowWidth, windowHeight, appName))
 		{
-			ZN_CORE_CRITICAL("[Application::Init] Failed to initialize Window. Closing Application")
+			ZN_CORE_CRITICAL("[Application::Init] Failed to initialize Window. Closing Application");
 			return false;
 		}
 
@@ -25,7 +32,7 @@ namespace zn
 
 		if (!m_renderer.Init(windowWidth, windowHeight))
 		{
-			ZN_CORE_CRITICAL("[Application::Init] Failed to initialize Renderer. Closing Application")
+			ZN_CORE_CRITICAL("[Application::Init] Failed to initialize Renderer. Closing Application");
 			return false;
 		}
 
@@ -36,12 +43,19 @@ namespace zn
 		m_scrollChangedConnection = EventSystem::Instance().Subscribe<ScrollChangedEvent>(shared_from_this(), &Application::OnScrollChanged);
 		m_windowClosedConnection = EventSystem::Instance().Subscribe<WindowClosedEvent>(shared_from_this(), &Application::OnWindowClosed);
 		m_windowResizedConnection = EventSystem::Instance().Subscribe<WindowResizedEvent>(shared_from_this(), &Application::OnWindowResized);
-			
+
+		m_initialized = true;
+		
 		return true;
 	}
 
 	void Application::Run()
 	{
+		ZN_ASSERT(m_initialized, "Ran application before initializing it");
+		
+		if (!m_initialized)
+			return;
+		
 		//const Time::Duration fixedDelta(1 / 60.f);
 		//f64 accumulator = 0.0;
 		//constexpr int maxUpdatesPerFrame = 5;
@@ -99,7 +113,7 @@ namespace zn
 
 	b8 Application::OnKeyPressed(const KeyPressedEvent& e)
 	{
-		ZN_CORE_TRACE("KeyPressedEvent: {}. ({}) repeats", static_cast<KeyCodeType>(e.KeyCode),  e.RepeatCount)
+		ZN_CORE_TRACE("KeyPressedEvent: {}. ({}) repeats", static_cast<KeyCodeType>(e.KeyCode),  e.RepeatCount);
 		return true;
 	}
 
@@ -118,13 +132,13 @@ namespace zn
 
 	b8 Application::OnWindowClosed(const WindowClosedEvent& e)
 	{
-		ZN_CORE_TRACE("Window ClosedEvent"	)
+		ZN_CORE_TRACE("Window ClosedEvent");
 		return true;
 	}
 
 	b8 Application::OnWindowResized(const WindowResizedEvent& e)
 	{
-		ZN_CORE_TRACE("Window ResizedEvent")
+		ZN_CORE_TRACE("Window ResizedEvent");
 		m_camera.SetViewportSize(e.Width, e.Height);
 		return true;
 	}

@@ -101,7 +101,7 @@ namespace zn
             return entries;
         }
 
-        ZN_CORE_WARN("[FileSystem::ListDirectory] Could not list directory. Returning empty list")
+        ZN_CORE_WARN("[FileSystem::ListDirectory] Could not list directory. Returning empty list");
         return {};
     }
 
@@ -114,7 +114,7 @@ namespace zn
                 std::ifstream file(fullPath.value(), std::ios::binary | std::ios::ate);
                 if (!file.is_open())
                 {
-                    ZN_CORE_ERROR("[FileSystem::ReadFileAsBinary] Failed to open file at '" + path + "'")
+                    ZN_CORE_ERROR("[FileSystem::ReadFileAsBinary] Failed to open file at '" + path + "'");
                     return std::nullopt;
                 }
 
@@ -124,7 +124,7 @@ namespace zn
                 Vector<Byte> buffer(size);
                 if (!file.read(reinterpret_cast<char*>(buffer.data()), size))
                 {
-                    ZN_CORE_ERROR("[FileSystem::ReadFileAsBinary] Failed to read file at '" + path + "'")
+                    ZN_CORE_ERROR("[FileSystem::ReadFileAsBinary] Failed to read file at '" + path + "'");
                     return std::nullopt;
                 }
 
@@ -132,7 +132,7 @@ namespace zn
             }
             else
             {
-                ZN_CORE_ERROR("[FileSystem::ReadFileAsBinary] Failed to read file at '" + path + "'")
+                ZN_CORE_ERROR("[FileSystem::ReadFileAsBinary] Failed to read file at '" + path + "'");
                 return std::nullopt;
             }
         } catch (...)
@@ -150,7 +150,7 @@ namespace zn
                 std::ifstream file(fullPath.value(), std::ios::binary | std::ios::ate);
                 if (!file.is_open())
                 {
-                    ZN_CORE_ERROR("[FileSystem::ReadFileAsString] Failed to open file at '" + path + "'")
+                    ZN_CORE_ERROR("[FileSystem::ReadFileAsString] Failed to open file at '" + path + "'");
                     return std::nullopt;
                 }
 
@@ -162,7 +162,7 @@ namespace zn
             
                 if (!file.read(buffer.data(), size))
                 {
-                    ZN_CORE_ERROR("[FileSystem::ReadFileAsString] Failed to read file at '" + path + "'")
+                    ZN_CORE_ERROR("[FileSystem::ReadFileAsString] Failed to read file at '" + path + "'");
                     return std::nullopt;
                 }
 
@@ -170,7 +170,7 @@ namespace zn
             }
             else
             {
-                ZN_CORE_ERROR("[FileSystem::ReadFileAsString] Failed to read file at '" + path + "'")
+                ZN_CORE_ERROR("[FileSystem::ReadFileAsString] Failed to read file at '" + path + "'");
                 return std::nullopt;
             }
         } catch (...)
@@ -186,7 +186,7 @@ namespace zn
             
         if (fileSystemPath.is_absolute())
         {
-            ZN_CORE_ERROR("[FileSystem::GetFullPath] Absolute paths not allowed: " + normalized)
+            ZN_CORE_ERROR("[FileSystem::GetFullPath] Absolute paths not allowed: " + normalized);
             return std::nullopt;
         }
             
@@ -196,7 +196,7 @@ namespace zn
         Path relativeToRoot = fullPath.lexically_relative(GetRoot());
         if (relativeToRoot.generic_string().find("..") != String::npos)
         {
-            ZN_CORE_ERROR("[FileSystem::GetFullPath] Path escapes root directory: " + normalized)
+            ZN_CORE_ERROR("[FileSystem::GetFullPath] Path escapes root directory: " + normalized);
             return std::nullopt;
         }
 

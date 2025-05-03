@@ -11,7 +11,7 @@ namespace zn
     {
         constexpr u16 KeyCodeToGLFW(KeyCode key)
         {
-            ZN_CORE_ASSERT(key != KeyCode::UNKNOWN)
+            ZN_ASSERT(key != KeyCode::UNKNOWN);
             
             return KeyCodesMapping_GLFW[static_cast<int>(key)];
         }
@@ -21,7 +21,7 @@ namespace zn
     {
         if(!window)
         {
-            ZN_CORE_ERROR("[InputSystem::Init] Failed to initialize InputSystem. Invalid GLFW window")
+            ZN_CORE_ERROR("[InputSystem::Init] Failed to initialize InputSystem. Invalid GLFW window");
             return false;
         }
 
@@ -34,7 +34,7 @@ namespace zn
 
     void InputSystem::Update()
     {
-        ZN_CORE_ASSERT(m_window != nullptr)
+        ZN_ASSERT(m_window != nullptr, "Could not update InputSystem. The system has not been initialized properly");
 
         // Update mouse position
         glfwGetCursorPos(m_window, &m_mouseX, &m_mouseY);
@@ -51,7 +51,7 @@ namespace zn
 
     b8 InputSystem::GetKeyState(KeyCode key) const
     {
-        ZN_CORE_ASSERT(m_window != nullptr)
+        ZN_ASSERT(m_window != nullptr);
         
         int state = glfwGetKey(m_window, KeyCodeToGLFW(static_cast<KeyCode>(key)));
         return state == GLFW_PRESS ? true : false;
@@ -59,7 +59,7 @@ namespace zn
 
     b8 InputSystem::IsKeyDown(KeyCode key) const
     {
-        ZN_CORE_ASSERT(key != KeyCode::UNKNOWN)
+        ZN_ASSERT(key != KeyCode::UNKNOWN);
         
         const u8 keyIdx = static_cast<u8>(key);
         return m_keyStates[keyIdx] && !m_keyStatesPrev[keyIdx];

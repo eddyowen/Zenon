@@ -20,33 +20,33 @@ namespace zn
     {
         if (!FileSystem::Exists(vertPath))
         {
-            ZN_CORE_ERROR("[ResourceManager::LoadShader] Failed to load shader. File {} does not exist", vertPath)
+            ZN_CORE_ERROR("[ResourceManager::LoadShader] Failed to load shader. File {} does not exist", vertPath);
             return std::nullopt;
         }
 
         if (!FileSystem::Exists(fragPath))
         {
-            ZN_CORE_ERROR("[ResourceManager::LoadShader] Failed to load shader. File {} does not exist", fragPath)
+            ZN_CORE_ERROR("[ResourceManager::LoadShader] Failed to load shader. File {} does not exist", fragPath);
             return std::nullopt;
         }
 		
         auto vertexCode = FileSystem::ReadFileAsString(vertPath);
         if (!vertexCode)
         {
-            ZN_CORE_ERROR("[ResourceManager::LoadShader] Failed to load shader. Failed to read vertex shader code from {}", vertPath)
+            ZN_CORE_ERROR("[ResourceManager::LoadShader] Failed to load shader. Failed to read vertex shader code from {}", vertPath);
             return std::nullopt;
         }
 
         auto fragmentCode = FileSystem::ReadFileAsString(fragPath);
         if (!fragmentCode)
         {
-            ZN_CORE_ERROR("[ResourceManager::LoadShader] Failed to load shader. Failed to read fragment shader code from {}", fragPath)
+            ZN_CORE_ERROR("[ResourceManager::LoadShader] Failed to load shader. Failed to read fragment shader code from {}", fragPath);
             return std::nullopt;
         }
         
         if (auto it = s_shaders.find(resourceName); it != s_shaders.end())
         {
-            ZN_CORE_ERROR("[ResourceManager::LoadShader] Failed to load shader. Shader ({}) resource already exists in the registry", resourceName)
+            ZN_CORE_ERROR("[ResourceManager::LoadShader] Failed to load shader. Shader ({}) resource already exists in the registry", resourceName);
             return std::nullopt;
         }
 
@@ -61,7 +61,7 @@ namespace zn
         auto it = s_shaders.find(name);
         if (it == s_shaders.end())
         {
-            ZN_CORE_ERROR("[ResourceManager::GetShader] Failed to retrieve shader. Shader ({}) resource doesn't exist in the registry", name)
+            ZN_CORE_ERROR("[ResourceManager::GetShader] Failed to retrieve shader. Shader ({}) resource doesn't exist in the registry", name);
             return std::nullopt;
         }
         
@@ -72,13 +72,13 @@ namespace zn
     {
         if (!FileSystem::Exists(path))
         {
-            ZN_CORE_ERROR("[ResourceManager::LoadTexture] Failed to load texture resource. File {} does not exist", path)
+            ZN_CORE_ERROR("[ResourceManager::LoadTexture] Failed to load texture resource. File {} does not exist", path);
             return std::nullopt;
         }
         
         if (auto it = s_textures.find(resourceName); it != s_textures.end())
         {
-            ZN_CORE_ERROR("[ResourceManager::LoadTexture] Failed to load shader. Shader ({}) resource already exists in the registry", resourceName)
+            ZN_CORE_ERROR("[ResourceManager::LoadTexture] Failed to load shader. Shader ({}) resource already exists in the registry", resourceName);
             return std::nullopt;
         }
 		
@@ -113,7 +113,7 @@ namespace zn
             return texture;
         }
         
-        ZN_CORE_ERROR("[ResourceManager::LoadTexture] Failed to load texture resource. Library (stbi) failed to load texture: {}", path)
+        ZN_CORE_ERROR("[ResourceManager::LoadTexture] Failed to load texture resource. Library (stbi) failed to load texture: {}", path);
         return std::nullopt;
     }
 
@@ -122,7 +122,7 @@ namespace zn
         auto it = s_textures.find(name);
         if (it == s_textures.end())
         {
-            ZN_CORE_ERROR("[ResourceManager::GetTexture] Failed to retrieve texture. Texture ({}) resource doesn't exist in the registry", name)
+            ZN_CORE_ERROR("[ResourceManager::GetTexture] Failed to retrieve texture. Texture ({}) resource doesn't exist in the registry", name);
             return std::nullopt;
         }
         

@@ -85,7 +85,7 @@ namespace zn
 		template<typename T>
 		void PushElement(uSize count)
 		{
-			ZN_CORE_ASSERT(false)
+			ZN_ASSERT(false);
 		}
 
 		template<>

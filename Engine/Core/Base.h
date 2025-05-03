@@ -24,6 +24,8 @@
 	#define ZN_DEBUGBREAK()
 #endif
 
+#define ZN_EXPAND_MACRO(x) x
+
 #define ZN_STRINGIFY_MACRO(x) #x
 
 namespace  zn

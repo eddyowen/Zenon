@@ -36,7 +36,7 @@ namespace zn
 		
 		if (!glfwInit())
 		{
-			ZN_CORE_CRITICAL("[Window::Init] Failed to initialize GLFW. Aborting")
+			ZN_CORE_CRITICAL("[Window::Init] Failed to initialize GLFW. Aborting");
 			return false;
 		}
 
@@ -50,7 +50,7 @@ namespace zn
 		m_window = glfwCreateWindow(m_width, m_height, m_name.c_str(), nullptr, nullptr);
 		if (!m_window)
 		{
-			ZN_CORE_CRITICAL("[Window::Init] Failed to create GLFW window. Aborting")
+			ZN_CORE_CRITICAL("[Window::Init] Failed to create GLFW window. Aborting");
 			glfwTerminate();
 			return false;
 		}
@@ -60,7 +60,7 @@ namespace zn
 
 		if (!gladLoadGL(glfwGetProcAddress))
 		{
-			ZN_CORE_CRITICAL("[Window::Init] Failed to initialize GLAD. Aborting")
+			ZN_CORE_CRITICAL("[Window::Init] Failed to initialize GLAD. Aborting");
 			glfwTerminate();
 			return false;
 		}
@@ -119,7 +119,7 @@ namespace zn
 			glDebugMessageCallback(OpenGLDebugOutput, nullptr);
 			glDebugMessageControl(GL_DONT_CARE, GL_DONT_CARE, GL_DONT_CARE, 0, nullptr, GL_TRUE);
 			
-			ZN_CORE_INFO("[Window::Init] OpenGL Debug Context successfully initialized")
+			ZN_CORE_INFO("[Window::Init] OpenGL Debug Context successfully initialized");
 		}
 #endif
 		return true;
@@ -295,23 +295,23 @@ namespace zn
 		switch (severity)
 		{
 			case GL_DEBUG_SEVERITY_HIGH:
-				ZN_CORE_ERROR("Debug message ({}): {}\n{}\n{}\n{}\n", id, message, messageSource, messageType, "Severity: high")
+				ZN_CORE_ERROR("Debug message ({}): {}\n{}\n{}\n{}\n", id, message, messageSource, messageType, "Severity: high");
 				break;
 
 			case GL_DEBUG_SEVERITY_MEDIUM:  
-				ZN_CORE_WARN("Debug message ({}): {}\n{}\n{}\n{}\n", id, message, messageSource, messageType, "Severity: medium")
+				ZN_CORE_WARN("Debug message ({}): {}\n{}\n{}\n{}\n", id, message, messageSource, messageType, "Severity: medium");
 				break;
 
 			case GL_DEBUG_SEVERITY_LOW:          
-				ZN_CORE_TRACE("Debug message ({}): {}\n{}\n{}\n{}\n", id, message, messageSource, messageType, "Severity: low")
+				ZN_CORE_TRACE("Debug message ({}): {}\n{}\n{}\n{}\n", id, message, messageSource, messageType, "Severity: low");
 				break;
 
 			case GL_DEBUG_SEVERITY_NOTIFICATION:
-				ZN_CORE_TRACE("Debug message ({}): {}\n{}\n{}\n{}\n", id, message, messageSource, messageType, "Severity: notification")
+				ZN_CORE_TRACE("Debug message ({}): {}\n{}\n{}\n{}\n", id, message, messageSource, messageType, "Severity: notification");
 				break;
 		}
 
-		ZN_CORE_ASSERT(false)
+		ZN_ASSERT(false);
 	}
 #endif
 }

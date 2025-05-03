@@ -16,7 +16,7 @@ namespace zn
 	{
 	public:
 		Application() = default;
-		~Application() = default;
+		~Application();
 		
 		Application(const Application& other) = delete;
 		Application(Application&& other) noexcept = delete;
@@ -49,5 +49,7 @@ namespace zn
 		EventConnection<ScrollChangedEvent> m_scrollChangedConnection;
 		EventConnection<WindowClosedEvent> m_windowClosedConnection;
 		EventConnection<WindowResizedEvent> m_windowResizedConnection;
+
+		b8 m_initialized = false;
 	};
 }
