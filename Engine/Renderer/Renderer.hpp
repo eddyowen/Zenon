@@ -1,8 +1,8 @@
 ﻿#pragma once
 
-#include "Core/Base.h"
-#include "Camera/Camera.h"
-#include "Math/Math.h"
+#include "Core/Base.hpp"
+#include "Camera/Camera.hpp"
+#include "Math/Math.hpp"
 
 namespace zn
 {

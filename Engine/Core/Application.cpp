@@ -1,12 +1,13 @@
-#include "Application.h"
+#include "Application.hpp"
 
-#include "Log.h"
-#include "Math/Math.h"
-#include "Timer.h"
+#include "Log.hpp"
+#include "Math/Math.hpp"
+#include "Timer.hpp"
 
 #include <imgui_internal.h>
 
-#include "Assert.h"
+#include "Assert.hpp"
+#include "Resource/ResourceManager.hpp"
 
 namespace zn
 {
@@ -45,6 +46,9 @@ namespace zn
 		m_windowResizedConnection = EventSystem::Instance().Subscribe<WindowResizedEvent>(shared_from_this(), &Application::OnWindowResized);
 
 		m_initialized = true;
+
+		Handle handle{1,1};
+		ZN_CORE_TRACE("Handle ID: {} GEN: {}", handle.GetIndex(), handle.GetGeneration());
 		
 		return true;
 	}

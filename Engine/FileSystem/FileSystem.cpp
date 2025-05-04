@@ -1,6 +1,6 @@
-﻿#include "FileSystem.h"
+﻿#include "FileSystem.hpp"
 
-#include "Core/Log.h"
+#include "Core/Log.hpp"
 
 #include <fstream>
 

@@ -1,7 +1,8 @@
-#include "ResourceManager.h"
+#include "ResourceManager.hpp"
 
-#include "Core/Log.h"
-#include "FileSystem/FileSystem.h"
+#include "Core/Base.hpp"
+#include "Core/Log.hpp"
+#include "FileSystem/FileSystem.hpp"
 
 #include "glad/gl.h"
 

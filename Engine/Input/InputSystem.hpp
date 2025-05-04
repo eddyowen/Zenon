@@ -1,8 +1,8 @@
 #pragma once
 
-#include "Core/Base.h"
+#include "Core/Base.hpp"
 
-#include "KeyCodes.h"
+#include "KeyCodes.hpp"
 
 struct GLFWwindow;
 

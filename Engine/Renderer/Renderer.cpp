@@ -1,7 +1,7 @@
-﻿#include "Renderer.h"
+﻿#include "Renderer.hpp"
 
-#include "VertexArray.h"
-#include "Resource/ResourceManager.h"
+#include "VertexArray.hpp"
+#include "Resource/ResourceManager.hpp"
 
 #include <glad/gl.h>
 #include <GLFW/glfw3.h>

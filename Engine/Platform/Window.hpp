@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Core/Base.h"
+#include "Core/Base.hpp"
 
 #include <glad/gl.h>
 #include <GLFW/glfw3.h>

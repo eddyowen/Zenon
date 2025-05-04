@@ -1,12 +1,30 @@
 #pragma once
 
-#include "Core/Base.h"
+#include "Core/Base.hpp"
 
-#include "Renderer/Shader.h"
-#include "Renderer/Texture.h"
+#include "Renderer/Shader.hpp"
+#include "Renderer/Texture.hpp"
 
 namespace zn
 {
+
+    class Handle
+    {
+    public:
+        static constexpr u32 GEN_SHIFT = 32;
+        static constexpr u32 INDEX_MASK = 0xFFFFFFFF;
+        static constexpr u32 INDEX_MAX_VALUE = 0xFFFFFFFF;
+        
+        Handle(u32 index, u32 generation)
+            : m_value(static_cast<u64>(generation) << GEN_SHIFT | index){}
+
+        u32 GetIndex() const { return static_cast<u32>(m_value & INDEX_MASK); }
+        u32 GetGeneration() const { return static_cast<u32>(m_value >> GEN_SHIFT); }
+        
+    private:
+        u64 m_value = 0;
+    };
+    
     class ResourceManager
     {
     public:

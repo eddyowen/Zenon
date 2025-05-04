@@ -1,7 +1,7 @@
 #pragma once
 
-#include "Core/Base.h"
-#include "Core/Assert.h"
+#include "Core/Base.hpp"
+#include "Core/Assert.hpp"
 
 #include <glad/gl.h>
 #include <GLFW/glfw3.h>

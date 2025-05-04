@@ -1,12 +1,9 @@
-#include "Texture.h"
+#include "Texture.hpp"
 
-#include "Core/Log.h"
-#include "FileSystem/FileSystem.h"
+#include "FileSystem/FileSystem.hpp"
 
 #include <glad/gl.h>
 #include <GLFW/glfw3.h>
-
-#include "Core/Assert.h"
 
 namespace zn
 {

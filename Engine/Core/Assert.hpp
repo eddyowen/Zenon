@@ -1,7 +1,7 @@
 #pragma once
 
-#include "Core/Base.h"
-#include "Core/Log.h"
+#include "Core/Base.hpp"
+#include "Core/Log.hpp"
 
 #include <source_location>
 

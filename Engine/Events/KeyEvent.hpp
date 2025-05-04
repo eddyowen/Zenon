@@ -1,7 +1,7 @@
 #pragma once
 
-#include "Core/Base.h"
-#include "Input/KeyCodes.h"
+#include "Core/Base.hpp"
+#include "Input/KeyCodes.hpp"
 
 namespace zn
 {

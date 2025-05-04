@@ -129,7 +129,7 @@ set (LINK_LIBS
 
 # Setup visual studio source groups / filters
 file(GLOB_RECURSE _source_list
-  *.cpp* src/*.h* src/*.hpp* *.h *.inl
+  *.cpp* *.h* *.hpp* *.h *.inl
 )
 
 # If STATIC/SHARED is omitted when defining the library, the default

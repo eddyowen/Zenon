@@ -12,7 +12,7 @@ set (LINK_LIBS
 
 # Setup visual studio source groups / filters ==
 file(GLOB_RECURSE _source_list
-    *.cpp* src/*.h* src/*.hpp* *.h* *.inl)
+    *.cpp* *.h* *.hpp* *.h* *.inl)
 
 # Link our normal libraries and create an executeable 
 add_executable(${PROJECT_NAME} ${_source_list})

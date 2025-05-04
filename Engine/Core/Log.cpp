@@ -1,4 +1,4 @@
-#include "Log.h"
+#include "Log.hpp"
 
 #pragma warning(push, 0)
 #include "spdlog/sinks/stdout_color_sinks.h"

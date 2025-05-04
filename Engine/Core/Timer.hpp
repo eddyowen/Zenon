@@ -1,5 +1,7 @@
 ﻿#pragma once
 
+#include "Core/Base.hpp"
+
 #include <chrono>
 
 namespace zn

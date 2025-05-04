@@ -1,7 +1,7 @@
 #pragma once
 
-#include "Core/Base.h"
-#include "Math/Math.h"
+#include "Core/Base.hpp"
+#include "Math/Math.hpp"
 
 namespace zn
 {

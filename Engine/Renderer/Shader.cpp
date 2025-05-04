@@ -1,7 +1,7 @@
-#include "Shader.h"
+#include "Shader.hpp"
 
-#include "Core/Log.h"
-#include "FileSystem/FileSystem.h"
+#include "Core/Log.hpp"
+#include "FileSystem/FileSystem.hpp"
 
 #include <glad/gl.h>
 #include <GLFW/glfw3.h>

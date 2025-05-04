@@ -1,14 +1,14 @@
 #pragma once
 
-#include "Base.h"
+#include "Base.hpp"
 
-#include "Events/Event.h"
-#include "Events/ApplicationEvent.h"
-#include "Events/KeyEvent.h"
-#include "Camera/Camera.h"
-#include "Input/InputSystem.h"
-#include "Platform/Window.h"
-#include "Renderer/Renderer.h"
+#include "Camera/Camera.hpp"
+#include "Events/Event.hpp"
+#include "Events/ApplicationEvent.hpp"
+#include "Events/KeyEvent.hpp"
+#include "Input/InputSystem.hpp"
+#include "Platform/Window.hpp"
+#include "Renderer/Renderer.hpp"
 
 namespace zn
 {

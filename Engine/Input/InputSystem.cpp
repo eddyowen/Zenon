@@ -1,6 +1,6 @@
-#include "InputSystem.h"
+#include "InputSystem.hpp"
 
-#include "Core/Assert.h"
+#include "Core/Assert.hpp"
 
 #include <glad/gl.h>
 #include <GLFW/glfw3.h>

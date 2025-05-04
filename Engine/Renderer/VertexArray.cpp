@@ -1,4 +1,4 @@
-#include "VertexArray.h"
+#include "VertexArray.hpp"
 
 namespace zn
 {
