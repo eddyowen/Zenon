@@ -4,6 +4,8 @@
 #include "Math/Math.hpp"
 #include "Timer.hpp"
 
+#include "Utils/Lifetime.hpp"
+
 #include <imgui_internal.h>
 
 #include "Assert.hpp"
@@ -47,8 +49,16 @@ namespace zn
 
 		m_initialized = true;
 
-		Handle handle{1,1};
-		ZN_CORE_TRACE("Handle ID: {} GEN: {}", handle.GetIndex(), handle.GetGeneration());
+		ResourceRegistry<Lifetime> intRegistry;
+		
+		//Opt<Handle<Lifetime>> intHandle = intRegistry.CreateResource({"Object 1"});
+		Opt<Handle<Lifetime>> intHandle2 = intRegistry.CreateResource({"Object 2"});
+		intRegistry.ReleaseResource(intHandle2.value());
+		Opt<Handle<Lifetime>> intHandle3 = intRegistry.EmplaceResource("Object 3");
+		
+		//ZN_CORE_TRACE("Handle ID: {} GEN: {}", intHandle->GetIndex(), intHandle->GetGeneration());
+		//ZN_CORE_TRACE("Handle 2 ID: {} GEN: {}", intHandle2->GetIndex(), intHandle2->GetGeneration());
+		ZN_CORE_TRACE("Handle 3 ID: {} GEN: {}", intHandle3->GetIndex(), intHandle3->GetGeneration());
 		
 		return true;
 	}
