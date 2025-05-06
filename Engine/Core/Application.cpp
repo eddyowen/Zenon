@@ -9,7 +9,7 @@
 #include <imgui_internal.h>
 
 #include "Assert.hpp"
-#include "Resource/ResourceManager.hpp"
+#include "Resource/ResourceRegistry.hpp"
 
 namespace zn
 {
@@ -49,16 +49,25 @@ namespace zn
 
 		m_initialized = true;
 
-		ResourceRegistry<Lifetime> intRegistry;
-		
-		//Opt<Handle<Lifetime>> intHandle = intRegistry.CreateResource({"Object 1"});
-		Opt<Handle<Lifetime>> intHandle2 = intRegistry.CreateResource({"Object 2"});
+		ResourceRegistry<int> intRegistry;
+		Opt<Handle<int>> intHandle2 = intRegistry.CreateResource(100);
 		intRegistry.ReleaseResource(intHandle2.value());
-		Opt<Handle<Lifetime>> intHandle3 = intRegistry.EmplaceResource("Object 3");
 		
-		//ZN_CORE_TRACE("Handle ID: {} GEN: {}", intHandle->GetIndex(), intHandle->GetGeneration());
-		//ZN_CORE_TRACE("Handle 2 ID: {} GEN: {}", intHandle2->GetIndex(), intHandle2->GetGeneration());
-		ZN_CORE_TRACE("Handle 3 ID: {} GEN: {}", intHandle3->GetIndex(), intHandle3->GetGeneration());
+
+		//Opt<Handle<Lifetime>> intHandle2 = intRegistry.CreateResource({"Object 2"});
+		//intRegistry.ReleaseResource(intHandle2.value());
+		//
+		//Opt<Handle<Lifetime>> intHandle3 = intRegistry.EmplaceResource("Object 3");
+		//
+		//const Lifetime& lifetime = intRegistry.GetResourceRef(intHandle3.value()).value();
+		//
+		//intRegistry.ModifyResource(intHandle3.value(), [](Lifetime& l)
+		//{
+		//	l.Rename("Object 3 - After rename");
+		//});
+		//
+		//ZN_CORE_TRACE("Lifetime Object name: {}", lifetime.GetName());
+		//ZN_CORE_TRACE("Handle 3 ID: {} GEN: {}", intHandle3->GetIndex(), intHandle3->GetGeneration());
 		
 		return true;
 	}

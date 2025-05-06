@@ -119,6 +119,12 @@ namespace  zn
 	template<typename T>
 	using Opt = std::optional<T>;
 
+	template<typename T>
+	using CRefWrapper = std::reference_wrapper<const T>;
+
+	template<typename T>
+	using RefWrapper = std::reference_wrapper<T>;
+
 	//-----------------------------------------------------------------------------
 	// Smart Pointers
 	//-----------------------------------------------------------------------------

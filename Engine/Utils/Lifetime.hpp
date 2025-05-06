@@ -10,7 +10,7 @@ namespace zn
     {
     public:
         // Constructor
-        Lifetime(std::string_view name) : m_instanceName(name), m_instanceId(++s_objectCount) 
+        Lifetime(StringView name) : m_instanceName(name), m_instanceId(++s_objectCount) 
         {
             ZN_CORE_TRACE("Constructor called for {} (ID: {})", m_instanceName, m_instanceId);
         }
@@ -60,21 +60,20 @@ namespace zn
         }
 
         // A method to demonstrate changing the instance's name
-        void rename(std::string_view newName) 
+        void Rename(StringView newName) 
         {
             m_instanceName = newName;
             ZN_CORE_TRACE("Instance renamed to {} (ID: {})", m_instanceName, m_instanceId);
         }
 
-        // Static method to get the current object count
-        static int gets_objectCount() 
-        {
-            return s_objectCount;
-        }
+        static u32 GetObjectCount() { return s_objectCount; }
+
+        StringView GetName() const { return m_instanceName; }
 
     private:
-        static inline int s_objectCount = 0; // Inline variable for simplicity
-        std::string_view m_instanceName;
-        int m_instanceId;
+        static inline u32 s_objectCount = 0; // Inline variable for simplicity
+        
+        StringView m_instanceName;
+        u32 m_instanceId;
     };
 }
