@@ -1,5 +1,6 @@
 #pragma once
 
+#include "Core/Assert.hpp"
 #include "Core/Base.hpp"
 
 namespace zn
@@ -18,6 +19,8 @@ namespace zn
         static constexpr u32 GEN_SHIFT = 32;
         static constexpr u32 INDEX_MASK = 0xFFFFFFFF;
         static constexpr u32 MAX_INDEX_VALUE = 0xFFFFFFFF;
+
+        Handle() = default;
         
         explicit constexpr Handle(IndexType index, GenerationType generation)
             : m_value(static_cast<ValueType>(generation) << GEN_SHIFT | index){}
@@ -194,7 +197,7 @@ namespace zn
     private:
         [[nodiscard]] Opt<Handle<T>> AddResourceInternal(T&& resource)
         {
-            // The free indices list contain data only when items are released
+            // The free indices list contains data only when items are released
             if (!m_freeIndices.empty())
             {
                 return ReuseSlot(std::forward<T>(resource));

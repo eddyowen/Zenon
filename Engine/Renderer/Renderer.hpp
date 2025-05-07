@@ -3,6 +3,7 @@
 #include "Core/Base.hpp"
 #include "Camera/Camera.hpp"
 #include "Math/Math.hpp"
+#include "Resource/ResourceRegistry.hpp"
 
 namespace zn
 {
@@ -33,16 +34,16 @@ namespace zn
         void LightingExample(const Camera& camera) const;
         
         // TEMPORAL ///////////////////////////////////////
-        SharedPtr<Shader> m_basicShader;
-        SharedPtr<Shader> m_lightDebugCubeShader;
-        SharedPtr<Shader> m_lightingShader;
+        Handle<Shader> m_basicShaderHandle{};
+        Handle<Shader> m_lightDebugCubeShaderHandle{};
+        Handle<Shader> m_lightingShaderHandle{};
+        
+        Handle<Texture> m_wallTextureHandle{};
+        Handle<Texture> m_georgeTextureHandle{};
         
         UniquePtr<VertexArray> m_vertexArray;
         UniquePtr<VertexArray> m_lightDegugCubeVA;
         UniquePtr<VertexArray> m_lightingCubeVA;
-
-        SharedPtr<Texture> m_wallTexture;
-        SharedPtr<Texture> m_georgeTexture;
 		
         static constexpr Array<f32, 180> vertices { 
             -0.5f, -0.5f, -0.5f,  0.0f, 0.0f,

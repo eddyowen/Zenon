@@ -2,8 +2,7 @@
 
 #include "FileSystem/FileSystem.hpp"
 
-#include <glad/gl.h>
-#include <GLFW/glfw3.h>
+
 
 namespace zn
 {
@@ -19,8 +18,6 @@ namespace zn
 		m_height = height;
 		m_channels = channels;
 		
-		m_data = data;
-		
 		m_internalFormat = internalFormat;
 		m_dataFormat = dataFormat;
 
@@ -33,7 +30,7 @@ namespace zn
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
-		glTextureSubImage2D(m_rendererID, 0, 0, 0, m_width, m_height, m_dataFormat, GL_UNSIGNED_BYTE, m_data);
+		glTextureSubImage2D(m_rendererID, 0, 0, 0, m_width, m_height, m_dataFormat, GL_UNSIGNED_BYTE, data);
 	}
 
 	Texture::~Texture()

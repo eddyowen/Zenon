@@ -11,78 +11,66 @@
 
 namespace zn
 {
-    ResourceManager::ShaderMap ResourceManager::s_shaders;
-    ResourceManager::TextureMap ResourceManager::s_textures;
+    ResourceRegistry<Shader> ResourceManager::s_shadersRegistry;
+    ResourceRegistry<Texture> ResourceManager::s_textureRegistry;
     
-    ResourceManager::ShaderResource ResourceManager::LoadShader(
-        const String& resourceName,
-        const String& vertPath,
-        const String& fragPath)
+    Opt<Handle<Shader>> ResourceManager::LoadShader(const String& vertPath, const String& fragPath)
     {
         if (!FileSystem::Exists(vertPath))
         {
-            ZN_CORE_ERROR("[ResourceManager::LoadShader] Failed to load shader. File {} does not exist", vertPath);
+            ZN_CORE_WARN("[ResourceManager::LoadShader] Failed to load Shader. File {} does not exist", vertPath);
             return std::nullopt;
         }
 
         if (!FileSystem::Exists(fragPath))
         {
-            ZN_CORE_ERROR("[ResourceManager::LoadShader] Failed to load shader. File {} does not exist", fragPath);
+            ZN_CORE_WARN("[ResourceManager::LoadShader] Failed to load Shader. File {} does not exist", fragPath);
             return std::nullopt;
         }
 		
         auto vertexCode = FileSystem::ReadFileAsString(vertPath);
         if (!vertexCode)
         {
-            ZN_CORE_ERROR("[ResourceManager::LoadShader] Failed to load shader. Failed to read vertex shader code from {}", vertPath);
+            ZN_CORE_WARN("[ResourceManager::LoadShader] Failed to load Shader. Failed to read vertex shader code from {}", vertPath);
             return std::nullopt;
         }
 
         auto fragmentCode = FileSystem::ReadFileAsString(fragPath);
         if (!fragmentCode)
         {
-            ZN_CORE_ERROR("[ResourceManager::LoadShader] Failed to load shader. Failed to read fragment shader code from {}", fragPath);
-            return std::nullopt;
-        }
-        
-        if (auto it = s_shaders.find(resourceName); it != s_shaders.end())
-        {
-            ZN_CORE_ERROR("[ResourceManager::LoadShader] Failed to load shader. Shader ({}) resource already exists in the registry", resourceName);
+            ZN_CORE_WARN("[ResourceManager::LoadShader] Failed to load Shader. Failed to read fragment shader code from {}", fragPath);
             return std::nullopt;
         }
 
-        SharedPtr<Shader> shader = CreateShared<Shader>(vertexCode.value().c_str(), fragmentCode.value().c_str());
-        s_shaders[resourceName] = shader;
+        auto handle = s_shadersRegistry.EmplaceResource(vertexCode.value().c_str(), fragmentCode.value().c_str());
+        if (!handle.has_value())
+        {
+            return std::nullopt;
+        }
         
-        return shader;
+        return handle;
     }
 
-    ResourceManager::ShaderResource ResourceManager::GetShader(const String& name)
+    Opt<CRefWrapper<Shader>> ResourceManager::GetShader(Handle<Shader> handle)
     {
-        auto it = s_shaders.find(name);
-        if (it == s_shaders.end())
+        if (Opt<CRefWrapper<Shader>> shader = s_shadersRegistry.GetResourceRef(handle))
         {
-            ZN_CORE_ERROR("[ResourceManager::GetShader] Failed to retrieve shader. Shader ({}) resource doesn't exist in the registry", name);
-            return std::nullopt;
+            return shader;
         }
+
+        ZN_CORE_WARN("[ResourceManager::GetShader] Failed to retrieve Shader. The provided Shader handle (Id: {}, Gen: {}) is not valid", handle.GetIndex(), handle.GetGeneration());
         
-        return it->second;
+        return std::nullopt;
     }
 
-    ResourceManager::TextureResource ResourceManager::LoadTexture(const String& resourceName, const String& path)
+    Opt<Handle<Texture>> ResourceManager::LoadTexture(const String& path)
     {
         if (!FileSystem::Exists(path))
         {
-            ZN_CORE_ERROR("[ResourceManager::LoadTexture] Failed to load texture resource. File {} does not exist", path);
+            ZN_CORE_WARN("[ResourceManager::LoadTexture] Failed to load Texture resource. File {} does not exist", path);
             return std::nullopt;
         }
         
-        if (auto it = s_textures.find(resourceName); it != s_textures.end())
-        {
-            ZN_CORE_ERROR("[ResourceManager::LoadTexture] Failed to load shader. Shader ({}) resource already exists in the registry", resourceName);
-            return std::nullopt;
-        }
-		
         FileSystem::Path fullPath = FileSystem::GetFullPath(path).value();
 
         stbi_set_flip_vertically_on_load(1);
@@ -106,28 +94,28 @@ namespace zn
                 dataFormat = GL_RGB;
             }
             
-            SharedPtr<Texture> texture = CreateShared<Texture>(data, width, height, channels, internalFormat, dataFormat);
-            s_textures[resourceName] = texture;
-            
+            auto handle = s_textureRegistry.EmplaceResource(data, width, height, channels, internalFormat, dataFormat);
+
             stbi_image_free(data);
 
-            return texture;
+            return handle;
         }
         
-        ZN_CORE_ERROR("[ResourceManager::LoadTexture] Failed to load texture resource. Library (stbi) failed to load texture: {}", path);
+        ZN_CORE_WARN("[ResourceManager::LoadTexture] Failed to load Texture resource. Library (stbi) failed to load texture: {}", path);
+        
         return std::nullopt;
     }
 
-    ResourceManager::TextureResource ResourceManager::GetTexture(const String& name)
+    Opt<CRefWrapper<Texture>> ResourceManager::GetTexture(Handle<Texture> handle)
     {
-        auto it = s_textures.find(name);
-        if (it == s_textures.end())
+        if (Opt<CRefWrapper<Texture>> texture = s_textureRegistry.GetResourceRef(handle))
         {
-            ZN_CORE_ERROR("[ResourceManager::GetTexture] Failed to retrieve texture. Texture ({}) resource doesn't exist in the registry", name);
-            return std::nullopt;
+            return texture;
         }
+
+        ZN_CORE_WARN("[ResourceManager::GetTexture] Failed to retrieve Texture. The provided Texture handle (Id: {}, Gen: {}) is not valid", handle.GetIndex(), handle.GetGeneration());
         
-        return it->second;
+        return std::nullopt;
     }
 
     void ResourceManager::Shutdown()

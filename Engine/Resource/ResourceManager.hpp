@@ -2,7 +2,7 @@
 
 #include "Core/Base.hpp"
 #include "Core/Log.hpp"
-
+#include "Resource/ResourceRegistry.hpp"
 #include "Renderer/Shader.hpp"
 #include "Renderer/Texture.hpp"
 
@@ -11,12 +11,6 @@ namespace zn
     class ResourceManager
     {
     public:
-        using ShaderResource = Opt<SharedPtr<Shader>>;
-        using TextureResource = Opt<SharedPtr<Texture>>;
-        
-        using ShaderMap = UMap<String, SharedPtr<Shader>>;
-        using TextureMap = UMap<String, SharedPtr<Texture>>;
-        
         ~ResourceManager() = default;
         
         ResourceManager(const ResourceManager& other) = delete;
@@ -25,20 +19,18 @@ namespace zn
         ResourceManager& operator=(const ResourceManager& other) = delete;
         ResourceManager& operator=(ResourceManager&& other) noexcept = delete;
         
-        [[nodiscard]]
-        static Opt<SharedPtr<Shader>> LoadShader(const String& name, const String& vertPath, const String& fragPath);
-        static ShaderResource GetShader(const String& name);
+        [[nodiscard]] static Opt<Handle<Shader>> LoadShader(const String& vertPath, const String& fragPath);
+        [[nodiscard]] static Opt<CRefWrapper<Shader>> GetShader(Handle<Shader> handle);
 
-        [[nodiscard]]
-        static TextureResource LoadTexture(const String& resourceName, const String& path);
-        static TextureResource GetTexture(const String& name);
+        [[nodiscard]] static Opt<Handle<Texture>> LoadTexture(const String& path);
+        [[nodiscard]] static Opt<CRefWrapper<Texture>> GetTexture(Handle<Texture> handle);
 
         static void Shutdown();
 
     private:
         ResourceManager() = default;
 
-        static ShaderMap s_shaders;
-        static TextureMap s_textures;
+        static ResourceRegistry<Shader> s_shadersRegistry;
+        static ResourceRegistry<Texture> s_textureRegistry;
     };
 }

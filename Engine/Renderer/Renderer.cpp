@@ -25,29 +25,29 @@ namespace zn
     b8 Renderer::Init(u32 width, u32 height)
     {
         // TEMPORAL ///////////////////////////////////////
-        if (auto shader = ResourceManager::LoadShader("Default Shader", "Content/Shaders/default.vert", "Content/Shaders/default.frag"))
+        if (auto shader = ResourceManager::LoadShader("Content/Shaders/default.vert", "Content/Shaders/default.frag"))
         {
-            m_basicShader = shader.value();
+            m_basicShaderHandle = shader.value();
         }
 
-        if (auto lightDebugCubeShader = ResourceManager::LoadShader("Light Cube Shader", "Content/Shaders/light_cube.vert", "Content/Shaders/light_cube.frag"))
+        if (auto lightDebugCubeShader = ResourceManager::LoadShader("Content/Shaders/light_cube.vert", "Content/Shaders/light_cube.frag"))
         {
-            m_lightDebugCubeShader = lightDebugCubeShader.value();
+            m_lightDebugCubeShaderHandle = lightDebugCubeShader.value();
         }
 
-        if (auto lightingShader = ResourceManager::LoadShader("Lighting Shader", "Content/Shaders/lighting.vert", "Content/Shaders/lighting.frag"))
+        if (auto lightingShader = ResourceManager::LoadShader("Content/Shaders/lighting.vert", "Content/Shaders/lighting.frag"))
         {
-            m_lightingShader = lightingShader.value();
+            m_lightingShaderHandle = lightingShader.value();
         }
 
-        if (auto wallTexture = ResourceManager::LoadTexture("Wall", "Content/Textures/wall.jpg"))
+        if (auto wallTexture = ResourceManager::LoadTexture("Content/Textures/wall.jpg"))
         {
-            m_wallTexture = wallTexture.value();
+            m_wallTextureHandle = wallTexture.value();
         }
 
-        if (auto georgeTexture = ResourceManager::LoadTexture("George", "Content/Textures/george.jpg"))
+        if (auto georgeTexture = ResourceManager::LoadTexture("Content/Textures/george.jpg"))
         {
-            m_georgeTexture = georgeTexture.value();
+            m_georgeTextureHandle = georgeTexture.value();
         }
 
         m_vertexArray = CreateUnique<zn::VertexArray>();
@@ -124,14 +124,19 @@ namespace zn
 
     void Renderer::TexturedCubesExample(const Camera& camera) const
     {
-        m_basicShader->Bind();
-        m_basicShader->SetInt("texture1", 0);
-        m_basicShader->SetInt("texture2", 1);
-        m_basicShader->SetMat4("view", camera.GetViewMatrix());
-        m_basicShader->SetMat4("projection", camera.GetProjection());
+        const Shader& basicShader = ResourceManager::GetShader(m_basicShaderHandle).value();
+        basicShader.Bind();
+        basicShader.SetInt("texture1", 0);
+        basicShader.SetInt("texture2", 1);
+        basicShader.SetMat4("view", camera.GetViewMatrix());
+        basicShader.SetMat4("projection", camera.GetProjection());
+
+        const Texture& wallTexture = ResourceManager::GetTexture(m_wallTextureHandle).value();
+        wallTexture.Bind();
         
-        m_wallTexture->Bind();
-        m_georgeTexture->Bind(1);
+        const Texture& georgeTexture = ResourceManager::GetTexture(m_georgeTextureHandle).value();
+        georgeTexture.Bind(1);
+        
         m_vertexArray->Bind();
         
         int counter = 0;
@@ -148,7 +153,7 @@ namespace zn
                 counter = 0;
             }
         
-            m_basicShader->SetMat4("model", model);
+            basicShader.SetMat4("model", model);
         
             glDrawArrays(GL_TRIANGLES, 0, 36);
         
@@ -167,10 +172,11 @@ namespace zn
         lightModel = glm::translate(lightModel, lightDebugCubePos);
         lightModel = glm::scale(lightModel, math::v3(.6f));
 
-        m_lightDebugCubeShader->Bind();
-        m_lightDebugCubeShader->SetMat4("model", lightModel);
-        m_lightDebugCubeShader->SetMat4("view", camera.GetViewMatrix());
-        m_lightDebugCubeShader->SetMat4("projection", camera.GetProjection());
+        const Shader& lightDebugCubeShader = ResourceManager::GetShader(m_lightDebugCubeShaderHandle).value();
+        lightDebugCubeShader.Bind();
+        lightDebugCubeShader.SetMat4("model", lightModel);
+        lightDebugCubeShader.SetMat4("view", camera.GetViewMatrix());
+        lightDebugCubeShader.SetMat4("projection", camera.GetProjection());
 
         m_lightDegugCubeVA->Bind();
         glDrawArrays(GL_TRIANGLES, 0, 36);
@@ -181,12 +187,13 @@ namespace zn
         math::m4 cubeModel = math::m4(1.0f);
         cubeModel = glm::translate(cubeModel, cubePos);
 
-        m_lightingShader->Bind();
-        m_lightingShader->SetMat4("model", cubeModel);
-        m_lightingShader->SetMat4("view", camera.GetViewMatrix());
-        m_lightingShader->SetMat4("projection", camera.GetProjection());
-        m_lightingShader->SetVec3("lightColor",  { 1.0f, 1.0f, 1.0f });
-        m_lightingShader->SetVec3("objectColor", { 0.0f, 1.0f, 1.0f });
+        const Shader& lightingShader = ResourceManager::GetShader(m_lightingShaderHandle).value();
+        lightingShader.Bind();
+        lightingShader.SetMat4("model", cubeModel);
+        lightingShader.SetMat4("view", camera.GetViewMatrix());
+        lightingShader.SetMat4("projection", camera.GetProjection());
+        lightingShader.SetVec3("lightColor",  { 1.0f, 1.0f, 1.0f });
+        lightingShader.SetVec3("objectColor", { 0.0f, 1.0f, 1.0f });
 
         m_lightingCubeVA->Bind();
         glDrawArrays(GL_TRIANGLES, 0, 36);
@@ -197,7 +204,7 @@ namespace zn
     {
         ClearScreen(0.3f, 0.3f, 0.3f, 1.0f);
 
-        //TexturedCubesExample(camera, projection);
-        LightingExample(camera);
+        TexturedCubesExample(camera);
+        //LightingExample(camera);
     }
 }
