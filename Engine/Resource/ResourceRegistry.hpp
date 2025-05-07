@@ -4,11 +4,13 @@
 
 namespace zn
 {
+    
     template<typename T>
     class Handle
     {
     public:
         using ResourceType = T;
+        
         using IndexType = u32;
         using GenerationType = u32;
         using ValueType = u64;
@@ -39,6 +41,14 @@ namespace zn
             T Data;
             GenerationType Generation = 0;
             b8 IsActive;
+
+            // To be able to "perfect forward" args to T Data. See -> EmplaceResource
+            template<typename... TArgs>
+            explicit constexpr Entry(TArgs&&... args)
+                : Data(std::forward<TArgs>(args)...), Generation(0), IsActive(true)
+            {
+                static_assert(std::is_constructible_v<T, TArgs...>, "ResourceRegistry::Entry inner type cannot be constructed with the provided arguments");
+            }
         };
         
         ResourceRegistry() = default;
@@ -49,6 +59,8 @@ namespace zn
         
         ResourceRegistry& operator=(const ResourceRegistry& other) = delete;
         ResourceRegistry& operator=(ResourceRegistry&& other) noexcept = delete;
+
+        void InitStorage(uSize newCapacity) { m_entries.reserve(newCapacity); m_freeIndices.reserve(newCapacity); }
 
         [[nodiscard]] Opt<Handle<T>> CreateResource(const T& resource)
         {
@@ -61,20 +73,19 @@ namespace zn
         }
 
         template<typename... Args>
+        requires std::is_constructible_v<T, Args...>
         [[nodiscard]] Opt<Handle<T>> EmplaceResource(Args&&... args)
         {
             if (!m_freeIndices.empty())
             {
-                return ReuseSlot(T{std::forward<Args>(args)...});
+                return ReuseSlot<Args...>(std::forward<Args>(args)...);
             }
 
-            if (m_entries.size() > Handle<T>::MAX_INDEX_VALUE)
-            {
-                return std::nullopt;
-            }
+            // TODO: Think about what to do in this situation... but very unlikely lol
+            ZN_ASSERT(m_entries.size() < Handle<T>::MAX_INDEX_VALUE);
 
             const IndexType index = static_cast<IndexType>(m_entries.size());
-            m_entries.emplace_back(Entry{T{std::forward<Args>(args)...}, 0, true});
+            m_entries.emplace_back(std::forward<Args>(args)...);
 
             return Handle<T>{index, 0};
         }
@@ -126,6 +137,36 @@ namespace zn
             return false;
         }
 
+        template<typename F>
+        requires std::is_invocable_v<F, const T&> && std::same_as<std::invoke_result_t<F, const T&>, void>
+        void ForEachActiveResource(F&& func) const
+        {
+            for (IndexType i = 0; i < m_entries.size(); ++i)
+            {
+                const Entry* entry = &m_entries[i];
+                if (entry->IsActive)
+                {
+                    Handle<T> handle = Handle<T>{i, entry->Generation};
+                    func(entry->Data);
+                }
+            }
+        }
+
+        template<typename F>
+        requires std::is_invocable_v<F, T&> && std::same_as<std::invoke_result_t<F, T&>, void>
+        void ForEachActiveResource(F&& func)
+        {
+            for (IndexType i = 0; i < m_entries.size(); ++i)
+            {
+                Entry* entry = &m_entries[i];
+                if (entry->IsActive)
+                {
+                    Handle<T> handle = Handle<T>{i, entry->Generation};
+                    func(entry->Data);
+                }
+            }
+        }
+
         [[nodiscard]] uSize GetTotalSlotsCount() const
         {
             return m_entries.size();    
@@ -151,43 +192,57 @@ namespace zn
         }
 
     private:
-        template<typename U>
-        [[nodiscard]] Opt<Handle<U>> AddResourceInternal(U&& resource)
+        [[nodiscard]] Opt<Handle<T>> AddResourceInternal(T&& resource)
         {
             // The free indices list contain data only when items are released
             if (!m_freeIndices.empty())
             {
-                return ReuseSlot(std::forward<U>(resource));
+                return ReuseSlot(std::forward<T>(resource));
             }
 
-            return CreateNewInternal(std::forward<U>(resource));
+            return CreateNewInternal(std::forward<T>(resource));
         }
 
-        template<typename U>
-        [[nodiscard]] Opt<Handle<U>> ReuseSlot(U&& resource)
+        [[nodiscard]] Opt<Handle<T>> ReuseSlot(T&& resource)
         {
             const IndexType index = m_freeIndices.back();
             m_freeIndices.pop_back();
 
+            // Assumes the T stored inside the slot has been "destroyed" previously
             Entry& entry = m_entries[index];
-            entry.Data = std::forward<U>(resource);
+            entry.Data = std::forward<T>(resource);
             entry.IsActive = true;
 
-            return Handle<U>(index, entry.Generation);
+            return Handle<T>(index, entry.Generation);
         }
 
-        template<typename U>
-        [[nodiscard]] Opt<Handle<U>> CreateNewInternal(U&& resource)
+        template<typename... TArgs>
+        requires std::is_constructible_v<T, TArgs...>
+        [[nodiscard]] Opt<Handle<T>> ReuseSlot(TArgs&&... targs)
         {
-            if (m_entries.size() > Handle<U>::MAX_INDEX_VALUE)
+            const IndexType index = m_freeIndices.back();
+            m_freeIndices.pop_back();
+
+            // Assumes the T stored inside the slot has been "destroyed" previously
+            Entry& entry = m_entries[index];
+            // Intentional temporary object creation. I prefer avoiding any side effects...
+            entry.Data = { std::forward<TArgs>(targs)... };
+            entry.IsActive = true;
+
+            return Handle<T>(index, entry.Generation);
+        }
+
+        [[nodiscard]] Opt<Handle<T>> CreateNewInternal(T&& resource)
+        {
+            if (m_entries.size() > Handle<T>::MAX_INDEX_VALUE)
             {
                 return std::nullopt;
             }
 
             const IndexType index = static_cast<IndexType>(m_entries.size());
-            m_entries.emplace_back(std::forward<U>(resource), 0, true);
+            m_entries.emplace_back(std::forward<T>(resource), 0, true);
             
-            return Handle<U>{index, 0};
+            return Handle<T>{index, 0};
         }
 
         [[nodiscard]] const Entry* ValidateHandle(const Handle<T> handle) const

@@ -49,25 +49,28 @@ namespace zn
 
 		m_initialized = true;
 
-		ResourceRegistry<int> intRegistry;
-		Opt<Handle<int>> intHandle2 = intRegistry.CreateResource(100);
-		intRegistry.ReleaseResource(intHandle2.value());
-		
+		ResourceRegistry<Lifetime> lifetimetRegistry;
 
-		//Opt<Handle<Lifetime>> intHandle2 = intRegistry.CreateResource({"Object 2"});
-		//intRegistry.ReleaseResource(intHandle2.value());
+		Opt<Handle<Lifetime>> intHandle1 = lifetimetRegistry.EmplaceResource("Object 1", true);
+		lifetimetRegistry.ReleaseResource(intHandle1.value());
+
+		Opt<Handle<Lifetime>> intHandle2 = lifetimetRegistry.EmplaceResource("Object 2", true);
+		//lifetimetRegistry.ReleaseResource(intHandle2.value());
 		//
-		//Opt<Handle<Lifetime>> intHandle3 = intRegistry.EmplaceResource("Object 3");
+		//Opt<Handle<Lifetime>> intHandle3 = lifetimetRegistry.EmplaceResource("Object 3", false);
+		//Opt<Handle<Lifetime>> intHandle4 = lifetimetRegistry.EmplaceResource("Object 4", false);
 		//
-		//const Lifetime& lifetime = intRegistry.GetResourceRef(intHandle3.value()).value();
+		//const Lifetime& lifetime = lifetimetRegistry.GetResourceRef(intHandle3.value()).value();
 		//
-		//intRegistry.ModifyResource(intHandle3.value(), [](Lifetime& l)
+		//lifetimetRegistry.ModifyResource(intHandle3.value(), [](Lifetime& l)
 		//{
 		//	l.Rename("Object 3 - After rename");
 		//});
-		//
-		//ZN_CORE_TRACE("Lifetime Object name: {}", lifetime.GetName());
-		//ZN_CORE_TRACE("Handle 3 ID: {} GEN: {}", intHandle3->GetIndex(), intHandle3->GetGeneration());
+
+		lifetimetRegistry.ForEachActiveResource([](const Lifetime& l)
+		{
+			ZN_CORE_TRACE("Lifetime object [{}]", l.GetName());
+		});
 		
 		return true;
 	}

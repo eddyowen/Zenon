@@ -10,21 +10,24 @@ namespace zn
     {
     public:
         // Constructor
-        Lifetime(StringView name) : m_instanceName(name), m_instanceId(++s_objectCount) 
+        Lifetime(StringView name, bool enableLogs)
+            : m_instanceName(name), m_instanceId(++s_objectCount), m_enableLogs(enableLogs)
         {
-            ZN_CORE_TRACE("Constructor called for {} (ID: {})", m_instanceName, m_instanceId);
+            LogFunctionCall("Constructor");
         }
 
         // Copy constructor
-        Lifetime(const Lifetime& other) : m_instanceName(other.m_instanceName), m_instanceId(++s_objectCount) 
+        Lifetime(const Lifetime& other)
+            : m_instanceName(other.m_instanceName), m_instanceId(++s_objectCount), m_enableLogs(other.m_enableLogs)
         {
-            ZN_CORE_TRACE("Copy constructor called for {} (ID: {})", m_instanceName, m_instanceId);
+            LogFunctionCall("Copy constructor");
         }
 
         // Move constructor
-        Lifetime(Lifetime&& other) noexcept : m_instanceName(std::move(other.m_instanceName)), m_instanceId(++s_objectCount) 
+        Lifetime(Lifetime&& other) noexcept
+            : m_instanceName(std::move(other.m_instanceName)), m_instanceId(++s_objectCount), m_enableLogs(other.m_enableLogs)
         {
-            ZN_CORE_TRACE("Move constructor called for {} (ID: {})", m_instanceName, m_instanceId);
+            LogFunctionCall("Move constructor");
         }
 
         // Copy assignment operator
@@ -34,9 +37,10 @@ namespace zn
                 return *this; // Handle self-assignment
         
             m_instanceName = other.m_instanceName;
+            m_enableLogs = other.m_enableLogs;
         
             // Note: We choose not to change the ID on assignment to preserve the identity of the original object
-            ZN_CORE_TRACE("Copy assigment operator called for {} (ID: {})", m_instanceName, m_instanceId);
+            LogFunctionCall("Copy assignment operator");
             return *this;
         }
 
@@ -47,27 +51,33 @@ namespace zn
                 return *this; // Handle self-assignment
         
             m_instanceName = std::move(other.m_instanceName);
+            m_enableLogs = other.m_enableLogs;
 
             // Note: We choose not to change the ID on assignment to preserve the identity of the original object
-            ZN_CORE_TRACE("Move assignment operator called for {} (ID: {})", m_instanceName, m_instanceId);
+            LogFunctionCall("Move assignment operator");
             return *this;
         }
 
         // Destructor
         ~Lifetime() 
         {
-            ZN_CORE_TRACE("Destructor called for {} (ID: {})", m_instanceName, m_instanceId);
+            LogFunctionCall("Destructor");
         }
 
         // A method to demonstrate changing the instance's name
         void Rename(StringView newName) 
         {
             m_instanceName = newName;
-            ZN_CORE_TRACE("Instance renamed to {} (ID: {})", m_instanceName, m_instanceId);
+            LogFunctionCall("Rename");
+        }
+
+        void LogFunctionCall(StringView functionName)
+        {
+            if (m_enableLogs)
+                ZN_CORE_TRACE("{} called for {} (ID: {})", functionName, m_instanceName, m_instanceId);
         }
 
         static u32 GetObjectCount() { return s_objectCount; }
-
         StringView GetName() const { return m_instanceName; }
 
     private:
@@ -75,5 +85,6 @@ namespace zn
         
         StringView m_instanceName;
         u32 m_instanceId;
+        bool m_enableLogs = false;
     };
 }
