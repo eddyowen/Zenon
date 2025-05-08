@@ -142,11 +142,12 @@ namespace zn
                 dataFormat = GL_RGB;
             }
             
-            auto handle = s_textureRegistry.CreateResource({data, width, height, channels, internalFormat, dataFormat});
+            //auto handle = s_textureRegistry.CreateResource({data, width, height, channels, internalFormat, dataFormat});
 
             stbi_image_free(data);
 
-            return handle;
+            //return handle;
+            return std::nullopt;
         }
         
         ZN_CORE_WARN("[ResourceManager::LoadTexture] Failed to load Texture resource. Library (stbi) failed to load texture: {}", path);

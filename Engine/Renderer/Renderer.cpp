@@ -47,7 +47,7 @@ namespace zn
 
         bool a = ResourceManager::ReleaseTexture(m_testTextureHandle);
 
-        auto testHandle = ResourceManager::LoadTextureTest("Content/Textures/wall.jpg");
+       //auto testHandle = ResourceManager::LoadTextureTest("Content/Textures/wall.jpg");
 
         if (auto wallTexture = ResourceManager::LoadTexture("Content/Textures/wall.jpg"))
         {
