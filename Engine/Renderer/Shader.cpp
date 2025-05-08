@@ -31,6 +31,41 @@ namespace zn
 		glDeleteShader(fragment);
 	}
 
+	Shader::~Shader()
+	{
+		if (m_rendererID)
+		{
+			glDeleteProgram(m_rendererID);
+			m_rendererID = 0;
+		}
+	}
+
+	Shader::Shader(Shader&& other) noexcept
+	{
+		if (other.m_rendererID)
+		{
+			m_rendererID = other.m_rendererID;
+		}
+
+		other.m_rendererID = 0;
+	}
+
+	Shader& Shader::operator=(Shader&& other) noexcept
+	{
+		if (this != &other)
+		{
+			if (m_rendererID)
+			{
+				glDeleteProgram(m_rendererID);
+				m_rendererID = other.m_rendererID;
+			}
+
+			other.m_rendererID = 0;
+		}
+
+		return *this;
+	}
+
 	void Shader::CheckCompileErrors(u32 rendererId, const String& type)
 	{
 		GLint success;

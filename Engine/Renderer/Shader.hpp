@@ -9,8 +9,14 @@ namespace zn
 	{
 	public:
 		Shader(const c8* vertCode, const c8* fragCode);
-		~Shader() = default;
+		~Shader();
 
+		Shader(const Shader& other) = delete;
+		Shader& operator=(const Shader& other) = delete;
+
+		Shader(Shader&& other) noexcept;
+		Shader& operator=(Shader&& other) noexcept;
+		
 		void Bind() const;
 		void Unbind() const;
 

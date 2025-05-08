@@ -63,6 +63,11 @@ namespace zn
         return std::nullopt;
     }
 
+    bool ResourceManager::ReleaseShader(Handle<Shader> handle)
+    {
+        return s_shadersRegistry.ReleaseResource(handle);
+    }
+
     Opt<Handle<Texture>> ResourceManager::LoadTexture(const String& path)
     {
         if (!FileSystem::Exists(path))
@@ -106,6 +111,49 @@ namespace zn
         return std::nullopt;
     }
 
+    Opt<Handle<Texture>> ResourceManager::LoadTextureTest(const String& path)
+    {
+        if (!FileSystem::Exists(path))
+        {
+            ZN_CORE_WARN("[ResourceManager::LoadTexture] Failed to load Texture resource. File {} does not exist", path);
+            return std::nullopt;
+        }
+        
+        FileSystem::Path fullPath = FileSystem::GetFullPath(path).value();
+
+        stbi_set_flip_vertically_on_load(1);
+
+        int width, height, channels;
+
+        stbi_uc* data = stbi_load(fullPath.string().c_str(), &width, &height, &channels, 0);
+        if (data)
+        {
+            unsigned int dataFormat;
+            unsigned int internalFormat;
+            
+            if (channels == 4)
+            {
+                internalFormat = GL_RGBA8;
+                dataFormat = GL_RGBA;
+            }
+            else if (channels == 3)
+            {
+                internalFormat = GL_RGB8;
+                dataFormat = GL_RGB;
+            }
+            
+            auto handle = s_textureRegistry.CreateResource({data, width, height, channels, internalFormat, dataFormat});
+
+            stbi_image_free(data);
+
+            return handle;
+        }
+        
+        ZN_CORE_WARN("[ResourceManager::LoadTexture] Failed to load Texture resource. Library (stbi) failed to load texture: {}", path);
+        
+        return std::nullopt;
+    }
+
     Opt<CRefWrapper<Texture>> ResourceManager::GetTexture(Handle<Texture> handle)
     {
         if (Opt<CRefWrapper<Texture>> texture = s_textureRegistry.GetResourceRef(handle))
@@ -116,6 +164,11 @@ namespace zn
         ZN_CORE_WARN("[ResourceManager::GetTexture] Failed to retrieve Texture. The provided Texture handle (Id: {}, Gen: {}) is not valid", handle.GetIndex(), handle.GetGeneration());
         
         return std::nullopt;
+    }
+
+    bool ResourceManager::ReleaseTexture(Handle<Texture> handle)
+    {
+        return s_textureRegistry.ReleaseResource(handle);
     }
 
     void ResourceManager::Shutdown()

@@ -39,6 +39,7 @@ namespace zn
         Handle<Shader> m_lightingShaderHandle{};
         
         Handle<Texture> m_wallTextureHandle{};
+        Handle<Texture> m_testTextureHandle{};
         Handle<Texture> m_georgeTextureHandle{};
         
         UniquePtr<VertexArray> m_vertexArray;

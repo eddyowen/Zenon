@@ -40,6 +40,15 @@ namespace zn
             m_lightingShaderHandle = lightingShader.value();
         }
 
+        if (auto testTexture = ResourceManager::LoadTexture("Content/Textures/wall.jpg"))
+        {
+            m_testTextureHandle = testTexture.value();
+        }
+
+        bool a = ResourceManager::ReleaseTexture(m_testTextureHandle);
+
+        auto testHandle = ResourceManager::LoadTextureTest("Content/Textures/wall.jpg");
+
         if (auto wallTexture = ResourceManager::LoadTexture("Content/Textures/wall.jpg"))
         {
             m_wallTextureHandle = wallTexture.value();

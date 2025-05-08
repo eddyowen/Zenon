@@ -154,5 +154,25 @@ namespace  zn
 
 	template<typename T>
 	using EnableSharedFromThis = std::enable_shared_from_this<T>;
+
+	//-----------------------------------------------------------------------------
+	// Concepts
+	//-----------------------------------------------------------------------------
+	template<typename T>
+	concept Moveable = std::is_move_constructible_v<T> && std::is_move_assignable_v<T>;
+
+	template<typename T, typename... TArgs>
+	concept ConstructibleWithArgs = std::is_constructible_v<T, TArgs...>;
+
+	template<typename T, typename... TArgs>
+	concept CallableWithArgs = std::is_invocable_v<T, TArgs...>;
+
+	template<typename T, typename... TArgs, typename TReturn>
+	concept ReturnsType = std::same_as<std::invoke_result_t<T, TArgs...>, TReturn>;
+	
+	template<typename T, typename... TArgs, typename... TReturn>
+	concept MatchingSignature = CallableWithArgs<T, TArgs...> && ReturnsType<T, TReturn>;
+
+	
 }
 

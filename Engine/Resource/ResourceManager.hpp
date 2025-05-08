@@ -21,9 +21,12 @@ namespace zn
         
         [[nodiscard]] static Opt<Handle<Shader>> LoadShader(const String& vertPath, const String& fragPath);
         [[nodiscard]] static Opt<CRefWrapper<Shader>> GetShader(Handle<Shader> handle);
+        [[nodiscard]] static bool ReleaseShader(Handle<Shader> handle);
 
         [[nodiscard]] static Opt<Handle<Texture>> LoadTexture(const String& path);
+        [[nodiscard]] static Opt<Handle<Texture>> LoadTextureTest(const String& path);
         [[nodiscard]] static Opt<CRefWrapper<Texture>> GetTexture(Handle<Texture> handle);
+        [[nodiscard]] static bool ReleaseTexture(Handle<Texture> handle);
 
         static void Shutdown();
 

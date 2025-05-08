@@ -2,7 +2,8 @@
 
 #include "FileSystem/FileSystem.hpp"
 
-
+#include <glad/gl.h>
+#include <GLFW/glfw3.h>
 
 namespace zn
 {
@@ -36,6 +37,41 @@ namespace zn
 	Texture::~Texture()
 	{
 		glDeleteTextures(1, &m_rendererID);
+	}
+
+	Texture::Texture(Texture&& other) noexcept
+	{
+		m_width = other.m_width;
+		m_height = other.m_height;
+		m_channels = other.m_channels;
+		m_internalFormat = other.m_internalFormat;
+		m_dataFormat = other.m_dataFormat;
+		m_rendererID = other.m_rendererID;
+
+		other.m_rendererID = 0;
+	}
+
+	Texture& Texture::operator=(Texture&& other) noexcept
+	{
+		if (this != &other)
+		{
+			// If initialized, release the texture from the GPU
+			if (m_rendererID)
+			{
+				glDeleteTextures(1, &m_rendererID);
+			}
+			
+			m_width = other.m_width;
+			m_height = other.m_height;
+			m_channels = other.m_channels;
+			m_internalFormat = other.m_internalFormat;
+			m_dataFormat = other.m_dataFormat;
+			m_rendererID = other.m_rendererID;
+			
+			other.m_rendererID = 0;
+		}
+
+		return *this;
 	}
 
 	void Texture::Bind(uint32_t textureUnit) const

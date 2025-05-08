@@ -5,7 +5,6 @@
 
 namespace zn
 {
-    
     template<typename T>
     class Handle
     {
@@ -32,7 +31,7 @@ namespace zn
         ValueType m_value = 0;
     };
 
-    template<typename T>
+    template<Moveable T>
     class ResourceRegistry
     {
     public:
@@ -43,14 +42,14 @@ namespace zn
         {
             T Data;
             GenerationType Generation = 0;
-            b8 IsActive;
+            b8 IsActive = false;
 
             // To be able to "perfect forward" args to T Data. See -> EmplaceResource
             template<typename... TArgs>
             explicit constexpr Entry(TArgs&&... args)
                 : Data(std::forward<TArgs>(args)...), Generation(0), IsActive(true)
             {
-                static_assert(std::is_constructible_v<T, TArgs...>, "ResourceRegistry::Entry inner type cannot be constructed with the provided arguments");
+                static_assert(ConstructibleWithArgs<T, TArgs...>, "ResourceRegistry::Entry inner type cannot be constructed with the provided arguments");
             }
         };
         
@@ -72,11 +71,11 @@ namespace zn
 
         [[nodiscard]] Opt<Handle<T>> CreateResource(T&& resource)
         {
-            return AddResourceInternal(std::move(resource));
+            return AddResourceInternal(std::forward<T>(resource));
         }
 
         template<typename... Args>
-        requires std::is_constructible_v<T, Args...>
+        requires ConstructibleWithArgs<T, Args...>
         [[nodiscard]] Opt<Handle<T>> EmplaceResource(Args&&... args)
         {
             if (!m_freeIndices.empty())
@@ -93,7 +92,7 @@ namespace zn
             return Handle<T>{index, 0};
         }
 
-        void ReleaseResource(Handle<T> handle)
+        bool ReleaseResource(Handle<T> handle)
         {
             if (Entry* entry = ValidateHandle(handle))
             {
@@ -111,7 +110,11 @@ namespace zn
                 ZN_ASSERT(entry->Generation != 0, "Generation counter wrapped around!");
 
                 m_freeIndices.push_back(handle.GetIndex());
+
+                return true;
             }
+
+            return false;
         }
 
         [[nodiscard]] Opt<CRefWrapper<T>> GetResourceRef(Handle<T> handle) const
@@ -125,7 +128,7 @@ namespace zn
         }
 
         template<typename F>
-        requires std::is_invocable_v<F, T&>
+        requires CallableWithArgs<F, T&>
         b8 ModifyResource(Handle<T> handle, F&& modifyFunc)
         {
             if (Entry* entry = ValidateHandle(handle))
@@ -141,7 +144,7 @@ namespace zn
         }
 
         template<typename F>
-        requires std::is_invocable_v<F, const T&> && std::same_as<std::invoke_result_t<F, const T&>, void>
+        requires MatchingSignature<F, const T&, void>
         void ForEachActiveResource(F&& func) const
         {
             for (IndexType i = 0; i < m_entries.size(); ++i)
@@ -156,7 +159,7 @@ namespace zn
         }
 
         template<typename F>
-        requires std::is_invocable_v<F, T&> && std::same_as<std::invoke_result_t<F, T&>, void>
+        requires MatchingSignature<F, T&, void>
         void ForEachActiveResource(F&& func)
         {
             for (IndexType i = 0; i < m_entries.size(); ++i)
@@ -211,16 +214,16 @@ namespace zn
             const IndexType index = m_freeIndices.back();
             m_freeIndices.pop_back();
 
-            // Assumes the T stored inside the slot has been "destroyed" previously
+            // [WARNING] Assumes the T stored inside the slot has been "destroyed" previously
             Entry& entry = m_entries[index];
-            entry.Data = std::forward<T>(resource);
+            std::construct_at(std::addressof(entry.Data), std::forward<T>(resource));
             entry.IsActive = true;
 
             return Handle<T>(index, entry.Generation);
         }
 
         template<typename... TArgs>
-        requires std::is_constructible_v<T, TArgs...>
+        requires ConstructibleWithArgs<T, TArgs...>
         [[nodiscard]] Opt<Handle<T>> ReuseSlot(TArgs&&... targs)
         {
             const IndexType index = m_freeIndices.back();
@@ -228,8 +231,7 @@ namespace zn
 
             // Assumes the T stored inside the slot has been "destroyed" previously
             Entry& entry = m_entries[index];
-            // Intentional temporary object creation. I prefer avoiding any side effects...
-            entry.Data = { std::forward<TArgs>(targs)... };
+            std::construct_at(std::addressof(entry.Data), std::forward<TArgs>(targs)...);
             entry.IsActive = true;
 
             return Handle<T>(index, entry.Generation);
