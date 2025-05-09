@@ -43,8 +43,10 @@ namespace zn
             T Data;
             GenerationType Generation = 0;
             b8 IsActive = false;
-
-            // To be able to "perfect forward" args to T Data. See -> EmplaceResource
+            
+            explicit constexpr Entry(T&& data, GenerationType g, b8 isActive)
+                : Data(std::move(data)), Generation(g), IsActive(isActive) {}
+            
             template<typename... TArgs>
             explicit constexpr Entry(TArgs&&... args)
                 : Data(std::forward<TArgs>(args)...), Generation(0), IsActive(true)
@@ -63,11 +65,6 @@ namespace zn
         ResourceRegistry& operator=(ResourceRegistry&& other) noexcept = delete;
 
         void InitStorage(uSize newCapacity) { m_entries.reserve(newCapacity); m_freeIndices.reserve(newCapacity); }
-
-        [[nodiscard]] Opt<Handle<T>> CreateResource(const T& resource)
-        {
-            return AddResourceInternal(resource);
-        }
 
         [[nodiscard]] Opt<Handle<T>> CreateResource(T&& resource)
         {
@@ -144,7 +141,7 @@ namespace zn
         }
 
         template<typename F>
-        requires MatchingSignature<F, const T&, void>
+        requires CallableWithArgs<F, T&> && ReturnsType<F, void, const T&>
         void ForEachActiveResource(F&& func) const
         {
             for (IndexType i = 0; i < m_entries.size(); ++i)
@@ -159,7 +156,7 @@ namespace zn
         }
 
         template<typename F>
-        requires MatchingSignature<F, T&, void>
+        requires CallableWithArgs<F, T&> && ReturnsType<F, void, T&>
         void ForEachActiveResource(F&& func)
         {
             for (IndexType i = 0; i < m_entries.size(); ++i)
@@ -167,6 +164,7 @@ namespace zn
                 Entry* entry = &m_entries[i];
                 if (entry->IsActive)
                 {
+                    int j  = 0;
                     Handle<T> handle = Handle<T>{i, entry->Generation};
                     func(entry->Data);
                 }
@@ -245,7 +243,8 @@ namespace zn
             }
 
             const IndexType index = static_cast<IndexType>(m_entries.size());
-            m_entries.emplace_back(std::forward<T>(resource), 0, true);
+            // The cast here is intentional, as the compiler needed a hint to find the correct Entry constructor, LOL
+            m_entries.emplace_back(std::move(resource), static_cast<GenerationType>(0), static_cast<b8>(true));
             
             return Handle<T>{index, 0};
         }

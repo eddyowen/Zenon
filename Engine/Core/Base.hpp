@@ -41,7 +41,7 @@ namespace  zn
 	using u32 = std::uint32_t;
 	using i64 = std::int64_t;
 	using u64 = std::uint64_t;
-
+	
 	//-----------------------------------------------------------------------------
 	// Boolean Types
 	//-----------------------------------------------------------------------------
@@ -167,12 +167,12 @@ namespace  zn
 	template<typename T, typename... TArgs>
 	concept CallableWithArgs = std::is_invocable_v<T, TArgs...>;
 
-	template<typename T, typename... TArgs, typename TReturn>
+	// Reminder: MSVC was struggling to deduce the parameter pack when it was in the middle, so having
+	// typename... T_InvokeArgs_RT at the end of the template definition is intentional 
+	template<typename T, typename TReturn, typename... TArgs>
 	concept ReturnsType = std::same_as<std::invoke_result_t<T, TArgs...>, TReturn>;
 	
-	template<typename T, typename... TArgs, typename... TReturn>
-	concept MatchingSignature = CallableWithArgs<T, TArgs...> && ReturnsType<T, TReturn>;
-
-	
+	template<typename T, typename TReturn, typename... TArgs> 
+	concept MatchingSignatureEd = CallableWithArgs<T, TArgs...> && ReturnsType<T, TArgs..., TReturn>;
 }
 
