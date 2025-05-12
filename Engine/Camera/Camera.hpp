@@ -37,6 +37,7 @@ namespace zn
         void SetMouseSensitivity(f32 sensitivity) { m_mouseSensitivity = sensitivity; }
         void SetLastMousePosition(f32 x, f32 y);
 
+        math::v3 GetPosition() const { return m_position; }
         math::m4 GetViewMatrix() const;
         math::m4 GetProjection() const;
         math::m4 GetViewProjectionMatrix() const;

@@ -29,7 +29,7 @@ namespace zn
 		}
 
 		m_camera = { static_cast<f32>(windowWidth) / static_cast<f32>(windowHeight) };
-		m_camera.SetPosition(math::v3(1.5f, 0.0f, 4.0f));
+		m_camera.SetPosition(math::v3(1.5f, 3.0f, 4.0f));
 		// just so the camera doesn't jump with the first mouse interaction
 		m_camera.SetLastMousePosition(windowWidth / 2.0f, windowHeight / 2.0f); 
 

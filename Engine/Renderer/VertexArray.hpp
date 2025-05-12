@@ -91,21 +91,21 @@ namespace zn
 		template<>
 		void PushElement<f32>(uSize count)
 		{
-			m_elements.push_back({ GL_FALSE, GL_FLOAT, count });
+			m_elements.push_back( { GL_FALSE, GL_FLOAT, count }  );
 			m_stride += count * sizeof(GLfloat);
 		}
 
 		template<>
 		void PushElement<unsigned int>(uSize count)
 		{
-			m_elements.push_back({ GL_FALSE, GL_UNSIGNED_INT, count});
+			m_elements.push_back( { GL_FALSE, GL_UNSIGNED_INT, count} );
 			m_stride += count * sizeof(GLuint);
 		}
 
 		template<>
 		void PushElement<unsigned char>(uSize count)
 		{
-			m_elements.push_back({ GL_FALSE, GL_UNSIGNED_BYTE, count });
+			m_elements.push_back( { GL_FALSE, GL_UNSIGNED_BYTE, count } );
 			m_stride += count * sizeof(GLubyte);
 		}
 
