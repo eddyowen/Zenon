@@ -75,7 +75,6 @@ namespace zn
 
         // LIGHTING EXAMPLE SETUP
         // ------------------------------------------------
-        
         m_lightDegugCubeVA = CreateUnique<VertexArray>();
         m_lightDegugCubeVA->Bind();
 
@@ -167,9 +166,9 @@ namespace zn
 
     void Renderer::LightingExample(const Camera& camera) const
     {
-        f32 lightX = 4.0f * sin(glfwGetTime());
-        f32 lightY = 0.0f;
-        f32 lightZ = 4.0f * cos(glfwGetTime());
+        f32 lightX = 18.0f * sin(glfwGetTime());
+        f32 lightY = -5.0f;
+        f32 lightZ = 18.0f * cos(glfwGetTime());
         glm::vec3 lightPos = glm::vec3(lightX, lightY, lightZ);
         
         math::m4 lightModel = math::m4(1.0f);
@@ -190,7 +189,7 @@ namespace zn
         
         math::m4 cubeModel = math::m4(1.0f);
         cubeModel = glm::translate(cubeModel, cubePos);
-        cubeModel = glm::scale(cubeModel, math::v3(4.0f));
+        //cubeModel = glm::scale(cubeModel, math::v3(10.0f));
 
         const Shader& lightingShader = ResourceManager::GetShader(m_lightingShaderHandle).value();
         lightingShader.Bind();
@@ -198,12 +197,12 @@ namespace zn
         lightingShader.SetMat4("view", camera.GetViewMatrix());
         lightingShader.SetMat4("projection", camera.GetProjection());
 
-        math::m4 normalMatrix = glm::inverse(glm::transpose(cubeModel)); 
+        math::m4 normalMatrix = glm::transpose(glm::inverse(cubeModel)); 
         lightingShader.SetMat4("normalMatrix", normalMatrix);
         
         lightingShader.SetVec3("viewPosition", camera.GetPosition());
         lightingShader.SetVec3("lightPosition", lightPos);
-        lightingShader.SetVec3("lightColor",  { 1.0f, 1.0f, 1.0f });
+        lightingShader.SetVec3("lightColor",  math::v3{ 1.0f });
         lightingShader.SetVec3("objectColor", { 0.0f, 1.0f, 1.0f });
 
         m_lightingCubeVA->Bind();
