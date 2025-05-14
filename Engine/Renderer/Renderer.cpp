@@ -202,13 +202,21 @@ namespace zn
         lightingShader.SetMat4("view", view);
         lightingShader.SetMat4("projection", proj);
         
-        math::m4 normalMatrix = glm::transpose(glm::inverse(glm::mat3(view * cubeModel))); // Calculate and passglm::transpose(glm::inverse(cubeModel)); 
+        math::m4 normalMatrix = glm::transpose(glm::inverse(glm::mat3(view * cubeModel)));
         //lightingShader.SetMat4("normalMatrix", normalMatrix);
+
+        // Material properties
+        lightingShader.SetVec3("material.ambient",  {1.0f, 0.5f, 0.31f});
+        lightingShader.SetVec3("material.diffuse",  {1.0f, 0.5f, 0.31f});
+        lightingShader.SetVec3("material.specular", {0.5f, 0.5f, 0.5f});
+        lightingShader.SetFloat("material.shininess", 32.0f);
+
+        lightingShader.SetVec3("light.position", math::v3(view * math::v4(lightPos, 1.0f)));
+        lightingShader.SetVec3("light.ambient",  {0.2f, 0.2f, 0.2f});
+        lightingShader.SetVec3("light.diffuse",  {0.5f, 0.5f, 0.5f});
+        lightingShader.SetVec3("light.specular", {1.0f, 1.0f, 1.0f});
         
         lightingShader.SetVec3("viewPosition", cameraPos);
-        lightingShader.SetVec3("lightPosition", math::v3(view * math::v4(lightPos, 1.0f)));
-        lightingShader.SetVec3("lightColor",  math::v3{ 1.0f });
-        lightingShader.SetVec3("objectColor", { 0.0f, 1.0f, 1.0f });
 
         m_lightingCubeVA->Bind();
         glDrawArrays(GL_TRIANGLES, 0, 36);

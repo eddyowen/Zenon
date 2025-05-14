@@ -31,6 +31,8 @@ namespace zn
         void ProccessMouseMovement(f32 currentMouseX, f32 currentMouseY);
         void ProcessMouseScroll(f32 offsetX, f32 offsetY);
 
+        void LookAtTarget(const math::v3& targetLocation);
+
         void SetViewportSize(u32 width, u32 height) { m_aspectRatio  = static_cast<f32>(width) / static_cast<f32>(height); }
         void SetPosition(const glm::vec3& position) { m_position = position; UpdateVectors(); }
         void SetMovementSpeed(f32 speed) { m_movementSpeed = speed; }
@@ -43,9 +45,9 @@ namespace zn
         math::m4 GetViewProjectionMatrix() const;
         
     private:
-        void UpdateView();
         void UpdateProjection();
         void UpdateVectors();
+        void UpdateView();
         
     private:
         math::m4 m_view;

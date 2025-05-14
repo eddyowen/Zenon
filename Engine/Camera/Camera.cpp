@@ -48,6 +48,7 @@ namespace zn
             m_lastMouseX = currentMouseX;
             m_lastMouseY = currentMouseY;
             m_firstMouseMovement = false;
+            return;
         }
         
         f32 offsetX = m_lastMouseX - currentMouseX;
@@ -58,9 +59,7 @@ namespace zn
 
         m_yaw += offsetX * m_mouseSensitivity;
         m_pitch += offsetY * m_mouseSensitivity;
-
-        m_pitch = std::min(m_pitch, 89.0f);
-        m_pitch = std::max(m_pitch, -89.0f);
+        m_pitch = glm::clamp(m_pitch, -89.0f, 89.0f);
 
         UpdateVectors();
     }
@@ -70,6 +69,26 @@ namespace zn
         m_fov -= offsetY;
         m_fov = std::max(m_fov, 1.0f);
         m_fov = std::min(m_fov, 45.0f);
+    }
+
+    void Camera::LookAtTarget(const math::v3& targetLocation)
+    {
+        const math::v3 lookAtDir = targetLocation - m_position;
+        const math::v3 forward = glm::normalize(lookAtDir);
+
+        // Consistent pitch calculation with UpdateVectors: forward.y = sin(radians(m_pitch))
+        m_pitch = glm::degrees(std::asin(forward.y));
+        m_pitch = glm::clamp(m_pitch, -89.0f, 89.0f);
+
+        // Consistent yaw calculation with UpdateVectors:
+        //
+        // If you need to find an angle from which you know its cos and sin
+        // you can use atan. atan takes and y, x components (sin, cos) and returns
+        // the angle in radians. In this case, and following how m_yaw is calculated,
+        // atan(forward.z, forward.x) (see Obsidian notes)W
+        m_yaw = glm::degrees(glm::atan(forward.z, forward.x));
+    
+        UpdateVectors();
     }
 
     math::m4 Camera::GetViewMatrix() const
@@ -85,11 +104,6 @@ namespace zn
     math::m4 Camera::GetViewProjectionMatrix() const
     {
         return m_projection * m_view;
-    }
-
-    void Camera::UpdateView()
-    {
-        m_view = glm::lookAt(m_position, m_position + m_forward, m_up);
     }
 
     void Camera::UpdateProjection()
@@ -110,6 +124,11 @@ namespace zn
         m_up = glm::normalize(glm::cross(m_right, m_forward));
 
         UpdateView();
+    }
+
+    void Camera::UpdateView()
+    {
+        m_view = glm::lookAt(m_position, m_position + m_forward, m_up);
     }
 }
 
