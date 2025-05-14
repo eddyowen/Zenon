@@ -166,11 +166,14 @@ namespace zn
 
     void Renderer::LightingExample(const Camera& camera) const
     {
-        f32 lightX = 18.0f * sin(glfwGetTime());
-        f32 lightY = -5.0f;
-        f32 lightZ = 18.0f * cos(glfwGetTime());
-        glm::vec3 lightPos = glm::vec3(lightX, lightY, lightZ);
+        const math::v3 cameraPos = camera.GetPosition();
+        const math::m4 view = camera.GetViewMatrix();
+        const math::m4 proj = camera.GetProjection();
         
+        const glm::vec3 lightPos = glm::vec3(18.0f * cos(glfwGetTime()), -5.0f, 18.0f * sin(glfwGetTime()));
+
+        // Draw debug Light
+        // ======================================================================
         math::m4 lightModel = math::m4(1.0f);
         lightModel = glm::translate(lightModel, lightPos);
         lightModel = glm::scale(lightModel, math::v3(.6f));
@@ -178,13 +181,15 @@ namespace zn
         const Shader& lightDebugCubeShader = ResourceManager::GetShader(m_lightDebugCubeShaderHandle).value();
         lightDebugCubeShader.Bind();
         lightDebugCubeShader.SetMat4("model", lightModel);
-        lightDebugCubeShader.SetMat4("view", camera.GetViewMatrix());
-        lightDebugCubeShader.SetMat4("projection", camera.GetProjection());
+        lightDebugCubeShader.SetMat4("view", view);
+        lightDebugCubeShader.SetMat4("projection", proj);
 
         m_lightDegugCubeVA->Bind();
         glDrawArrays(GL_TRIANGLES, 0, 36);
         m_lightDegugCubeVA->Unbind();
 
+        // Phong Shading
+        // ======================================================================
         constexpr math::v3 cubePos(0.0f, 0.0f, 0.0f);
         
         math::m4 cubeModel = math::m4(1.0f);
@@ -194,14 +199,14 @@ namespace zn
         const Shader& lightingShader = ResourceManager::GetShader(m_lightingShaderHandle).value();
         lightingShader.Bind();
         lightingShader.SetMat4("model", cubeModel);
-        lightingShader.SetMat4("view", camera.GetViewMatrix());
-        lightingShader.SetMat4("projection", camera.GetProjection());
-
-        math::m4 normalMatrix = glm::transpose(glm::inverse(cubeModel)); 
-        lightingShader.SetMat4("normalMatrix", normalMatrix);
+        lightingShader.SetMat4("view", view);
+        lightingShader.SetMat4("projection", proj);
         
-        lightingShader.SetVec3("viewPosition", camera.GetPosition());
-        lightingShader.SetVec3("lightPosition", lightPos);
+        math::m4 normalMatrix = glm::transpose(glm::inverse(glm::mat3(view * cubeModel))); // Calculate and passglm::transpose(glm::inverse(cubeModel)); 
+        //lightingShader.SetMat4("normalMatrix", normalMatrix);
+        
+        lightingShader.SetVec3("viewPosition", cameraPos);
+        lightingShader.SetVec3("lightPosition", math::v3(view * math::v4(lightPos, 1.0f)));
         lightingShader.SetVec3("lightColor",  math::v3{ 1.0f });
         lightingShader.SetVec3("objectColor", { 0.0f, 1.0f, 1.0f });
 

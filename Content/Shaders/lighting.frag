@@ -11,19 +11,18 @@ in vec3 Normal;
 
 void main()
 {
-    float ambientStrength = 0.1;
-    float specularStrength = 0.5;
-    
-    vec3 ambient = ambientStrength * lightColor;
-    
     vec3 norm = normalize(Normal);
     vec3 lightDir = normalize(lightPosition - FragPos);
+    vec3 viewDir = normalize(-FragPos);
+    vec3 reflectDir = reflect(-lightDir, norm);
+    
+    float ambientStrength = 0.1;
+    vec3 ambient = ambientStrength * lightColor;
     
     float diff = max(dot(norm, lightDir), 0.0);
     vec3 diffuse = diff * lightColor;
     
-    vec3 viewDir = normalize(viewPosition - FragPos);
-    vec3 reflectDir = reflect(-lightDir, norm);
+    float specularStrength = 0.5;
     
     float spec = pow(max(dot(viewDir, reflectDir), 0.0), 256);
     vec3 specular = specularStrength * spec * lightColor;  
