@@ -72,7 +72,7 @@ namespace zn
         f32 m_lastMouseX = 0.0f;
         f32 m_lastMouseY = 0.0f;
 
-        b8 m_invertYaw = true;
+        b8 m_invertYaw = false;
         b8 m_invertPitch = true;
 
         b8 m_firstMouseMovement = true;

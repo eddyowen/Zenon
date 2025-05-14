@@ -51,7 +51,7 @@ namespace zn
             return;
         }
         
-        f32 offsetX = m_lastMouseX - currentMouseX;
+        f32 offsetX = currentMouseX - m_lastMouseX;
         f32 offsetY = currentMouseY - m_lastMouseY; // inverted as y-coordinate ranges from bottom to top
 
         m_lastMouseX = currentMouseX;
