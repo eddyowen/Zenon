@@ -8,11 +8,13 @@ set (LINK_LIBS
 	"Engine"
 )
 
-# ============== Add Exe and link ================= #
+# ============== Add Executable and Link ================= #
 
-# Setup visual studio source groups / filters ==
-file(GLOB_RECURSE _source_list
-    *.cpp* *.h* *.hpp* *.h* *.inl)
+# Setup visual studio source groups / filters
+file(GLOB_RECURSE _source_list CONFIGURE_DEPENDS *.cpp *.hpp *.h *.inl)
+file(GLOB_RECURSE _shaders_list CONFIGURE_DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/../Content/*.vert ${CMAKE_CURRENT_SOURCE_DIR}/../Content/*.frag)
+
+list(APPEND _source_list ${_shaders_list})
 
 # Link our normal libraries and create an executeable 
 add_executable(${PROJECT_NAME} ${_source_list})

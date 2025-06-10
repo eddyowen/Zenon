@@ -81,7 +81,7 @@ set_target_properties(spdlog PROPERTIES FOLDER "ThirdParty")
 
 FetchContent_Declare(assimp
   GIT_REPOSITORY https://github.com/assimp/assimp.git
-  GIT_TAG v5.4.3
+  GIT_TAG v6.0.2
   EXCLUDE_FROM_ALL
 )
 
@@ -116,21 +116,19 @@ if(NOT TARGET imgui)
 endif()
 
 set (LINK_LIBS
-  glad_gl_core_45
-  glfw ${GLFW_LIBRARIES}
-	glm
+    glad_gl_core_45
+    glfw ${GLFW_LIBRARIES}
+    glm
 	spdlog
 	imgui
-  assimp
+    assimp
 	opengl32.lib
 )
 
-# ################ Add Engine library and link ######################
+# ################ Add Engine library and Link ######################
 
 # Setup visual studio source groups / filters
-file(GLOB_RECURSE _source_list
-  *.cpp* *.h* *.hpp* *.h *.inl
-)
+file(GLOB_RECURSE _source_list CONFIGURE_DEPENDS *.cpp *.hpp *.h *.inl)
 
 # If STATIC/SHARED is omitted when defining the library, the default
 # will depend on the value of the property BUILD_SHARED_LIBS

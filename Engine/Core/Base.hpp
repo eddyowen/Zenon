@@ -28,7 +28,7 @@
 
 #define ZN_STRINGIFY_MACRO(x) #x
 
-namespace  zn
+namespace zn
 {
 	//-----------------------------------------------------------------------------
 	// Integer Types
