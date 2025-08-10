@@ -22,8 +22,8 @@ This project depeneds on Python3 to generate GLAD2 loader code. The commmand to 
 Open a terminal where the repository is located and access the `Scripts` directory. Once in that location, you can execute the `zen` tool the following way:
 
 #### Format
-    zen [args]
-#### Arguments
+    zen [command]
+#### Commands
     
     gensln  - initializes all the submodules, configures the dependencies and generates the project files.
     opensln - launches Visual Studio and opens the solution.
